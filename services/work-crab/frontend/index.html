@@ -20,16 +20,28 @@
             const [tasks, setTasks] = useState([]);
             const [burnout, setBurnout] = useState({ energy_level: 80, status: "Healthy", recommendation: "Keep it up!" });
             const [diary, setDiary] = useState("");
+            const [timer, setTimer] = useState(1500); // 25 mins default
+            const [isTimerRunning, setIsTimerRunning] = useState(false);
             const userId = 1; // Mock user ID
 
             useEffect(() => {
-                // Initial data fetch (Mock for prototype)
-                setTasks([
-                    { id: 1, title: "기획서 작성", priority: "High", status: "InProgress" },
-                    { id: 2, title: "주간 회의", priority: "Mid", status: "Todo" },
-                    { id: 3, title: "운동 30분", priority: "Low", status: "Todo" }
-                ]);
-            }, []);
+                let interval = null;
+                if (isTimerRunning && timer > 0) {
+                    interval = setInterval(() => {
+                        setTimer(timer => timer - 1);
+                    }, 1000);
+                } else if (timer === 0) {
+                    setIsTimerRunning(false);
+                    alert("Time for a break! Crab says: Stretch your legs!");
+                }
+                return () => clearInterval(interval);
+            }, [isTimerRunning, timer]);
+
+            const formatTime = (seconds) => {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            };
 
             const handleDiarySubmit = () => {
                 alert("일기가 등록되었습니다! AI 분석 결과: 긍정적");
@@ -57,6 +69,21 @@
                         <div className="gauge-text">
                             <h3>{burnout.energy_level}% - {burnout.status}</h3>
                             <p>{burnout.recommendation}</p>
+                        </div>
+                        
+                        <div className="timer-section" style={{ marginTop: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '12px' }}>
+                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: isTimerRunning ? '#FF5722' : '#333' }}>
+                                {formatTime(timer)}
+                            </div>
+                            <button 
+                                onClick={() => setIsTimerRunning(!isTimerRunning)} 
+                                style={{ marginTop: '10px', background: isTimerRunning ? '#333' : '#FF5722' }}
+                            >
+                                {isTimerRunning ? "Pause" : "Start Focus"}
+                            </button>
+                            <button onClick={() => { setTimer(300); setIsTimerRunning(true); }} style={{ marginLeft: '10px', background: '#1A237E' }}>
+                                Short Break
+                            </button>
                         </div>
                         
                         <div className="achievements-mini" style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
