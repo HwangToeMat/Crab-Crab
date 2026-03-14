@@ -17,14 +17,42 @@ client.on('error', err => console.log('Redis Client Error', err));
 
 async function startServer() {
   await client.connect();
-
 const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름", "작은 산들바람", "빛나는 별빛", "다정한 숲속", "포근한 달빛", "신나는 파도"];
+const bannedWords = ["바보", "멍청이", "나쁜말"]; // Simple filter for demo
 
   // 1. Post Creation (24h expiration)
   app.post('/api/posts', async (req, res) => {
     const { content, authorId, nickname, mood } = req.body;
+
+    // Filter
+    const hasBannedWord = bannedWords.some(word => content.includes(word));
+    if (hasBannedWord) {
+      return res.status(400).json({ message: '부적절한 표현이 포함되어 있습니다.' });
+    }
+
     console.log(`[POST] User ${authorId} created post with mood ${mood}`);
-    const postId = uuidv4();
+...
+  // 1.4 Delete a Post
+  app.delete('/api/posts/:id', async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.query;
+    const key = `post:${id}`;
+    const data = await client.get(key);
+    if (data) {
+      const post = JSON.parse(data);
+      if (post.authorId === userId) {
+        await client.del(key);
+        res.json({ message: 'Deleted successfully' });
+      } else {
+        res.status(403).send('Unauthorized');
+      }
+    } else {
+      res.status(404).send('Not found');
+    }
+  });
+
+  // 1.1 Like a Post (and track user stats)
+
     const postData = {
       id: postId,
       content,
