@@ -172,6 +172,29 @@ button {
     margin-bottom: 2rem;
 }
 
+.sub-info {
+    font-size: 0.9rem;
+    color: #6B7280;
+    margin-top: 1rem;
+}
+
+.cheer-card {
+    background-color: #E0F2FE;
+    border: none;
+    text-align: center;
+}
+
+.cheer-card h3 {
+    color: #0369A1;
+    margin-bottom: 0.5rem;
+}
+
+#cheer-text {
+    font-style: italic;
+    font-weight: 500;
+    color: #075985;
+}
+
 .history-list {
     display: flex;
     gap: 0.5rem;

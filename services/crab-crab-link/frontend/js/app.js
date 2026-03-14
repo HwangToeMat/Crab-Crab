@@ -156,22 +156,22 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <header class="post-header">
                     <div>
-                        <span class="user-name">${post.user_name || '익명게'}</span>
-                        ${isVerifiedPost ? '<span class="verified-badge" aria-label="인증된 사용자">인증됨</span>' : ''}
+                        <span class="user-name">${post.user_name || (window.i18n.getLang() === 'ko' ? '익명게' : 'Anonymous')}</span>
+                        ${isVerifiedPost ? `<span class="verified-badge" aria-label="${window.i18n.t('verified')}">${window.i18n.t('verified')}</span>` : ''}
                     </div>
-                    <div class="temp-wrapper" aria-label="매너 온도 ${post.user_temperature}도">
+                    <div class="temp-wrapper" aria-label="${window.i18n.t('temperature')} ${post.user_temperature}도">
                         <span class="temp-value" style="color: ${tempColor}" aria-hidden="true">${post.user_temperature}℃</span>
                         <div class="temp-bar-bg" aria-hidden="true">
                             <div class="temp-bar-fill" style="width: ${Math.min(post.user_temperature * 2, 100)}%; background-color: ${tempColor}"></div>
                         </div>
                     </div>
                 </header>
-                ${post.image_url ? `<img src="${post.image_url}" alt="${post.title} 상품 이미지" class="post-image">` : '<div class="post-image" aria-hidden="true">이미지 없음</div>'}
-                <div style="font-size: 0.8rem; color: #555; margin-bottom: 5px;" aria-label="지역: 역삼동">📍 역삼동</div>
+                ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image">` : '<div class="post-image" aria-hidden="true">No Image</div>'}
+                <div style="font-size: 0.8rem; color: #555; margin-bottom: 5px;" aria-label="Location">📍 ${window.i18n.getLang() === 'ko' ? '역삼동' : 'Yeoksam'}</div>
                 <h3>${post.title}</h3>
                 <p>${post.content}</p>
-                <div class="tags" aria-label="태그목록">${(post.tags || '').split(',').map(tag => tag ? `<span class="tag">${tag.trim()}</span>` : '').join('')}</div>
-                <button class="btn-secondary" style="margin-top: 15px; width: 100%;" aria-label="${post.title} 참여하기">참여하기</button>
+                <div class="tags" aria-label="Tags">${(post.tags || '').split(',').map(tag => tag ? `<span class="tag">${tag.trim()}</span>` : '').join('')}</div>
+                <button class="btn-secondary" style="margin-top: 15px; width: 100%;" aria-label="${window.i18n.t('joinBtn')}">${window.i18n.t('joinBtn')}</button>
             `;
             postList.appendChild(card);
         });

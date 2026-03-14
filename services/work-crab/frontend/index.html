@@ -16,8 +16,55 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        const i18n = {
+            ko: {
+                title: "Work-Crab",
+                slogan: "게으르지 않게, 하지만 지치지 않게.",
+                energy: "나의 에너지 상태",
+                tasks: "오늘의 할 일",
+                diary: "감정 회고",
+                voice: "🎤 음성 입력",
+                focus: "집중 시작",
+                break: "짧은 휴식",
+                share: "📸 오늘의 갓생 인스타 공유하기",
+                save: "오늘의 회고 저장하기",
+                achievements: "획득한 업적",
+                stats: "주간 활동 추이"
+            },
+            en: {
+                title: "Work-Crab",
+                slogan: "Not lazy, but not exhausted.",
+                energy: "My Energy Status",
+                tasks: "Today's Tasks",
+                diary: "Emotion Review",
+                voice: "🎤 Voice",
+                focus: "Start Focus",
+                break: "Short Break",
+                share: "📸 Share on Instagram",
+                save: "Save Daily Review",
+                achievements: "Achievements",
+                stats: "Weekly Activity"
+            },
+            ja: {
+                title: "ワーククラブ",
+                slogan: "怠けず、しかし疲れず。",
+                energy: "マイエネルギーステータス",
+                tasks: "今日のタスク",
+                diary: "感情回顧",
+                voice: "🎤 音声入力",
+                focus: "集中開始",
+                break: "短い休憩",
+                share: "📸 インスタで共有する",
+                save: "今日の振り返りを保存",
+                achievements: "獲得した実績",
+                stats: "週間活動推移"
+            }
+        };
+
         function App() {
+            const [lang, setLang] = useState('ko');
             const [tasks, setTasks] = useState([]);
+            const t = i18n[lang];
             const [burnout, setBurnout] = useState({ energy_level: 80, status: "Healthy", recommendation: "Keep it up!" });
             const [diary, setDiary] = useState("");
             const [timer, setTimer] = useState(1500); // 25 mins default
