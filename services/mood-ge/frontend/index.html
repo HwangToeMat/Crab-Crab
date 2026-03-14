@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood-Ge (무드게)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>무드게 (Mood-Ge)</h1>
+            <p>오늘의 번아웃 회복 수치: <span id="recovery-score">0</span>%</p>
+        </header>
+
+        <section class="mood-crab-section">
+            <div id="mood-crab" class="crab neutral">
+                <div class="crab-body">
+                    <div class="eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                </div>
+                <div class="claw left"></div>
+                <div class="claw right"></div>
+            </div>
+            <p id="crab-message">"반가워요! 오늘은 어떤 기분인가요?"</p>
+        </section>
+
+        <section class="mood-picker">
+            <button onclick="logMood('happy', 100)">😊</button>
+            <button onclick="logMood('neutral', 50)">😐</button>
+            <button onclick="logMood('tired', 20)">😫</button>
+            <button onclick="logMood('sad', 10)">😢</button>
+        </section>
+
+        <section class="challenges">
+            <h2>오늘의 꽃게 퀘스트</h2>
+            <ul id="challenge-list">
+                <!-- Challenges will be loaded here -->
+            </ul>
+        </section>
+
+        <section class="stats">
+            <div class="streak-badge">3일 연속 달성 중! 🔥</div>
+        </section>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
