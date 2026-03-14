@@ -96,9 +96,26 @@
                                 Short Break
                             </button>
                         </div>
+
+                        <div className="stats-mini" style={{ marginTop: '20px', padding: '15px', border: '1px solid #eee', borderRadius: '12px' }}>
+                            <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem' }}>주간 활동 추이</h4>
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '60px', padding: '0 10px' }}>
+                                {[40, 70, 90, 60, 80, 50, 95].map((val, i) => (
+                                    <div key={i} style={{ 
+                                        width: '20px', 
+                                        height: `${val}%`, 
+                                        background: val > 80 ? 'var(--success-green)' : 'var(--crab-orange)',
+                                        borderRadius: '4px 4px 0 0'
+                                    }}></div>
+                                ))}
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginTop: '5px', opacity: 0.6 }}>
+                                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                            </div>
+                        </div>
                         
                         <div className="achievements-mini" style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
-                            <h4>획득한 업적</h4>
+                            <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem' }}>획득한 업적</h4>
                             <div style={{ display: 'flex', justifyContent: 'center', gap: '15px' }}>
                                 <span title="Miracle Morning" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🌅</span>
                                 <span title="Work-Crab Rookie" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🦀</span>
@@ -106,6 +123,8 @@
                             </div>
                         </div>
                     </section>
+
+
 
 
                     <section className="tasks-section">
