@@ -9,6 +9,7 @@ class PostBase(BaseModel):
     category: Optional[str] = "기타"
     image_url: Optional[str] = None
     tags: Optional[str] = None
+    likes: Optional[int] = 0
 
 class PostCreate(PostBase):
     user_id: int
@@ -19,6 +20,7 @@ class Post(PostBase):
     created_at: datetime
     user_name: Optional[str] = "익명게"
     user_temperature: Optional[float] = 36.5
+    likes: int = 0
 
     class Config:
         from_attributes = True

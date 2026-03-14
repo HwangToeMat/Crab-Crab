@@ -29,7 +29,12 @@ const translations = {
         errorMsg: "데이터를 불러오는 중 오류가 발생했습니다.",
         locationPrefix: "현재 위치: ",
         verifiedPrefix: "📍 인증됨: ",
-        verifiedSuccess: "인증 완료"
+        verifiedSuccess: "인증 완료",
+        searchPlaceholder: "필요한 물건이나 정보를 검색해보세요",
+        sortBy: "정렬 기준",
+        sortLatest: "최신순",
+        sortTemp: "온도순",
+        likes: "찜"
     },
     en: {
         logo: "🦀 CrabLink",
@@ -61,7 +66,12 @@ const translations = {
         errorMsg: "Error occurred while loading data.",
         locationPrefix: "Current Location: ",
         verifiedPrefix: "📍 Verified: ",
-        verifiedSuccess: "Verified"
+        verifiedSuccess: "Verified",
+        searchPlaceholder: "Search for items or information",
+        sortBy: "Sort by",
+        sortLatest: "Latest",
+        sortTemp: "Manner Temp",
+        likes: "Likes"
     },
     ja: {
         logo: "🦀 カニリンク",
@@ -93,7 +103,12 @@ const translations = {
         errorMsg: "データの読み込み中にエラーが発生しました。",
         locationPrefix: "現在地: ",
         verifiedPrefix: "📍 認証済み: ",
-        verifiedSuccess: "認証済み"
+        verifiedSuccess: "認証済み",
+        searchPlaceholder: "必要なものや情報を検索してください",
+        sortBy: "整列基準",
+        sortLatest: "最新順",
+        sortTemp: "マナー温度順",
+        likes: "いいね"
     }
 };
 

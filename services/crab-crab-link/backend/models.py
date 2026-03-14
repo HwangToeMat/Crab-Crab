@@ -27,6 +27,7 @@ class Post(Base):
     category = Column(String, default="기타") # '식재료', '생필품', '도구/공유', '기타'
     image_url = Column(String)
     tags = Column(String)
+    likes = Column(Integer, default=0)
     created_at = Column(DateTime, server_default=func.now())
 
     owner = relationship("User", back_populates="posts")

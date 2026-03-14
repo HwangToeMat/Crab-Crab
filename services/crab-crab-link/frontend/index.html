@@ -53,6 +53,20 @@
                     <button class="btn-secondary" id="create-post-btn" aria-label="새 글 작성하기" data-i18n="writeBtn">글쓰기</button>
                 </div>
                 
+                <div class="feed-controls">
+                    <div class="search-box">
+                        <input type="text" id="search-input" data-i18n="searchPlaceholder" placeholder="필요한 물건이나 정보를 검색해보세요">
+                        <button id="search-btn" aria-label="Search">🔍</button>
+                    </div>
+                    <div class="sort-box">
+                        <label for="sort-select" data-i18n="sortBy">정렬 기준</label>
+                        <select id="sort-select">
+                            <option value="latest" data-i18n="sortLatest">최신순</option>
+                            <option value="temperature" data-i18n="sortTemp">온도순</option>
+                        </select>
+                    </div>
+                </div>
+                
                 <nav class="filter-tabs" aria-label="카테고리 필터">
                     <button class="filter-btn active" data-category="ALL" aria-pressed="true" data-i18n="categoryAll">전체</button>
                     <button class="filter-btn" data-category="식재료" aria-pressed="false" data-i18n="categoryFood">식재료</button>

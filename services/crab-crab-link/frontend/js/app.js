@@ -13,6 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationBannerText = document.getElementById('current-location');
     const locationTextInModal = document.getElementById('location-text');
     const langSelect = document.getElementById('lang-select');
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const sortSelect = document.getElementById('sort-select');
+
+    // 검색 및 정렬 상태 관리
+    let currentSearch = '';
+    let currentSort = 'latest';
 
     // 언어 선택 이벤트
     langSelect.value = window.i18n.getLang();
@@ -27,6 +34,24 @@ document.addEventListener('DOMContentLoaded', () => {
             verifyBtn.innerText = window.i18n.t('verifyBtn');
         }
         renderPosts(allPosts);
+    });
+
+    // 검색 이벤트
+    searchBtn.addEventListener('click', () => {
+        currentSearch = searchInput.value;
+        fetchPosts();
+    });
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            currentSearch = searchInput.value;
+            fetchPosts();
+        }
+    });
+
+    // 정렬 이벤트
+    sortSelect.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        fetchPosts();
     });
 
     // 초기 데이터 페칭
@@ -111,12 +136,17 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchPosts() {
         showLoading();
         try {
-            const response = await fetch('http://localhost:8000/posts');
+            const params = new URLSearchParams({
+                search: currentSearch,
+                sort_by: currentSort
+            });
+            const response = await fetch(`http://localhost:8000/posts?${params.toString()}`);
             if (!response.ok) throw new Error('서버 응답 오류');
             allPosts = await response.json();
-            if (allPosts.length === 0) allPosts = getDummyData();
+            if (allPosts.length === 0 && !currentSearch) allPosts = getDummyData();
             renderPosts(allPosts);
         } catch (error) {
+            console.error(error);
             showError('데이터를 불러오는 중 오류가 발생했습니다.');
         }
     }
@@ -143,6 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPosts(posts) {
         postList.innerHTML = '';
+        if (posts.length === 0) {
+            postList.innerHTML = `<div class="error-container" style="background: #f8f9fa; border-color: #ddd;"><p style="color: #666;">검색 결과가 없습니다.</p></div>`;
+            return;
+        }
         posts.forEach(post => {
             const card = document.createElement('article');
             card.className = 'post-card';
@@ -171,9 +205,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>${post.title}</h3>
                 <p>${post.content}</p>
                 <div class="tags" aria-label="Tags">${(post.tags || '').split(',').map(tag => tag ? `<span class="tag">${tag.trim()}</span>` : '').join('')}</div>
-                <button class="btn-secondary" style="margin-top: 15px; width: 100%;" aria-label="${window.i18n.t('joinBtn')}">${window.i18n.t('joinBtn')}</button>
+                <div class="post-footer">
+                    <div style="display: flex; align-items: center;">
+                        <button class="btn-like" data-id="${post.id}" aria-label="Like">❤️</button>
+                        <span class="likes-count" id="likes-${post.id}">${post.likes || 0}</span>
+                    </div>
+                    <button class="btn-secondary" style="width: auto; padding: 8px 20px;" aria-label="${window.i18n.t('joinBtn')}">${window.i18n.t('joinBtn')}</button>
+                </div>
             `;
             postList.appendChild(card);
+
+            // Like 버튼 이벤트
+            card.querySelector('.btn-like').addEventListener('click', async (e) => {
+                const btn = e.currentTarget;
+                const postId = btn.getAttribute('data-id');
+                try {
+                    const response = await fetch(`http://localhost:8000/posts/${postId}/like`, { method: 'POST' });
+                    if (response.ok) {
+                        const updatedPost = await response.json();
+                        document.getElementById(`likes-${postId}`).innerText = updatedPost.likes;
+                        btn.classList.toggle('active');
+                    }
+                } catch (err) {
+                    console.error('Like failed', err);
+                }
+            });
         });
     }
 
@@ -181,19 +237,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = window.i18n.getLang();
         const data = {
             ko: [
-                { id: 1, title: '샤인머스캣 소분하실 분!', content: '대용량 1박스 샀는데 혼자 먹기 많아서 3송이 나눔합니다.', category: '식재료', tags: '식재료, 소분', user_name: '포도대장', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop' },
-                { id: 2, title: '전동 드릴 빌려주실 분 계신가요?', content: '서랍장 조립하려고 하는데 1시간만 빌려주실 분 찾습니다.', category: '도구/공유', tags: '도구, 공유', user_name: '뚝딱이', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop' },
-                { id: 3, title: '화장지 30롤 너무 많아서 10롤 나눕니다', content: '쿠팡에서 잘못 시켰네요. 필요하신 분 가져가세요.', category: '생필품', tags: '생필품, 나눔', user_name: '깔끔이', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop' }
+                { id: 1, title: '샤인머스캣 소분하실 분!', content: '대용량 1박스 샀는데 혼자 먹기 많아서 3송이 나눔합니다.', category: '식재료', tags: '식재료, 소분', user_name: '포도대장', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop', likes: 12 },
+                { id: 2, title: '전동 드릴 빌려주실 분 계신가요?', content: '서랍장 조립하려고 하는데 1시간만 빌려주실 분 찾습니다.', category: '도구/공유', tags: '도구, 공유', user_name: '뚝딱이', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop', likes: 5 },
+                { id: 3, title: '화장지 30롤 너무 많아서 10롤 나눕니다', content: '쿠팡에서 잘못 시켰네요. 필요하신 분 가져가세요.', category: '생필품', tags: '생필품, 나눔', user_name: '깔끔이', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop', likes: 8 }
             ],
             en: [
-                { id: 1, title: 'Anyone want to split Shine Muscat?', content: 'Bought a large box, too much for one. Sharing 3 bunches.', category: '식재료', tags: 'food, split', user_name: 'GrapeMaster', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop' },
-                { id: 2, title: 'Can I borrow a power drill?', content: 'Assembling a drawer, need it for just 1 hour.', category: '도구/공유', tags: 'tools, sharing', user_name: 'HandyMan', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop' },
-                { id: 3, title: '30 rolls of TP is too many, sharing 10', content: 'Ordered too many online. Please take some.', category: '생필품', tags: 'necessities, free', user_name: 'CleanGuy', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop' }
+                { id: 1, title: 'Anyone want to split Shine Muscat?', content: 'Bought a large box, too much for one. Sharing 3 bunches.', category: '식재료', tags: 'food, split', user_name: 'GrapeMaster', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop', likes: 12 },
+                { id: 2, title: 'Can I borrow a power drill?', content: 'Assembling a drawer, need it for just 1 hour.', category: '도구/공유', tags: 'tools, sharing', user_name: 'HandyMan', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop', likes: 5 },
+                { id: 3, title: '30 rolls of TP is too many, sharing 10', content: 'Ordered too many online. Please take some.', category: '생필품', tags: 'necessities, free', user_name: 'CleanGuy', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop', likes: 8 }
             ],
             ja: [
-                { id: 1, title: 'シャインマスカットを分け合いたい方！', content: '大容量1箱買いましたが一人では多いので3房お分けします。', category: '식재료', tags: '食材, 分け合い', user_name: 'ブドウ大将', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop' },
-                { id: 2, title: '電動ドリルを貸していただける方いますか？', content: '引き出しを組み立てるのに1時間だけ借りたいです。', category: '도구/공유', tags: '道具, 共有', user_name: 'トントン', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop' },
-                { id: 3, title: 'トイレットペーパー30ロールは多すぎて10ロール分けます', content: '通販で買いすぎました。必要な方どうぞ。', category: '생필품', tags: '日用品, お裾分け', user_name: 'きれい好き', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop' }
+                { id: 1, title: 'シャインマスカットを分け合いたい方！', content: '大容量1箱買いましたが一人では多いので3房お分けします。', category: '식재료', tags: '食材, 分け合い', user_name: 'ブドウ大将', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop', likes: 12 },
+                { id: 2, title: '電動ドリルを貸していただける方いますか？', content: '引き出しを組み立てるのに1時間だけ借りたいです。', category: '도구/공유', tags: '道具, 共有', user_name: 'トントン', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop', likes: 5 },
+                { id: 3, title: 'トイレットペーパー30ロールは多すぎて10ロール分けます', content: '通販で買いすぎました。必要な方どうぞ。', category: '생필품', tags: '日用品, お裾分け', user_name: 'きれい好き', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop', likes: 8 }
             ]
         };
         return data[lang] || data.en;

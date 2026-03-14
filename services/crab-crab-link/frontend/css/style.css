@@ -443,6 +443,96 @@ footer {
     border: 1px solid #1976d2;
 }
 
+/* Cycle 09: Search, Sort, Wishlist */
+.feed-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+}
+
+.search-box button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 0 15px;
+    cursor: pointer;
+    min-width: auto;
+}
+
+.sort-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.sort-box label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+}
+
+.sort-box select {
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.btn-like {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    min-width: auto;
+    min-height: auto;
+}
+
+.btn-like.active {
+    background-color: #fff0f0;
+    border-color: var(--color-secondary);
+    color: var(--color-secondary);
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.likes-count {
+    font-size: 0.9rem;
+    color: #666;
+    margin-left: 5px;
+}
+
 /* Modal Styles */
 .modal {
     display: none;
