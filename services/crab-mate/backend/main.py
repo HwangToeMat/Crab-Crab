@@ -60,9 +60,19 @@ class MoodResponse(BaseModel):
     mood_category: str
     message: str
     history: List[MoodHistoryItem] = [] # 사용자 히스토리 추가
+    same_mood_count: int = 0 # 신규: 동일 무드 사용자 수 추가
 
 # 임시 사용자 히스토리 저장소 (DB 대체)
 USER_HISTORIES = {}
+
+# 신규: 익명 응원 메시지 저장소
+CHEER_MESSAGES = {
+    "Happy": ["당신의 기쁨이 모두에게 전달되길!", "그 행복 꼭 붙잡으세요 🦀"],
+    "Sad": ["울어도 괜찮아요. 내일은 조금 더 나을 거예요.", "꽃게가 옆에 있어요."],
+    "Angry": ["심호흡 한 번! 시원한 물 한 잔 어때요?", "다 지나갈 일이에요."],
+    "Anxious": ["걱정 마세요, 생각보다 잘 하고 있어요.", "숨을 크게 들이마셔 봐요."],
+    "Neutral": ["평화로운 오늘을 즐기세요.", "안정적인 마음이 가장 큰 자산입니다."]
+}
 
 @app.post("/api/mood/analyze", response_model=MoodResponse)
 async def analyze_mood(request: MoodRequest):
@@ -104,12 +114,21 @@ async def analyze_mood(request: MoodRequest):
     new_entry = MoodHistoryItem(date=datetime.now(), mood=category, score=round(score, 2))
     USER_HISTORIES[request.user_id].append(new_entry)
     
+    # 동일 무드 사용자 수 시뮬레이션
+    same_mood_count = random.randint(1, 50)
+    
     return MoodResponse(
         sentiment_score=round(score, 2),
         mood_category=category,
         message=messages.get(category, "오늘도 당신을 응원합니다."),
-        history=USER_HISTORIES[request.user_id][-5:] # 최근 5개 기록 반환
+        history=USER_HISTORIES[request.user_id][-5:], # 최근 5개 기록 반환
+        same_mood_count=same_mood_count
     )
+
+@app.get("/api/cheer", response_model=List[str])
+async def get_cheer(mood: str):
+    """무드에 맞는 응원 메시지 반환"""
+    return CHEER_MESSAGES.get(mood, ["힘내세요!"])
 
 @app.get("/api/activities/recommend", response_model=List[Activity])
 async def recommend_activities(mood: str):

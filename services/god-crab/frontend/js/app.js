@@ -2,22 +2,24 @@ const API_URL = 'http://localhost:3001/api';
 
 async function fetchData() {
     const list = document.getElementById('tasks');
-    list.innerHTML = '<li style="border:none; justify-content:center;">Loading tasks... 🦀</li>';
+    if (list) list.innerHTML = '<li style="border:none; justify-content:center;">Loading tasks... 🦀</li>';
 
     try {
         const tasksRes = await fetch(`${API_URL}/tasks`);
         const tasks = await tasksRes.json();
-...
-
-    const crabRes = await fetch(`${API_URL}/crab/status`);
-    const crab = await crabRes.json();
-    
-    renderTasks(tasks);
-    renderCrab(crab);
+        const crabRes = await fetch(`${API_URL}/crab/status`);
+        const crab = await crabRes.json();
+        
+        renderTasks(tasks);
+        renderCrab(crab);
+    } catch (e) {
+        console.error("Fetch error", e);
+    }
 }
 
 function renderTasks(tasks) {
     const list = document.getElementById('tasks');
+    if (!list) return;
     list.innerHTML = '';
     tasks.forEach(task => {
         const li = document.createElement('li');
@@ -28,48 +30,53 @@ function renderTasks(tasks) {
     });
 }
 
-const sayings = [
-    "오늘도 껍질을 깨고 성장해봐요!",
-    "작은 걸음이 큰 게를 만들어요!",
-    "옆으로 걸어도 목표는 앞으로!",
-    "집게로 오늘의 할 일을 꽉 잡으세요!",
-    "당신의 갓생을 응원합니다! 🦀"
-];
-
 function renderCrab(crab) {
     document.getElementById('crab-name').textContent = crab.name;
     document.getElementById('crab-level').textContent = crab.level;
     document.getElementById('crab-exp').style.width = `${crab.exp}%`;
-    
-    // Random saying update
-    const sayingElem = document.getElementById('crab-saying');
-    if (sayingElem) {
-        sayingElem.textContent = `"${sayings[Math.floor(Math.random() * sayings.length)]}"`;
+}
+
+// Evolution v2: Tab Switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+        const tabId = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        document.getElementById(tabId).style.display = 'block';
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (tabId === 'league-view') fetchRankings();
+    };
+});
+
+async function fetchRankings() {
+    try {
+        const res = await fetch(`${API_URL}/league/rankings`);
+        const data = await res.json();
+        const list = document.getElementById('rankings-list');
+        list.innerHTML = '';
+        data.forEach((r, idx) => {
+            const li = document.createElement('li');
+            li.style.display = 'flex';
+            li.style.justifyContent = 'space-between';
+            li.style.padding = '10px';
+            li.style.borderBottom = '1px solid #eee';
+            li.innerHTML = `<span>#${idx+1} <b>${r.name}</b> (LV.${r.level})</span> <span>🔥 ${r.streak}</span>`;
+            list.appendChild(li);
+        });
+    } catch (e) {
+        console.error("Ranking fetch error", e);
     }
 }
 
-const i18n = {
-    ko: { title: "갓게 (God-Crab)", placeholder: "새로운 습관을 입력하세요...", add: "+", water: "💧 물", vitamins: "💊 영양제", reading: "📖 독서", meditation: "🧘 명상" },
-    en: { title: "God-Crab", placeholder: "Enter a new habit...", add: "+", water: "💧 Water", vitamins: "💊 Vitamin", reading: "📖 Reading", meditation: "🧘 Zen" }
+document.getElementById('theme-toggle').onclick = () => {
+    document.body.classList.toggle('dark-mode');
 };
-let currentLang = 'ko';
-
-document.getElementById('lang-toggle').onclick = () => {
-    currentLang = currentLang === 'ko' ? 'en' : 'ko';
-    document.getElementById('lang-toggle').textContent = currentLang === 'ko' ? '🌐 EN' : '🌐 KO';
-    updateLanguage();
-};
-
-function updateLanguage() {
-    document.querySelector('[data-i18n="title"]').textContent = i18n[currentLang].title;
-    document.getElementById('new-task-title').placeholder = i18n[currentLang].placeholder;
-}
 
 document.getElementById('share-btn').onclick = () => {
     const name = document.getElementById('crab-name').textContent;
     const level = document.getElementById('crab-level').textContent;
-    const text = `🦀 [갓게] ${name}와(과) 함께하는 갓생! 현재 LV.${level}\n오늘도 보람찬 하루를 보냈습니다! #갓생 #갓게`;
-    navigator.clipboard.writeText(text).then(() => alert('공유 텍스트가 복사되었습니다!'));
+    const text = `🦀 [갓게+] ${name}와(과) 함께하는 진화된 갓생! 현재 LV.${level}\n#갓생 #갓게 #CrabEvolution`;
+    navigator.clipboard.writeText(text).then(() => alert('진화된 공유 텍스트가 복사되었습니다!'));
 };
 
 document.querySelectorAll('.tmpl-btn').forEach(btn => {
@@ -92,16 +99,13 @@ async function toggleTask(id) {
 document.getElementById('add-task-btn').onclick = async () => {
     const title = document.getElementById('new-task-title').value;
     if (!title) return;
-    
     await fetch(`${API_URL}/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title })
     });
-    
     document.getElementById('new-task-title').value = '';
     fetchData();
 };
 
-// Initial load
 fetchData();
