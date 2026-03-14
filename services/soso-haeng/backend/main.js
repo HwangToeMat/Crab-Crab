@@ -168,6 +168,11 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
 
   io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
+    io.emit('online_count', io.engine.clientsCount);
+
+    socket.on('disconnect', () => {
+      io.emit('online_count', io.engine.clientsCount);
+    });
     
     socket.on('join_chat', async (sessionId) => {
       socket.join(sessionId);

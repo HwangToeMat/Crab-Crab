@@ -37,6 +37,9 @@
             const [socket, setSocket] = useState(null);
             const [now, setNow] = useState(Date.now());
             const [view, setView] = useState('feed'); // 'feed' or 'profile'
+            const [onlineCount, setOnlineCount] = useState(0);
+            const [isPosting, setIsPosting] = useState(false);
+            const [isMatching, setIsMatching] = useState(false);
 
             useEffect(() => {
                 fetchPosts();
@@ -50,6 +53,10 @@
 
                 newSocket.on('chat_history', (history) => {
                     setMessages(history);
+                });
+
+                newSocket.on('online_count', (count) => {
+                    setOnlineCount(count);
                 });
 
                 const timer = setInterval(() => setNow(Date.now()), 1000);
@@ -93,20 +100,27 @@
             };
 
             const createPost = async () => {
-                if (!content) return;
-                await fetch('http://localhost:4000/api/posts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        content, 
-                        authorId: userId,
-                        nickname: userProfile?.nickname,
-                        mood
-                    })
-                });
-                setContent('');
-                fetchPosts();
-                fetchProfile();
+                if (!content || isPosting) return;
+                setIsPosting(true);
+                try {
+                    await fetch('http://localhost:4000/api/posts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            content, 
+                            authorId: userId,
+                            nickname: userProfile?.nickname,
+                            mood
+                        })
+                    });
+                    setContent('');
+                    fetchPosts();
+                    fetchProfile();
+                } catch (err) {
+                    alert('전송 실패. 다시 시도해주세요.');
+                } finally {
+                    setIsPosting(false);
+                }
             };
 
             const refreshNickname = async () => {
@@ -131,19 +145,26 @@
             };
 
             const matchChat = async (postId) => {
-                const res = await fetch('http://localhost:4000/api/chat/match', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ postId, userId })
-                });
-                const data = await res.json();
-                if (data.matched) {
-                    setChatSession(data.sessionId);
-                    socket.emit('join_chat', data.sessionId);
-                    fetchProfile();
-                    alert('매칭 성공! 따뜻한 대화를 시작하세요.');
-                } else {
-                    alert('대기 중입니다... 누군가 당신의 글을 클릭하면 대화가 시작됩니다.');
+                if (isMatching) return;
+                setIsMatching(true);
+                try {
+                    const res = await fetch('http://localhost:4000/api/chat/match', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ postId, userId })
+                    });
+                    const data = await res.json();
+                    if (data.matched) {
+                        setChatSession(data.sessionId);
+                        socket.emit('join_chat', data.sessionId);
+                        fetchProfile();
+                    } else {
+                        alert('따뜻한 대화를 기다리는 중입니다... (1분 내 매칭)');
+                    }
+                } catch (err) {
+                    alert('매칭 중 오류가 발생했습니다.');
+                } finally {
+                    setIsMatching(false);
                 }
             };
 
@@ -263,7 +284,10 @@
                     <header class="py-8 flex justify-between items-center">
                         <div>
                             <h1 class="text-4xl font-black text-orange-600 tracking-tight">소소행</h1>
-                            <p class="text-orange-400 mt-1 font-medium">따뜻한 행복이 머무는 곳</p>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <p class="text-orange-400 font-medium">따뜻한 행복이 머무는 곳</p>
+                                <span class="bg-green-100 text-green-600 text-[10px] px-2 py-0.5 rounded-full font-bold">● {onlineCount}명 접속 중</span>
+                            </div>
                         </div>
                         <button 
                             onClick={() => setView('profile')}
@@ -294,11 +318,13 @@
                         ></textarea>
                         <div class="text-right mt-4 flex justify-between items-center">
                             <span class="text-orange-300 font-bold text-sm">작성자: {userProfile?.nickname}</span>
-                            <button onClick={createPost} class="bg-orange-600 text-white px-8 py-3 rounded-full font-black text-xl shadow-lg hover:bg-orange-700 active:scale-95 transition">행복 나누기</button>
+                            <button onClick={createPost} disabled={isPosting} class={`bg-orange-600 text-white px-8 py-3 rounded-full font-black text-xl shadow-lg transition ${isPosting ? 'opacity-50' : 'hover:bg-orange-700 active:scale-95'}`}>
+                                {isPosting ? '나누는 중...' : '행복 나누기'}
+                            </button>
                         </div>
                     </div>
 
-                    <div class="space-y-8">
+                    <div class="space-y-12">
                         {posts.map(post => {
                             const moodColors = {
                                 happy: 'border-yellow-200 bg-yellow-50/30',
