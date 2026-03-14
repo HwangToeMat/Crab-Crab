@@ -22,7 +22,12 @@
             const [diary, setDiary] = useState("");
             const [timer, setTimer] = useState(1500); // 25 mins default
             const [isTimerRunning, setIsTimerRunning] = useState(false);
+            const [isDarkMode, setIsDarkMode] = useState(false);
             const userId = 1; // Mock user ID
+
+            useEffect(() => {
+                document.body.className = isDarkMode ? 'dark-mode' : '';
+            }, [isDarkMode]);
 
             useEffect(() => {
                 let interval = null;
@@ -56,9 +61,15 @@
             return (
                 <div className="container">
                     <header>
+                        <div style={{ textAlign: 'right', marginBottom: '-30px' }}>
+                            <button onClick={() => setIsDarkMode(!isDarkMode)} style={{ background: 'transparent', boxShadow: 'none', fontSize: '1.2rem' }}>
+                                {isDarkMode ? '🌙' : '☀️'}
+                            </button>
+                        </div>
                         <h1>Work-Crab</h1>
                         <p>게으르지 않게, 하지만 지치지 않게.</p>
                     </header>
+
 
                     <section className="burnout-gauge">
                         <h2>나의 에너지 상태</h2>
