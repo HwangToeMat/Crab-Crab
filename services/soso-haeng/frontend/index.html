@@ -48,6 +48,10 @@
                     setMessages(prev => [...prev, data]);
                 });
 
+                newSocket.on('chat_history', (history) => {
+                    setMessages(history);
+                });
+
                 const timer = setInterval(() => setNow(Date.now()), 1000);
 
                 return () => {
@@ -155,29 +159,52 @@
 
             if (chatSession) {
                 return (
-                    <div class="max-w-md mx-auto p-4 flex flex-col h-screen bg-white">
-                        <header class="flex justify-between items-center py-4 border-b">
-                            <h1 class="text-2xl font-bold text-orange-600">소소한 대화</h1>
-                            <button onClick={() => setChatSession(null)} class="text-gray-500 font-bold p-2 border rounded">대화 종료</button>
+                    <div class="max-w-md mx-auto p-4 flex flex-col h-screen bg-orange-50/50">
+                        <header class="flex justify-between items-center py-4 border-b bg-white px-4 rounded-t-3xl shadow-sm">
+                            <div class="flex flex-col">
+                                <h1 class="text-xl font-bold text-orange-600">따뜻한 소통 중</h1>
+                                <span class="text-xs text-gray-400 font-bold">익명 대화는 1시간 후 사라집니다</span>
+                            </div>
+                            <button onClick={() => {
+                                if(confirm('대화를 종료할까요?')) setChatSession(null);
+                            }} class="text-gray-400 font-bold p-2 hover:text-red-500 transition">닫기</button>
                         </header>
-                        <div class="flex-grow overflow-y-auto py-4 space-y-4">
+                        <div class="flex-grow overflow-y-auto py-6 px-4 space-y-6">
                             {messages.map((m, i) => (
                                 <div key={i} class={`flex ${m.senderId === userId ? 'justify-end' : 'justify-start'}`}>
-                                    <div class={`p-3 rounded-2xl max-w-[80%] text-lg ${m.senderId === userId ? 'bg-orange-500 text-white' : 'bg-gray-100 text-black'}`}>
+                                    <div class={`group relative p-4 rounded-2xl max-w-[85%] text-lg shadow-sm ${m.senderId === userId ? 'bg-orange-500 text-white rounded-tr-none' : 'bg-white text-black rounded-tl-none'}`}>
                                         {m.message}
+                                        <span class={`absolute bottom-[-20px] text-[10px] font-bold ${m.senderId === userId ? 'right-0 text-orange-400' : 'left-0 text-gray-300'}`}>
+                                            {m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                                        </span>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div class="p-4 border-t flex space-x-2">
-                            <input 
-                                value={msgInput} 
-                                onChange={(e) => setMsgInput(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                                placeholder="따뜻한 한마디를 건네보세요..." 
-                                class="flex-grow p-3 border rounded-xl text-lg focus:outline-orange-300"
-                            />
-                            <button onClick={sendMessage} class="bg-orange-600 text-white px-6 py-2 rounded-xl font-bold text-lg">전송</button>
+                        <div class="bg-white p-4 rounded-b-3xl shadow-lg border-t space-y-4">
+                            <div class="flex space-x-2 overflow-x-auto pb-2">
+                                {['👏 대단해요!', '❤️ 공감해요', '🙏 감사해요', '😊 행복하세요', '👍 응원합니다'].map(emoji => (
+                                    <button 
+                                        key={emoji}
+                                        onClick={() => {
+                                            socket.emit('send_message', { sessionId: chatSession, message: emoji, senderId: userId });
+                                        }}
+                                        class="whitespace-nowrap bg-orange-50 text-orange-600 px-3 py-1 rounded-full text-sm font-bold border border-orange-100"
+                                    >
+                                        {emoji}
+                                    </button>
+                                ))}
+                            </div>
+                            <div class="flex space-x-2">
+                                <input 
+                                    value={msgInput} 
+                                    onChange={(e) => setMsgInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                                    placeholder="따뜻한 마음을 전하세요..." 
+                                    class="flex-grow p-4 border-none bg-gray-100 rounded-2xl text-lg focus:ring-2 focus:ring-orange-300 outline-none"
+                                />
+                                <button onClick={sendMessage} class="bg-orange-600 text-white px-6 py-2 rounded-2xl font-black shadow-md hover:bg-orange-700">전송</button>
+                            </div>
                         </div>
                     </div>
                 );

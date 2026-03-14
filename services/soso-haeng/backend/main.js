@@ -168,11 +168,20 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
 
   io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
-    socket.on('join_chat', (sessionId) => {
+    
+    socket.on('join_chat', async (sessionId) => {
       socket.join(sessionId);
+      // Fetch history
+      const history = await client.lRange(`chat_history:${sessionId}`, 0, -1);
+      const messages = history.map(h => JSON.parse(h));
+      socket.emit('chat_history', messages);
     });
-    socket.on('send_message', ({ sessionId, message, senderId }) => {
-      io.to(sessionId).emit('receive_message', { message, senderId });
+
+    socket.on('send_message', async ({ sessionId, message, senderId }) => {
+      const msgData = { message, senderId, timestamp: Date.now() };
+      await client.rPush(`chat_history:${sessionId}`, JSON.stringify(msgData));
+      await client.expire(`chat_history:${sessionId}`, 3600); // 1 hour expiry
+      io.to(sessionId).emit('receive_message', msgData);
     });
   });
 
