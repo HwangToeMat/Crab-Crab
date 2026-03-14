@@ -82,25 +82,43 @@ def create_diary(diary: DiaryCreate, db: Session = Depends(get_db)):
 
 @app.get("/burnout-status/{user_id}")
 def get_burnout_status(user_id: int, db: Session = Depends(get_db)):
-    # Calculate energy based on tasks done and emotion score
+    # Enhanced logic: Consider time of day and task density
     tasks = db.query(Task).filter(Task.user_id == user_id).all()
     diaries = db.query(Diary).filter(Diary.user_id == user_id).all()
     
+    now = datetime.datetime.now()
+    hour_penalty = 0
+    if now.hour > 22 or now.hour < 6:
+        hour_penalty = 20  # Late night work penalty
+    
     total_tasks = len(tasks)
     done_tasks = len([t for t in tasks if t.status == "Done"])
+    todo_tasks = total_tasks - done_tasks
+    
     avg_emotion = sum([d.emotion_score for d in diaries]) / len(diaries) if diaries else 0.5
     
-    energy_level = (done_tasks / total_tasks * 50) + (avg_emotion * 50) if total_tasks > 0 else 50 + (avg_emotion * 50)
+    # Base energy 100
+    energy_level = 100
     
-    status = "Healthy"
-    if energy_level < 30:
-        status = "Warning: Burnout Risk High"
-    elif energy_level < 60:
-        status = "Moderate: Take a rest"
+    # Penalties
+    energy_level -= (todo_tasks * 10)  # Each pending task drains 10 energy
+    energy_level -= hour_penalty
+    energy_level += (avg_emotion * 40) - 20 # Emotion impact (-20 to +20)
+    
+    energy_level = max(0, min(100, energy_level))
+    
+    status = "Great"
+    if energy_level < 25:
+        status = "CRITICAL: Burnout Detected. Stop everything."
+    elif energy_level < 50:
+        status = "Warning: High Stress Level"
+    elif energy_level < 75:
+        status = "Moderate: You need a break soon"
         
     return {
         "user_id": user_id,
-        "energy_level": round(max(0, min(100, energy_level)), 2),
+        "energy_level": round(energy_level, 2),
         "status": status,
-        "recommendation": "Go for a walk!" if energy_level < 60 else "Keep it up!"
+        "recommendation": "Emergency Rest Required!" if energy_level < 30 else "Take a 15-min walk." if energy_level < 60 else "You are doing great!"
     }
+
