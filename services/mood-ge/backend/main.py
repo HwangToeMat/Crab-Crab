@@ -23,11 +23,15 @@ class Challenge(BaseModel):
 
 # Mock Data
 mood_history = []
-daily_challenges = [
-    {"id": 1, "title": "물 한 잔 마시기 (Drink water)", "completed": False},
-    {"id": 2, "title": "1분간 하늘 보기 (Look at the sky)", "completed": False},
-    {"id": 3, "title": "감사한 일 1개 적기 (One thing I'm grateful for)", "completed": False},
+all_challenges = [
+    {"id": 1, "title": "물 한 잔 마시기 (신체)", "completed": False, "category": "Body"},
+    {"id": 2, "title": "1분간 하늘 보기 (마음)", "completed": False, "category": "Mind"},
+    {"id": 3, "title": "감사한 일 1개 적기 (마음)", "completed": False, "category": "Mind"},
+    {"id": 4, "title": "가벼운 스트레칭 5분 (신체)", "completed": False, "category": "Body"},
+    {"id": 5, "title": "친구에게 안부 문자 보내기 (관계)", "completed": False, "category": "Social"},
+    {"id": 6, "title": "오늘의 명언 읽기 (마음)", "completed": False, "category": "Mind"},
 ]
+daily_challenges = all_challenges[:3] # Initial 3
 
 @app.get("/")
 def read_root():
