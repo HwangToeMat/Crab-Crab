@@ -109,11 +109,20 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
     for (const key of keys) {
       const data = await client.get(key);
       if (data) {
-        posts.push(JSON.parse(data));
+        const post = JSON.parse(data);
+        // Check if anyone is waiting in queue
+        const queueKey = `match_queue:${post.id}`;
+        const waitingUser = await client.get(queueKey);
+        post.isWaiting = !!waitingUser;
+        posts.push(post);
       }
     }
-    // Sort by createdAt descending
-    posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // Sort: Waiting posts first, then by createdAt descending
+    posts.sort((a, b) => {
+      if (a.isWaiting && !b.isWaiting) return -1;
+      if (!a.isWaiting && b.isWaiting) return 1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
     res.json(posts);
   });
 
