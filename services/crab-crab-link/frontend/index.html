@@ -47,6 +47,24 @@
             </div>
         </section>
 
+        <!-- [Evolution 2.0] AI Recommendation Section -->
+        <section id="ai-recommendations" class="ai-recommendation-section" aria-labelledby="ai-title">
+            <div class="container">
+                <div class="ai-header">
+                    <span class="ai-badge-label">✨ AI Pick</span>
+                    <h2 id="ai-title">꽃게가 찾아낸 오늘의 추천</h2>
+                </div>
+                <div id="ai-scroll-list" class="ai-scroll-container">
+                    <!-- AI 추천 카드가 여기에 동적으로 추가됩니다 -->
+                    <div class="ai-card skeleton">
+                        <div class="skeleton-text" style="width: 30%;"></div>
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <div class="location-banner" role="status" aria-live="polite">
             <div class="container">
                 <span id="current-location" data-i18n="verifyBanner">📍 내 동네를 인증해주세요.</span>
@@ -99,6 +117,10 @@
     <nav class="mobile-bottom-nav" aria-label="모바일 하단 메뉴">
         <a href="#" class="active" data-i18n="home">홈</a>
         <a href="#" data-i18n="split">스플릿</a>
+        <a href="#" id="ai-assistant-tab" style="color: var(--color-ai-electric-purple); font-weight: 800; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <span style="font-size: 1.2rem;">✨</span>
+            <span style="font-size: 0.7rem;">AI봇</span>
+        </a>
         <a href="#" data-i18n="library">라이브러리</a>
         <a href="#" data-i18n="tips">꿀팁</a>
     </nav>

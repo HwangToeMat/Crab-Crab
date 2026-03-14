@@ -42,3 +42,47 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+
+class WarrantyBase(BaseModel):
+    post_id: int
+    deposit_amount: float
+    insurance_plan: str = "NONE"
+
+class WarrantyCreate(WarrantyBase):
+    lender_id: int
+    borrower_id: Optional[int] = None
+
+class Warranty(WarrantyBase):
+    id: int
+    lender_id: int
+    borrower_id: Optional[int] = None
+    status: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class AmbassadorBase(BaseModel):
+    region: str
+    activity_score: int = 0
+    badges: Optional[str] = "{}" # JSON string
+
+class AmbassadorCreate(AmbassadorBase):
+    user_id: int
+
+class Ambassador(AmbassadorBase):
+    id: int
+    user_id: int
+    status: str
+    appointed_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class AIRecommendation(BaseModel):
+    id: str
+    title: str
+    reason: str  # AI가 추천하는 이유
+    item_type: str  # 'POST', 'TIP', 'EVENT'
+    image_url: Optional[str] = None
+    action_url: str
