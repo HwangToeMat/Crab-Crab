@@ -47,6 +47,18 @@ document.getElementById('theme-toggle').onclick = () => {
     document.body.classList.toggle('dark-mode');
 };
 
+document.querySelectorAll('.tmpl-btn').forEach(btn => {
+    btn.onclick = async () => {
+        const title = btn.getAttribute('data-title');
+        await fetch(`${API_URL}/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title })
+        });
+        fetchData();
+    };
+});
+
 async function toggleTask(id) {
     await fetch(`${API_URL}/tasks/${id}`, { method: 'PATCH' });
     fetchData();
