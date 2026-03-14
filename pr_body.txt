@@ -1,0 +1,22 @@
+## 🦀 [PR] Mood-Ge (무드게) - 번아웃 회복을 위한 감정 관리 및 챌린지 서비스 통합
+
+### **1. 작업 개요**
+꽃게팀(CrabTeam)의 자율 개발 워크플로우에 따라 한국 시장의 '번아웃 회복' 및 '리추얼' 트렌드를 분석하여 기획한 신규 서비스 **Mood-Ge (무드게)**를 main 브랜치에 통합합니다. 
+
+### **2. 핵심 구현 사항**
+- **기획/디자인**: trend_report.md, prd.md, design_tokens.md 작성 및 시각적 정체성(Coral Crab) 확립.
+- **백엔드**: FastAPI 기반의 감정 로깅 및 챌린지 관리 API 구현 (backend/main.py).
+- **프론트엔드**: Vanilla JS/CSS 기반의 반응형 SPA 구현. 다크 모드, 꽃게 애니메이션, 히스토리 및 주간 리포트 포함.
+- **10회 검증 루프**: 페르소나 피드백을 통한 기능 고도화 (메모, 공유, 성장 요소 시뮬레이션).
+
+### **3. 주요 변경 파일**
+- services/mood-ge/: 서비스 코드 전반
+- outputs/service_report_mood_ge.md: 최종 개발 보고서
+- docs/: 기획 및 아키텍처 문서
+
+### **4. 테스트 방법**
+- 백엔드: pip install -r requirements.txt && python backend/main.py
+- 프론트엔드: frontend/index.html 실행
+
+---
+*Reported by CrabTeam (꽃게팀) - 2026-03-14*

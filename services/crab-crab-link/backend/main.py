@@ -20,8 +20,11 @@ app.add_middleware(
 def read_root():
     return {"message": "Welcome to crab-crab-link API"}
 
+import asyncio
+
 @app.get("/posts", response_model=list[schemas.Post])
-def read_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def read_posts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    await asyncio.sleep(1.5) # 인위적 지연 추가
     posts = db.query(models.Post).offset(skip).limit(limit).all()
     for post in posts:
         if post.owner:

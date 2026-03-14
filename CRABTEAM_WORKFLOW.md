@@ -21,14 +21,17 @@ This document outlines the mandatory steps for developing any new service under 
 -   **Step 5**: Commit each cycle result to Git: `feat: Cycle [N] - [Description]`.
 
 ## Phase 4: Final Documentation & Handover
--   Create a comprehensive `outputs/service_report_[service_name].md` in Git.
--   The report must include:
+- Create a comprehensive `outputs/service_report_[service_name].md` in Git.
+- Finalize all changes and **directly merge to the `main` branch**.
+- The report must include:
+
     -   Service Vision & Goals.
     -   Technical Architecture.
     -   Key Features (Implemented vs. Planned).
     -   User Feedback Summary (from the 10 cycles).
     -   Local Setup & Test Guide.
     -   Market Success Potential.
+-   **Final Step**: Merge the integrated feature branch into the `main` branch directly and push to the remote repository. No PR is required.
 
 ## Trigger Command
 -   **"꽃게팀 작업개시"**: This initiates the entire workflow from Phase 1 to Phase 4.

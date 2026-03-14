@@ -6,6 +6,8 @@ class PostBase(BaseModel):
     title: str
     content: str
     post_type: str
+    category: Optional[str] = "기타"
+    image_url: Optional[str] = None
     tags: Optional[str] = None
 
 class PostCreate(PostBase):

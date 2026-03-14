@@ -24,6 +24,8 @@ class Post(Base):
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
     post_type = Column(String)  # 'REQUEST', 'OFFER'
+    category = Column(String, default="기타") # '식재료', '생필품', '도구/공유', '기타'
+    image_url = Column(String)
     tags = Column(String)
     created_at = Column(DateTime, server_default=func.now())
 
