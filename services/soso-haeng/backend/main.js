@@ -49,10 +49,34 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
       
       // Increment author's total likes
       await client.hIncrBy(`user_stats:${post.authorId}`, 'totalLikes', 1);
+      // Increment author's happiness level
+      await client.hIncrBy(`user_stats:${post.authorId}`, 'happinessLevel', 10);
 
       const ttl = await client.ttl(key);
       await client.setEx(key, ttl > 0 ? ttl : 86400, JSON.stringify(post));
       res.json(post);
+    } else {
+      res.status(404).send('Post not found');
+    }
+  });
+
+  // 1.2 Report a Post
+  app.post('/api/posts/:id/report', async (req, res) => {
+    const { id } = req.params;
+    const key = `post:${id}`;
+    const data = await client.get(key);
+    if (data) {
+      const post = JSON.parse(data);
+      post.reports = (post.reports || 0) + 1;
+      
+      if (post.reports >= 5) {
+        await client.del(key);
+        res.json({ message: 'Post deleted due to multiple reports' });
+      } else {
+        const ttl = await client.ttl(key);
+        await client.setEx(key, ttl > 0 ? ttl : 86400, JSON.stringify(post));
+        res.json(post);
+      }
     } else {
       res.status(404).send('Post not found');
     }
@@ -75,12 +99,13 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
       nickname,
       stats: {
         totalLikes: parseInt(stats.totalLikes || 0),
-        totalChats: parseInt(stats.totalChats || 0)
+        totalChats: parseInt(stats.totalChats || 0),
+        happinessLevel: parseInt(stats.happinessLevel || 0)
       }
     });
   });
 
-  // Update matching to increment chat count
+  // 3. Chat Matching
   app.post('/api/chat/match', async (req, res) => {
     const { postId, userId } = req.body;
     const queueKey = `match_queue:${postId}`;
@@ -94,6 +119,10 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
       // Increment chat counts for both
       await client.hIncrBy(`user_stats:${userId}`, 'totalChats', 1);
       await client.hIncrBy(`user_stats:${waitingUser}`, 'totalChats', 1);
+      
+      // Increment happiness level for both
+      await client.hIncrBy(`user_stats:${userId}`, 'happinessLevel', 20);
+      await client.hIncrBy(`user_stats:${waitingUser}`, 'happinessLevel', 20);
 
       res.json({ sessionId, matched: true, partnerId: waitingUser });
     } else {
@@ -124,26 +153,6 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     res.json(posts);
-  });
-
-  // 3. Chat Matching
-  // For MVP, if two people request a match for the same post, they get a sessionId.
-  app.post('/api/chat/match', async (req, res) => {
-    const { postId, userId } = req.body;
-    const queueKey = `match_queue:${postId}`;
-    
-    const waitingUser = await client.get(queueKey);
-    
-    if (waitingUser && waitingUser !== userId) {
-      // Match found!
-      const sessionId = uuidv4();
-      await client.del(queueKey);
-      res.json({ sessionId, matched: true, partnerId: waitingUser });
-    } else {
-      // No match yet, wait in queue for 60 seconds
-      await client.setEx(queueKey, 60, userId);
-      res.json({ matched: false, message: "Waiting for a partner..." });
-    }
   });
 
   io.on('connection', (socket) => {

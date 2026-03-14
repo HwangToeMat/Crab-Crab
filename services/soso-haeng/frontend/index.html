@@ -187,7 +187,7 @@
                             <h2 class="text-3xl font-bold text-gray-800 mb-2">{userProfile?.nickname}</h2>
                             <p class="text-gray-400 mb-10">당신은 따뜻한 행복을 나누는 분이시군요!</p>
                             
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-3 gap-4">
                                 <div class="bg-orange-50 p-6 rounded-3xl">
                                     <p class="text-gray-500 text-sm font-bold mb-2">받은 박수</p>
                                     <p class="text-4xl font-black text-orange-600">{userProfile?.stats.totalLikes}</p>
@@ -195,6 +195,10 @@
                                 <div class="bg-orange-50 p-6 rounded-3xl">
                                     <p class="text-gray-500 text-sm font-bold mb-2">나눈 대화</p>
                                     <p class="text-4xl font-black text-orange-600">{userProfile?.stats.totalChats}</p>
+                                </div>
+                                <div class="bg-orange-50 p-6 rounded-3xl">
+                                    <p class="text-gray-500 text-sm font-bold mb-2">행복 지수</p>
+                                    <p class="text-4xl font-black text-orange-600">{userProfile?.stats.happinessLevel}</p>
                                 </div>
                             </div>
                         </div>
