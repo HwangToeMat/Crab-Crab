@@ -22,13 +22,15 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
 
   // 1. Post Creation (24h expiration)
   app.post('/api/posts', async (req, res) => {
-    const { content, authorId, nickname } = req.body;
+    const { content, authorId, nickname, mood } = req.body;
+    console.log(`[POST] User ${authorId} created post with mood ${mood}`);
     const postId = uuidv4();
     const postData = {
       id: postId,
       content,
       authorId,
       nickname: nickname || "익명",
+      mood: mood || "happy",
       createdAt: new Date().toISOString(),
       likes: 0,
       reports: 0
@@ -36,6 +38,14 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
 
     await client.setEx(`post:${postId}`, 86400, JSON.stringify(postData));
     res.status(201).json(postData);
+  });
+
+  // 1.3 Refresh Nickname
+  app.post('/api/users/:id/nickname/refresh', async (req, res) => {
+    const { id } = req.params;
+    const nickname = nicknames[Math.floor(Math.random() * nicknames.length)];
+    await client.set(`user_nickname:${id}`, nickname);
+    res.json({ nickname });
   });
 
   // 1.1 Like a Post (and track user stats)
@@ -115,6 +125,7 @@ const nicknames = ["행복한 고래", "따뜻한 햇살", "미소 짓는 구름
     if (waitingUser && waitingUser !== userId) {
       const sessionId = uuidv4();
       await client.del(queueKey);
+      console.log(`[MATCH] Success: ${userId} & ${waitingUser} for post ${postId}`);
       
       // Increment chat counts for both
       await client.hIncrBy(`user_stats:${userId}`, 'totalChats', 1);

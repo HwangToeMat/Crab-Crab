@@ -22,6 +22,7 @@
         const App = () => {
             const [posts, setPosts] = useState([]);
             const [content, setContent] = useState('');
+            const [mood, setMood] = useState('happy');
             const [chatSession, setChatSession] = useState(null);
             const [messages, setMessages] = useState([]);
             const [msgInput, setMsgInput] = useState('');
@@ -95,12 +96,19 @@
                     body: JSON.stringify({ 
                         content, 
                         authorId: userId,
-                        nickname: userProfile?.nickname 
+                        nickname: userProfile?.nickname,
+                        mood
                     })
                 });
                 setContent('');
                 fetchPosts();
                 fetchProfile();
+            };
+
+            const refreshNickname = async () => {
+                const res = await fetch(`http://localhost:4000/api/users/${userId}/nickname/refresh`, { method: 'POST' });
+                const data = await res.json();
+                setUserProfile(prev => ({ ...prev, nickname: data.nickname }));
             };
 
             const likePost = async (e, postId) => {
@@ -178,9 +186,12 @@
             if (view === 'profile') {
                 return (
                     <div class="max-w-md mx-auto p-4 bg-white h-screen">
-                        <header class="flex items-center space-x-4 py-8 border-b">
-                            <button onClick={() => setView('feed')} class="text-2xl text-orange-600 font-bold">←</button>
-                            <h1 class="text-3xl font-black text-orange-600">내 정보</h1>
+                        <header class="flex items-center justify-between py-8 border-b">
+                            <div class="flex items-center space-x-4">
+                                <button onClick={() => setView('feed')} class="text-2xl text-orange-600 font-bold">←</button>
+                                <h1 class="text-3xl font-black text-orange-600">내 정보</h1>
+                            </div>
+                            <button onClick={refreshNickname} class="text-sm bg-gray-100 px-3 py-1 rounded-full font-bold text-gray-600">별명 변경</button>
                         </header>
                         <div class="py-12 text-center">
                             <div class="text-6xl mb-6">🌞</div>
@@ -236,6 +247,17 @@
                     </header>
 
                     <div class="bg-white p-6 rounded-3xl shadow-xl shadow-orange-100 mb-10 border border-orange-50">
+                        <div class="flex space-x-2 mb-4">
+                            {['happy', 'grateful', 'calm', 'excited'].map(m => (
+                                <button 
+                                    key={m}
+                                    onClick={() => setMood(m)}
+                                    class={`px-4 py-2 rounded-full text-sm font-bold transition ${mood === m ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-400'}`}
+                                >
+                                    {m === 'happy' ? '😊 행복' : m === 'grateful' ? '🙏 감사' : m === 'calm' ? '🧘 평온' : '🎉 신남'}
+                                </button>
+                            ))}
+                        </div>
                         <textarea 
                             value={content} 
                             onChange={(e) => setContent(e.target.value)}
@@ -250,42 +272,50 @@
                     </div>
 
                     <div class="space-y-8">
-                        {posts.map(post => (
-                            <div key={post.id} class="bg-white p-8 rounded-[2rem] shadow-md border border-orange-100 hover:border-orange-400 transition-all cursor-pointer group" onClick={() => matchChat(post.id)}>
-                                <div class="flex justify-between items-start mb-4">
-                                    <div class="flex flex-col">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-orange-400 font-bold text-sm bg-orange-50 px-3 py-1 rounded-full w-fit">
-                                                {getTimeRemaining(post.createdAt)}
-                                            </span>
-                                            {post.isWaiting && (
-                                                <span class="flex items-center space-x-1 bg-red-50 text-red-500 px-3 py-1 rounded-full text-xs font-black animate-pulse">
-                                                    <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                                                    <span>대화 대기 중!</span>
+                        {posts.map(post => {
+                            const moodColors = {
+                                happy: 'border-yellow-200 bg-yellow-50/30',
+                                grateful: 'border-green-200 bg-green-50/30',
+                                calm: 'border-blue-200 bg-blue-50/30',
+                                excited: 'border-pink-200 bg-pink-50/30'
+                            };
+                            return (
+                                <div key={post.id} class={`p-8 rounded-[2rem] shadow-md border-2 hover:border-orange-400 transition-all cursor-pointer group ${moodColors[post.mood] || 'bg-white border-orange-100'}`} onClick={() => matchChat(post.id)}>
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex flex-col">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="text-orange-400 font-bold text-sm bg-white/80 px-3 py-1 rounded-full w-fit">
+                                                    {getTimeRemaining(post.createdAt)}
                                                 </span>
-                                            )}
+                                                {post.isWaiting && (
+                                                    <span class="flex items-center space-x-1 bg-red-50 text-red-500 px-3 py-1 rounded-full text-xs font-black animate-pulse">
+                                                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                                        <span>대화 대기 중!</span>
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span class="text-gray-400 text-sm mt-2 font-bold">{post.nickname} 님의 행복</span>
                                         </div>
-                                        <span class="text-gray-400 text-sm mt-2 font-bold">{post.nickname} 님의 행복</span>
+                                        <button onClick={(e) => reportPost(e, post.id)} class="text-lg hover:scale-125 transition">🚫</button>
                                     </div>
-                                    <button onClick={(e) => reportPost(e, post.id)} class="text-xs text-gray-300 hover:text-red-400 transition">신고</button>
+                                    <p class="text-2xl text-gray-800 leading-snug font-medium mb-6">{post.content}</p>
+                                    <div class="flex items-center space-x-4 mb-6">
+                                        <button 
+                                            onClick={(e) => likePost(e, post.id)} 
+                                            class="flex items-center space-x-1 bg-orange-50 text-orange-600 px-4 py-2 rounded-full hover:bg-orange-100 transition active:scale-90"
+                                        >
+                                            <span class="text-xl">👏</span>
+                                            <span class="font-bold">{post.likes || 0}</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex justify-center">
+                                        <span class={`w-full text-center py-4 rounded-2xl font-black text-lg transition ${post.isWaiting ? 'bg-red-500 text-white shadow-lg shadow-red-100 ring-4 ring-red-50 animate-bounce' : 'bg-orange-600 text-white group-hover:bg-orange-700'}`}>
+                                            {post.isWaiting ? '즉시 대화 참여하기!' : '함께 기뻐하기 & 대화'}
+                                        </span>
+                                    </div>
                                 </div>
-                                <p class="text-2xl text-gray-800 leading-snug font-medium mb-6">{post.content}</p>
-                                <div class="flex items-center space-x-4 mb-6">
-                                    <button 
-                                        onClick={(e) => likePost(e, post.id)} 
-                                        class="flex items-center space-x-1 bg-orange-50 text-orange-600 px-4 py-2 rounded-full hover:bg-orange-100 transition active:scale-90"
-                                    >
-                                        <span class="text-xl">👏</span>
-                                        <span class="font-bold">{post.likes || 0}</span>
-                                    </button>
-                                </div>
-                                <div class="flex justify-center">
-                                    <span class={`w-full text-center py-4 rounded-2xl font-black text-lg transition ${post.isWaiting ? 'bg-red-500 text-white shadow-lg shadow-red-100 ring-4 ring-red-50 animate-bounce' : 'bg-orange-600 text-white group-hover:bg-orange-700'}`}>
-                                        {post.isWaiting ? '즉시 대화 참여하기!' : '함께 기뻐하기 & 대화'}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             );
