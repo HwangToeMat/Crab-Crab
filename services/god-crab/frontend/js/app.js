@@ -43,8 +43,29 @@ function renderCrab(crab) {
     }
 }
 
-document.getElementById('theme-toggle').onclick = () => {
-    document.body.classList.toggle('dark-mode');
+const i18n = {
+    ko: { title: "갓게 (God-Crab)", placeholder: "새로운 습관을 입력하세요...", add: "+", water: "💧 물", vitamins: "💊 영양제", reading: "📖 독서", meditation: "🧘 명상" },
+    en: { title: "God-Crab", placeholder: "Enter a new habit...", add: "+", water: "💧 Water", vitamins: "💊 Vitamin", reading: "📖 Reading", meditation: "🧘 Zen" }
+};
+let currentLang = 'ko';
+
+document.getElementById('lang-toggle').onclick = () => {
+    currentLang = currentLang === 'ko' ? 'en' : 'ko';
+    document.getElementById('lang-toggle').textContent = currentLang === 'ko' ? '🌐 EN' : '🌐 KO';
+    updateLanguage();
+};
+
+function updateLanguage() {
+    document.querySelector('[data-i18n="title"]').textContent = i18n[currentLang].title;
+    document.getElementById('new-task-title').placeholder = i18n[currentLang].placeholder;
+}
+
+document.getElementById('rename-btn').onclick = async () => {
+    const newName = prompt("New Crab Name?");
+    if (newName) {
+        // Mock update
+        document.getElementById('crab-name').textContent = newName;
+    }
 };
 
 document.querySelectorAll('.tmpl-btn').forEach(btn => {

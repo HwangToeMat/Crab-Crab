@@ -10,13 +10,17 @@
     <div id="app">
         <header>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h1><span class="crab-icon">🦀</span> 갓게 (God-Crab)</h1>
-                <button id="theme-toggle" style="background:none; font-size: 1.5rem;">🌓</button>
+                <h1><span class="crab-icon">🦀</span> <span data-i18n="title">갓게 (God-Crab)</span></h1>
+                <div>
+                    <button id="lang-toggle" style="background:none; font-size: 1rem;">🌐 EN</button>
+                    <button id="theme-toggle" style="background:none; font-size: 1.5rem;">🌓</button>
+                </div>
             </div>
             <div id="crab-info">
-                <span id="crab-name">크래비</span> (LV.<span id="crab-level">1</span>)
+                <span id="crab-name">크래비</span> <button id="rename-btn" style="padding: 2px 5px; font-size: 0.7rem;">✏️</button> (LV.<span id="crab-level">1</span>)
                 <div class="progress-bar"><div id="crab-exp" style="width: 40%;"></div></div>
                 <p id="crab-saying" style="font-style: italic; color: var(--primary); margin-top: 10px;">"오늘도 껍질을 깨고 성장해봐요!"</p>
+                <div id="badges" style="margin-top: 10px; font-size: 1.2rem;">🏅 🐣</div>
             </div>
         </header>
 

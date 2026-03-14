@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>꽃게메이트 (Crab-Mate)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>🦀 꽃게메이트</h1>
+            <p>오늘 당신의 기분에 딱 맞는 메이트를 찾아보세요.</p>
+        </header>
+
+        <main>
+            <section id="mood-input-section">
+                <div class="card">
+                    <h2>오늘 기분은 어때요?</h2>
+                    <p>당신의 감정을 한 문장으로 들려주세요.</p>
+                    <textarea id="mood-text" placeholder="예: 오늘 날씨가 좋아서 기분이 정말 행복해!"></textarea>
+                    <button id="analyze-btn" class="primary-btn">분석 및 위로받기</button>
+                </div>
+            </section>
+
+            <section id="result-section" class="hidden">
+                <div class="card result-card">
+                    <div id="mood-emoji" class="emoji">😐</div>
+                    <h2 id="mood-category-title">감정 분석 결과</h2>
+                    <p id="crab-message" class="message"></p>
+                    <div id="sentiment-meter-container">
+                        <div id="sentiment-meter-fill"></div>
+                    </div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>🎁 당신을 위한 추천 액티비티</h3>
+                    <div id="activity-list" class="activity-grid">
+                        <!-- 액티비티 항목들이 여기에 동적으로 추가됩니다 -->
+                    </div>
+                </div>
+                
+                <button id="reset-btn" class="secondary-btn">다시 입력하기</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 CrabTeam. 모든 권리 보유.</p>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

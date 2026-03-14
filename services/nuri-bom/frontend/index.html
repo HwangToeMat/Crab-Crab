@@ -150,6 +150,7 @@
                                         {mission.author_nickname}
                                         <span className="ml-1 text-[10px] bg-blue-500 text-white px-1 rounded">인증</span>
                                     </span>
+                                    <span className="text-[10px] text-orange-500 font-bold">봄기운 {mission.manner_temp || 36.5}°C</span>
                                 </div>
                             </div>
                             <span className="text-md font-black text-spring-green">함께하기 ></span>
@@ -169,21 +170,36 @@
                         <div className="flex-grow overflow-y-auto p-4 space-y-4">
                             {messages.map((m, i) => (
                                 <div key={i} className={`flex ${m.senderId === user.id ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[80%] p-4 rounded-2xl ${m.senderId === user.id ? 'spring-green text-white rounded-tr-none' : 'bg-slate-100 text-slate-800 rounded-tl-none'}`}>
+                                    <div className={`max-w-[80%] p-4 rounded-2xl ${m.senderId === user.id ? 'spring-green text-white rounded-tr-none' : 'bg-slate-100 text-slate-800 rounded-tl-none shadow-sm'}`}>
                                         {m.text}
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="p-4 border-t flex space-x-2">
-                            <input 
-                                value={msgInput} 
-                                onChange={(e) => setMsgInput(e.target.value)} 
-                                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                                placeholder="메시지를 입력하세요" 
-                                className="flex-grow p-3 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-green-300"
-                            />
-                            <button onClick={sendMessage} className="spring-green text-white px-6 py-2 rounded-xl font-bold">전송</button>
+                        <div className="p-4 bg-white border-t">
+                            <div className="flex space-x-2 mb-3 overflow-x-auto pb-2 scrollbar-hide">
+                                {['🌱 좋아요', '🙏 감사합니다', '🤝 지금 갈게요', '✨ 응원해요'].map(emoji => (
+                                    <button 
+                                        key={emoji}
+                                        onClick={() => {
+                                            socket.emit('send_message', { roomId: chatRoom, senderId: user.id, text: emoji });
+                                        }}
+                                        className="whitespace-nowrap bg-slate-50 border border-slate-100 px-3 py-1 rounded-full text-xs font-bold text-slate-600 hover:bg-green-50 hover:border-green-200"
+                                    >
+                                        {emoji}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="flex space-x-2">
+                                <input 
+                                    value={msgInput} 
+                                    onChange={(e) => setMsgInput(e.target.value)} 
+                                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                                    placeholder="따뜻한 대화를 나눠보세요" 
+                                    className="flex-grow p-4 bg-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-green-300 text-md"
+                                />
+                                <button onClick={sendMessage} className="spring-green text-white px-6 py-2 rounded-2xl font-black shadow-lg">전송</button>
+                            </div>
                         </div>
                     </div>
                 );
