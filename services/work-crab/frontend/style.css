@@ -1,10 +1,13 @@
 :root {
     --primary-blue: #1A237E;
+    --primary-light: #534BAE;
     --crab-orange: #FF5722;
-    --bg-color: #F5F5F5;
-    --text-color: #333;
+    --crab-light: #FF8A50;
+    --bg-color: #F8F9FA;
+    --text-color: #212121;
     --success-green: #4CAF50;
     --card-bg: #FFFFFF;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 body {
@@ -13,56 +16,58 @@ body {
     color: var(--text-color);
     margin: 0;
     padding: 0;
+    line-height: 1.6;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
 }
 
 header {
-    background-color: var(--primary-blue);
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
     color: white;
-    padding: 40px 20px;
+    padding: 50px 20px;
     text-align: center;
-    border-radius: 0 0 20px 20px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 0 0 30px 30px;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
 }
 
 header h1 {
     margin: 0;
-    font-size: 2.5rem;
-    letter-spacing: -1px;
-}
-
-header p {
-    opacity: 0.8;
-    margin-top: 10px;
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -1.5px;
 }
 
 .burnout-gauge {
     background: var(--card-bg);
-    padding: 30px;
-    border-radius: 15px;
+    padding: 25px;
+    border-radius: 20px;
     text-align: center;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.burnout-gauge:hover {
+    transform: translateY(-5px);
 }
 
 .gauge-container {
-    width: 200px;
-    height: 100px;
+    width: 180px;
+    height: 90px;
     margin: 20px auto;
     position: relative;
     overflow: hidden;
 }
 
 .gauge-bar {
-    width: 200px;
-    height: 200px;
-    border: 20px solid #eee;
+    width: 180px;
+    height: 180px;
+    border: 15px solid #EDEFF2;
     border-radius: 50%;
     position: absolute;
     top: 0;
@@ -71,85 +76,42 @@ header p {
 }
 
 .gauge-progress {
-    width: 200px;
-    height: 200px;
-    border: 20px solid var(--crab-orange);
+    width: 180px;
+    height: 180px;
+    border: 15px solid var(--crab-orange);
     border-radius: 50%;
     position: absolute;
     top: 0;
     left: 0;
     box-sizing: border-box;
     clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
-    transform: rotate(45deg); /* Dynamic */
-    transition: transform 1s ease;
-}
-
-.tasks-section, .diary-section {
-    margin-bottom: 30px;
-}
-
-h2 {
-    color: var(--primary-blue);
-    border-left: 5px solid var(--crab-orange);
-    padding-left: 15px;
-    margin-bottom: 20px;
+    transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .task-card {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 15px;
+    padding: 18px;
+    border-radius: 16px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(0,0,0,0.03);
 }
-
-.task-card:hover {
-    transform: translateY(-2px);
-}
-
-.task-info h3 {
-    margin: 0;
-    font-size: 1.1rem;
-}
-
-.priority-tag {
-    font-size: 0.8rem;
-    padding: 4px 8px;
-    border-radius: 5px;
-    color: white;
-    margin-top: 5px;
-    display: inline-block;
-}
-
-.priority-high { background-color: #f44336; }
-.priority-mid { background-color: #ff9800; }
-.priority-low { background-color: #2196f3; }
 
 button {
-    background-color: var(--crab-orange);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
+    background: linear-gradient(45deg, var(--crab-orange), var(--crab-light));
+    box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+    transition: all 0.2s ease;
 }
 
-button:hover {
-    background-color: #e64a19;
+button:active {
+    transform: scale(0.95);
 }
 
-.diary-input {
-    width: 100%;
-    height: 100px;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    box-sizing: border-box;
-    margin-bottom: 15px;
-    font-family: inherit;
+@media (max-width: 480px) {
+    header h1 { font-size: 2rem; }
+    .container { padding: 10px; }
 }
+
