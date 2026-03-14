@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crab-Crab Care v2 | 실버 케어 AI</title>
+    <title>Crab-Crab Care v3 | 선제적 케어 AI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- v3: Medication Modal -->
+    <div id="med-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="empathy-title">🦀 할아버지, 소중한 건강을 챙길 시간이에요!</h2>
+            <p id="med-message" class="med-text">지금 약을 드시면 제가 더 든든할 것 같아요.</p>
+            <div class="pill-icon">💊</div>
+            <button id="pill-confirm-btn" class="pill-btn">약을 잘 챙겨 먹었어요</button>
+        </div>
+    </div>
+
     <div class="container">
         <header>
-            <h1>🦀 Crab-Crab Care <span class="version-tag">v2</span></h1>
+            <h1>🦀 Crab-Crab Care <span class="version-tag">v3</span></h1>
             <div class="header-right">
                 <div id="family-status" class="status-connected">👨‍👩‍👧 가족 연결됨</div>
                 <div id="status-indicator" class="status-normal">상태: 정상</div>
@@ -19,35 +29,36 @@
         <main>
             <section class="dashboard">
                 <div class="card health">
-                    <h3>오늘의 건강</h3>
+                    <h3>오늘의 건강 <span id="gait-badge" class="badge-hidden">보행 이상 감지</span></h3>
                     <div class="stats">
                         <div class="stat"><span class="label">심박수:</span> <span id="heart-rate">--</span> bpm</div>
                         <div class="stat"><span class="label">걸음수:</span> <span id="steps">--</span> 보</div>
-                        <div class="stat"><span class="label">수면시간:</span> <span id="sleep">--</span> 시간</div>
+                        <div class="stat"><span class="label">보행속도:</span> <span id="speed">--</span> km/h</div>
                     </div>
                 </div>
 
                 <div class="card alerts">
-                    <h3>알림 및 소식</h3>
+                    <h3>지능형 알림</h3>
                     <ul id="alert-list">
-                        <li>알림을 불러오는 중...</li>
+                        <li>데이터 분석 중...</li>
                     </ul>
                 </div>
             </section>
 
             <section class="trends-section">
                 <div class="card trends">
-                    <h3>지난 7일간의 변화</h3>
+                    <h3>보행 패턴 및 추이 (지난 7일)</h3>
                     <div id="trends-container" class="trends-grid">
                         <!-- Trends will be loaded here -->
                     </div>
+                    <div class="trend-legend">● 보행 속도 (높을수록 건강)</div>
                 </div>
             </section>
 
             <section class="chat-section">
                 <h3>AI 말벗 (Crab-Care)</h3>
                 <div id="chat-window" class="chat-window">
-                    <div class="message system">반가워요! 이야기를 나눠볼까요?</div>
+                    <div class="message system">안녕하세요 할아버지! 오늘도 건강하게 시작해볼까요?</div>
                 </div>
                 <div class="chat-input-area">
                     <input type="text" id="user-input" placeholder="하고 싶은 말을 입력하세요...">

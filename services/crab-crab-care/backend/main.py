@@ -1,10 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timedelta
 import random
 
-app = FastAPI(title="Crab-Crab Care API v2", description="Improved AI Agent for Silver Care")
+app = FastAPI(title="Crab-Crab Care API v3", description="Predictive & Empathetic AI Agent for Silver Care")
 
 # Models
 class ChatRequest(BaseModel):
@@ -23,15 +23,22 @@ class HealthStatus(BaseModel):
     sleep_hours: float
     status: str # Normal, Alert, Critical
     caregiver_notified: bool = False
+    gait_alert: bool = False # v3: Predictive fall prevention
 
 class DailyStat(BaseModel):
     date: str
     steps: int
     avg_heart_rate: int
+    walking_speed: float # v3: km/h
 
 class HealthTrend(BaseModel):
     user_id: str
     trends: List[DailyStat]
+
+class MedicationUpdate(BaseModel):
+    user_id: str
+    pill_name: str
+    taken: bool
 
 # Mock Data
 MOCK_RESPONSES = [
@@ -42,40 +49,38 @@ MOCK_RESPONSES = [
     "할머니, 옛날 이야기 좀 더 해주세요. 정말 흥미로워요!"
 ]
 
-MOODS = ["Happy", "Neutral", "Lonely", "Energetic"]
-
 @app.get("/")
 async def root():
-    return {"message": "Welcome to Crab-Crab Care API v2"}
+    return {"message": "Welcome to Crab-Crab Care API v3 - Predictive Care Active"}
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat_with_agent(request: ChatRequest):
     response = random.choice(MOCK_RESPONSES)
-    mood = random.choice(MOODS)
-    return ChatResponse(response=response, mood_detected=mood, timestamp=datetime.now())
+    return ChatResponse(response=response, mood_detected="Happy", timestamp=datetime.now())
 
 @app.get("/health-status/{user_id}", response_model=HealthStatus)
 async def get_health_status(user_id: str):
-    heart_rate = random.randint(65, 110) # Increased range for testing alerts
+    heart_rate = random.randint(65, 110)
     steps = random.randint(1000, 8000)
     sleep_hours = round(random.uniform(5.0, 8.5), 1)
     
-    status = "Normal"
-    caregiver_notified = False
+    # v3: Simulated Radar Fall Sensor Logic
+    is_fall_detected = random.random() < 0.05 # 5% chance for testing
+    status = "Critical" if is_fall_detected or heart_rate > 105 else "Normal"
     
-    if heart_rate > 100:
-        status = "Critical"
-        caregiver_notified = True
-    elif heart_rate > 90 or sleep_hours < 6.0:
+    # v3: Simulated Gait Alert
+    gait_alert = random.random() < 0.1 # 10% chance
+    if gait_alert and status == "Normal":
         status = "Alert"
-    
+
     return HealthStatus(
         user_id=user_id,
         heart_rate=heart_rate,
         steps=steps,
         sleep_hours=sleep_hours,
         status=status,
-        caregiver_notified=caregiver_notified
+        caregiver_notified=(status == "Critical"),
+        gait_alert=gait_alert
     )
 
 @app.get("/health-trends/{user_id}", response_model=HealthTrend)
@@ -87,24 +92,25 @@ async def get_health_trends(user_id: str):
         trends.append(DailyStat(
             date=date_str,
             steps=random.randint(2000, 7000),
-            avg_heart_rate=random.randint(70, 85)
+            avg_heart_rate=random.randint(70, 85),
+            walking_speed=round(random.uniform(3.0, 4.5), 2)
         ))
     return HealthTrend(user_id=user_id, trends=trends)
 
 @app.get("/alerts")
 async def get_active_alerts():
+    # v3: Dynamic Medication Alert
     return {
         "alerts": [
-            {"type": "Medicine", "message": "점심 약 복용 시간입니다.", "time": "13:00"},
-            {"type": "Health", "message": "어제보다 활동량이 적습니다. 가벼운 스트레칭은 어떨까요?", "time": "14:30"}
+            {"type": "Medicine", "message": "💊 혈압약 드실 시간입니다. 할아버지의 소중한 건강을 지켜주세요!", "time": "현재", "urgent": True},
+            {"type": "Health", "message": "최근 보행 속도가 조금 느려졌습니다. 무리하지 마세요.", "time": "분석 결과", "urgent": False}
         ]
     }
 
-@app.post("/caregiver/notification")
-async def notify_caregiver(user_id: str, message: str):
-    # Mocking a push notification
-    print(f"NOTIFICATION SENT TO CAREGIVER of {user_id}: {message}")
-    return {"status": "success", "message": f"Notification sent: {message}"}
+@app.post("/medication/confirm")
+async def confirm_medication(update: MedicationUpdate):
+    print(f"MEDICATION CONFIRMED: {update.user_id} took {update.pill_name}")
+    return {"status": "success", "message": "가족들에게도 안심하라고 전해드릴게요!"}
 
 if __name__ == "__main__":
     import uvicorn
