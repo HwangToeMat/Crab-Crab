@@ -30,7 +30,15 @@ ACTIVITIES = [
     Activity(id=3, title="슬픈 영화 정주행", description="감정을 솔직하게 표현하고 털어내는 시간.", category="Sad"),
     Activity(id=4, title="액티브한 조깅", description="땀을 흘리며 스트레스를 날려버리세요.", category="Angry"),
     Activity(id=5, title="로컬 북카페 탐방", description="새로운 영감을 얻고 느슨한 연대를 경험하세요.", category="Happy"),
+    Activity(id=6, title="명상과 호흡", description="심호흡을 통해 내면의 평화를 유지하세요.", category="Neutral"),
+    Activity(id=7, title="매운 음식 먹기", description="스트레스를 확 날려버리는 화끈한 맛!", category="Angry"),
+    Activity(id=8, title="일기 쓰기", description="오늘의 감정을 글로 정리하며 마음을 정리해요.", category="Sad"),
 ]
+
+@app.get("/api/stats")
+async def get_stats():
+    """현재 활동 중인 메이트 수 (Mock)"""
+    return {"active_users": random.randint(100, 500)}
 
 @app.get("/api/health")
 async def health_check():

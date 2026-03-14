@@ -10,9 +10,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const crabMessage = document.getElementById('crab-message');
     const activityList = document.getElementById('activity-list');
     const sentimentMeter = document.getElementById('sentiment-meter-fill');
+    const activeCount = document.getElementById('active-count');
 
     // API 연동 설정 (로컬 환경 기준)
     const API_BASE_URL = 'http://localhost:8000/api';
+
+    // 초기 통계 데이터 가져오기
+    async function fetchStats() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/stats`);
+            const data = await response.json();
+            activeCount.textContent = data.active_users;
+        } catch (error) {
+            activeCount.textContent = '여러';
+        }
+    }
+    fetchStats();
 
     analyzeBtn.addEventListener('click', async () => {
         const text = moodInput.value.trim();
