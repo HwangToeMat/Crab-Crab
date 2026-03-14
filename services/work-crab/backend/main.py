@@ -88,7 +88,7 @@ async def create_diary(diary: DiaryCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/burnout-status/{user_id}")
-def get_burnout_status(user_id: int, db: Session = Depends(get_db)):
+async def get_burnout_status(user_id: int, db: Session = Depends(get_db)):
     # Enhanced logic: Consider time of day and task density
     tasks = db.query(Task).filter(Task.user_id == user_id).all()
     diaries = db.query(Diary).filter(Diary.user_id == user_id).all()

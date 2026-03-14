@@ -110,17 +110,45 @@ button:active {
     transform: scale(0.95);
 }
 
-@media (max-width: 480px) {
-    header h1 { font-size: 2.2rem; }
-    .container { padding: 12px; }
+/* Activity Log Styles */
+.activity-log-section {
+    margin-top: 25px;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
 }
 
-/* Dark Mode Support */
-body.dark-mode {
-    --bg-color: #121212;
-    --text-color: #E0E0E0;
-    --card-bg: #1E1E1E;
-    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+.log-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0F0F0;
+    font-size: 0.9rem;
+}
+
+.log-item:last-child { border-bottom: none; }
+
+.log-type {
+    font-weight: bold;
+    color: var(--primary-blue);
+    width: 100px;
+}
+
+.log-time {
+    color: #999;
+    font-size: 0.8rem;
+    margin-left: auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.task-card, .burnout-gauge, .activity-log-section {
+    animation: fadeIn 0.5s ease forwards;
 }
 
 body.dark-mode h2 {

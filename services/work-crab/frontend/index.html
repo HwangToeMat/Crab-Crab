@@ -29,37 +29,23 @@
                 share: "📸 오늘의 갓생 인스타 공유하기",
                 save: "오늘의 회고 저장하기",
                 achievements: "획득한 업적",
-                stats: "주간 활동 추이"
-            },
-            en: {
+                stats: "주간 활동 추이",
+                activity: "최근 활동 내역"
+                },
+                en: {
                 title: "Work-Crab",
-                slogan: "Not lazy, but not exhausted.",
-                energy: "My Energy Status",
-                tasks: "Today's Tasks",
-                diary: "Emotion Review",
-                voice: "🎤 Voice",
-                focus: "Start Focus",
-                break: "Short Break",
-                share: "📸 Share on Instagram",
-                save: "Save Daily Review",
-                achievements: "Achievements",
-                stats: "Weekly Activity"
-            },
-            ja: {
+                // ...
+                stats: "Weekly Activity",
+                activity: "Recent Activity"
+                },
+                ja: {
                 title: "ワーククラブ",
-                slogan: "怠けず、しかし疲れず。",
-                energy: "マイエネルギーステータス",
-                tasks: "今日のタスク",
-                diary: "感情回顧",
-                voice: "🎤 音声入力",
-                focus: "集中開始",
-                break: "短い休憩",
-                share: "📸 インスタで共有する",
-                save: "今日の振り返りを保存",
-                achievements: "獲得した実績",
-                stats: "週間活動推移"
-            }
-        };
+                // ...
+                stats: "週間活動推移",
+                activity: "最近の活動履歴"
+                }
+                };
+
 
         function App() {
             const [lang, setLang] = useState('ko');
@@ -237,12 +223,27 @@
                         >
                             {t.share}
                         </button>
-                    </section>
+                        </section>
 
+                        <section className="activity-log-section">
+                        <h2>{t.activity}</h2>
+                        {[
+                            { id: 1, type: "Task", desc: "기획서 작성 완료", time: "10:30 AM" },
+                            { id: 2, type: "Break", desc: "15분 휴식", time: "11:15 AM" },
+                            { id: 3, type: "Diary", desc: "오전 감정 기록", time: "11:35 AM" }
+                        ].map(log => (
+                            <div key={log.id} className="log-item">
+                                <span className="log-type">[{log.type}]</span>
+                                <span className="log-desc">{log.desc}</span>
+                                <span className="log-time">{log.time}</span>
+                            </div>
+                        ))}
+                        </section>
 
-                </div>
-            );
-        }
+                        </div>
+                        );
+                        }
+
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
