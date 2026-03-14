@@ -79,6 +79,20 @@
                 fetchPosts();
             };
 
+            const likePost = async (e, postId) => {
+                e.stopPropagation();
+                await fetch(`http://localhost:4000/api/posts/${postId}/like`, { method: 'POST' });
+                fetchPosts();
+            };
+
+            const reportPost = async (e, postId) => {
+                e.stopPropagation();
+                if (confirm('이 글을 신고하시겠습니까? 5회 이상 신고된 글은 자동으로 삭제됩니다.')) {
+                    await fetch(`http://localhost:4000/api/posts/${postId}/report`, { method: 'POST' });
+                    fetchPosts();
+                }
+            };
+
             const matchChat = async (postId) => {
                 const res = await fetch('http://localhost:4000/api/chat/match', {
                     method: 'POST',
@@ -162,8 +176,18 @@
                                     <span class="text-orange-400 font-bold text-sm bg-orange-50 px-3 py-1 rounded-full">
                                         {getTimeRemaining(post.createdAt)}
                                     </span>
+                                    <button onClick={(e) => reportPost(e, post.id)} class="text-xs text-gray-300 hover:text-red-400 transition">신고</button>
                                 </div>
                                 <p class="text-2xl text-gray-800 leading-snug font-medium mb-6">{post.content}</p>
+                                <div class="flex items-center space-x-4 mb-6">
+                                    <button 
+                                        onClick={(e) => likePost(e, post.id)} 
+                                        class="flex items-center space-x-1 bg-orange-50 text-orange-600 px-4 py-2 rounded-full hover:bg-orange-100 transition active:scale-90"
+                                    >
+                                        <span class="text-xl">👏</span>
+                                        <span class="font-bold">{post.likes || 0}</span>
+                                    </button>
+                                </div>
                                 <div class="flex justify-center">
                                     <span class="w-full text-center bg-orange-600 text-white py-4 rounded-2xl font-black text-lg group-hover:bg-orange-700 transition">
                                         함께 기뻐하기 & 대화

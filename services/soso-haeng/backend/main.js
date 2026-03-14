@@ -27,15 +27,48 @@ async function startServer() {
       content,
       authorId,
       createdAt: new Date().toISOString(),
+      likes: 0,
+      reports: 0
     };
 
-    // Store as a key with 24-hour TTL (86400 seconds)
     await client.setEx(`post:${postId}`, 86400, JSON.stringify(postData));
-    
-    // Also add to a general index of posts (not ideal for TTL, but okay for MVP with manual cleanup or scanning)
-    // Actually, we'll just use SCAN in /api/posts to find active keys
-    
     res.status(201).json(postData);
+  });
+
+  // 1.1 Like a Post
+  app.post('/api/posts/:id/like', async (req, res) => {
+    const { id } = req.params;
+    const key = `post:${id}`;
+    const data = await client.get(key);
+    if (data) {
+      const post = JSON.parse(data);
+      post.likes = (post.likes || 0) + 1;
+      const ttl = await client.ttl(key);
+      await client.setEx(key, ttl > 0 ? ttl : 86400, JSON.stringify(post));
+      res.json(post);
+    } else {
+      res.status(404).send('Post not found');
+    }
+  });
+
+  // 1.2 Report a Post
+  app.post('/api/posts/:id/report', async (req, res) => {
+    const { id } = req.params;
+    const key = `post:${id}`;
+    const data = await client.get(key);
+    if (data) {
+      const post = JSON.parse(data);
+      post.reports = (post.reports || 0) + 1;
+      if (post.reports >= 5) {
+        await client.del(key);
+        return res.json({ removed: true });
+      }
+      const ttl = await client.ttl(key);
+      await client.setEx(key, ttl > 0 ? ttl : 86400, JSON.stringify(post));
+      res.json(post);
+    } else {
+      res.status(404).send('Post not found');
+    }
   });
 
   // 2. Home Feed (Fetch active posts)
