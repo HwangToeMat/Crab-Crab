@@ -39,3 +39,17 @@ class Diary(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     
     user = relationship("User", back_populates="diaries")
+
+class Achievement(Base):
+    __tablename__ = "achievements"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String)
+    icon = Column(String) # Emoji or SVG path
+    unlocked_at = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    user = relationship("User", back_populates="achievements")
+
+# Update User model relationship
+User.achievements = relationship("Achievement", back_populates="user")
+

@@ -111,7 +111,37 @@ button:active {
 }
 
 @media (max-width: 480px) {
-    header h1 { font-size: 2rem; }
-    .container { padding: 10px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 12px; }
 }
+
+/* Dark Mode Support */
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #E0E0E0;
+    --card-bg: #1E1E1E;
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+body.dark-mode h2 {
+    color: var(--crab-light);
+}
+
+body.dark-mode .task-card, 
+body.dark-mode .burnout-gauge,
+body.dark-mode .timer-section {
+    background-color: var(--card-bg);
+    border-color: rgba(255,255,255,0.05);
+}
+
+body.dark-mode .gauge-bar {
+    border-color: #333;
+}
+
+body.dark-mode .diary-input {
+    background-color: #2C2C2C;
+    color: white;
+    border-color: #444;
+}
+
 
