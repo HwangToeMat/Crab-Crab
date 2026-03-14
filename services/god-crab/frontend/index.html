@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>갓게 (God-Crab) - 당신의 갓생 파트너</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>🦀 갓게 (God-Crab)</h1>
+            <div id="crab-info">
+                <span id="crab-name">크래비</span> (LV.<span id="crab-level">1</span>)
+                <div class="progress-bar"><div id="crab-exp" style="width: 40%;"></div></div>
+            </div>
+        </header>
+
+        <main>
+            <section id="habit-list">
+                <h2>오늘의 갓생 할 일</h2>
+                <ul id="tasks"></ul>
+                <div class="add-task">
+                    <input type="text" id="new-task-title" placeholder="새로운 습관을 입력하세요...">
+                    <button id="add-task-btn">+</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>

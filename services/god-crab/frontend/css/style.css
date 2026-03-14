@@ -1,0 +1,108 @@
+:root {
+    --primary: #FF6B6B;
+    --secondary: #4D96FF;
+    --success: #06D6A0;
+    --warning: #FFD166;
+    --bg: #F8F9FA;
+    --text: #333;
+}
+
+body {
+    font-family: 'Pretendard', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+#app {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+header h1 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#crab-info {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+#crab-exp {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+#habit-list h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+li:hover {
+    border-color: var(--primary);
+}
+
+li.completed {
+    background: #f0fff4;
+    text-decoration: line-through;
+    color: #999;
+}
+
+.add-task {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
