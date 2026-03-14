@@ -28,6 +28,7 @@ async function initDB() {
       id TEXT PRIMARY KEY,
       nickname TEXT,
       location TEXT,
+      is_verified INTEGER DEFAULT 0,
       manner_temp REAL DEFAULT 36.5,
       preferences TEXT
     );
@@ -38,6 +39,7 @@ async function initDB() {
       author_nickname TEXT,
       type TEXT,
       content TEXT,
+      distance REAL DEFAULT 0.5,
       status TEXT DEFAULT 'open',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );

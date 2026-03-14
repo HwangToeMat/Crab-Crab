@@ -39,6 +39,21 @@ header h1 {
     color: var(--primary);
     text-align: center;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.crab-icon {
+    display: inline-block;
+    animation: crab-dance 2s infinite ease-in-out;
+}
+
+@keyframes crab-dance {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    25% { transform: rotate(-10deg) translateX(-5px); }
+    75% { transform: rotate(10deg) translateX(5px); }
 }
 
 #crab-info {
@@ -92,6 +107,13 @@ li.completed {
     background: #f0fff4;
     text-decoration: line-through;
     color: #999;
+    animation: pop 0.3s ease-out;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .add-task {
