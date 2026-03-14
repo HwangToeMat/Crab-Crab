@@ -341,13 +341,18 @@
                         </button>
                     </header>
 
-                    <div class="bg-white p-6 rounded-3xl shadow-xl shadow-orange-100 mb-10 border border-orange-50">
-                        <div class="flex space-x-2 mb-4">
+                    <div className="bg-white p-8 rounded-[3rem] shadow-2xl shadow-orange-100 mb-12 border-4 border-orange-50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100 rounded-full -mr-16 -mt-16 opacity-50"></div>
+                        <div className="flex items-center space-x-3 mb-6">
+                            <span className="text-3xl animate-pulse">🧡</span>
+                            <h2 className="text-2xl font-black text-orange-600">오늘의 감정 지도</h2>
+                        </div>
+                        <div className="flex space-x-3 mb-6">
                             {['happy', 'grateful', 'calm', 'excited'].map(m => (
                                 <button 
                                     key={m}
                                     onClick={() => setMood(m)}
-                                    class={`px-4 py-2 rounded-full text-sm font-bold transition ${mood === m ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-400'}`}
+                                    className={`px-6 py-3 rounded-2xl text-md font-black transition-all ${mood === m ? 'bg-orange-500 text-white shadow-lg scale-105' : 'bg-orange-50 text-orange-400 hover:bg-orange-100'}`}
                                 >
                                     {m === 'happy' ? '😊 행복' : m === 'grateful' ? '🙏 감사' : m === 'calm' ? '🧘 평온' : '🎉 신남'}
                                 </button>
@@ -356,14 +361,16 @@
                         <textarea 
                             value={content} 
                             onChange={(e) => setContent(e.target.value)}
-                            placeholder="오늘 당신을 웃게 만든 소소한 행복은 무엇인가요?" 
-                            class="w-full p-4 border-none rounded-2xl bg-orange-50 focus:ring-2 focus:ring-orange-200 outline-none text-xl placeholder-orange-300"
-                            rows="3"
+                            placeholder="지금 느끼는 미묘한 감정을 적어보세요. AI가 당신만의 색깔로 그려줄게요." 
+                            className="w-full p-6 border-none rounded-[2rem] bg-orange-50/50 focus:ring-4 focus:ring-orange-200 outline-none text-xl placeholder-orange-300 min-h-[150px]"
                         ></textarea>
-                        <div class="text-right mt-4 flex justify-between items-center">
-                            <span class="text-orange-300 font-bold text-sm">작성자: {userProfile?.nickname}</span>
-                            <button onClick={createPost} disabled={isPosting} class={`bg-orange-600 text-white px-8 py-3 rounded-full font-black text-xl shadow-lg transition ${isPosting ? 'opacity-50' : 'hover:bg-orange-700 active:scale-95'}`}>
-                                {isPosting ? '나누는 중...' : '행복 나누기'}
+                        <div className="text-right mt-6 flex justify-between items-center">
+                            <div className="flex flex-col items-start">
+                                <span className="text-orange-400 font-bold text-sm">작성자: {userProfile?.nickname}</span>
+                                <span className="text-[10px] text-gray-300 font-bold">AI 감정 엔진 v2.0 가동 중</span>
+                            </div>
+                            <button onClick={createPost} disabled={isPosting} className={`bg-orange-600 text-white px-10 py-4 rounded-full font-black text-xl shadow-xl transition-all ${isPosting ? 'opacity-50' : 'hover:bg-orange-700 active:scale-95 hover:shadow-orange-200'}`}>
+                                {isPosting ? '감정 분석 중...' : '감정 시각화하기'}
                             </button>
                         </div>
                     </div>
