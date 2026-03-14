@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crab-Crab Care | 실버 케어 AI</title>
+    <title>Crab-Crab Care v2 | 실버 케어 AI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🦀 Crab-Crab Care</h1>
-            <div id="status-indicator" class="status-normal">상태: 정상</div>
+            <h1>🦀 Crab-Crab Care <span class="version-tag">v2</span></h1>
+            <div class="header-right">
+                <div id="family-status" class="status-connected">👨‍👩‍👧 가족 연결됨</div>
+                <div id="status-indicator" class="status-normal">상태: 정상</div>
+            </div>
         </header>
 
         <main>
@@ -25,10 +28,19 @@
                 </div>
 
                 <div class="card alerts">
-                    <h3>알림</h3>
+                    <h3>알림 및 소식</h3>
                     <ul id="alert-list">
                         <li>알림을 불러오는 중...</li>
                     </ul>
+                </div>
+            </section>
+
+            <section class="trends-section">
+                <div class="card trends">
+                    <h3>지난 7일간의 변화</h3>
+                    <div id="trends-container" class="trends-grid">
+                        <!-- Trends will be loaded here -->
+                    </div>
                 </div>
             </section>
 
