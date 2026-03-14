@@ -54,6 +54,23 @@
                 setBurnout({ ...burnout, energy_level: 85 });
             };
 
+            const addHabitTemplate = (type) => {
+                const templates = {
+                    miracle: [
+                        { id: Date.now() + 1, title: "기상 및 침구 정리", priority: "Mid", status: "Todo" },
+                        { id: Date.now() + 2, title: "명상 10분", priority: "Low", status: "Todo" },
+                        { id: Date.now() + 3, title: "독서 30분", priority: "High", status: "Todo" }
+                    ],
+                    health: [
+                        { id: Date.now() + 4, title: "물 2L 마시기", priority: "Low", status: "Todo" },
+                        { id: Date.now() + 5, title: "스트레칭", priority: "Mid", status: "Todo" },
+                        { id: Date.now() + 6, title: "헬스장 가기", priority: "High", status: "Todo" }
+                    ]
+                };
+                setTasks([...tasks, ...templates[type]]);
+                alert(`${type === 'miracle' ? '미라클 모닝' : '건강 챙기기'} 템플릿이 추가되었습니다!`);
+            };
+
             const toggleTask = (id) => {
                 setTasks(tasks.map(t => t.id === id ? { ...t, status: t.status === "Done" ? "Todo" : "Done" } : t));
             };
@@ -147,7 +164,12 @@
                                 </button>
                             </div>
                         ))}
+                        <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+                            <button onClick={() => addHabitTemplate('miracle')} style={{ background: '#FFC107', color: '#333', flex: 1 }}>🌅 Miracle Morning</button>
+                            <button onClick={() => addHabitTemplate('health')} style={{ background: '#4CAF50', flex: 1 }}>🥗 Health Care</button>
+                        </div>
                     </section>
+
 
                     <section className="diary-section">
                         <h2>감정 회고</h2>
