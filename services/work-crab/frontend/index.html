@@ -142,14 +142,17 @@
 
                     <section className="burnout-gauge">
                         <h2>{t.energy}</h2>
-                        {/* ... */}
+                        <div className="gauge-container">
+                            <div className="gauge-bar"></div>
+                            <div className="gauge-progress" style={{ transform: `rotate(${45 + (burnout.energy_level * 1.8)}deg)` }}></div>
+                        </div>
                         <div className="gauge-text">
                             <h3>{burnout.energy_level}% - {burnout.status}</h3>
                             <p>{burnout.recommendation}</p>
                         </div>
                         
-                        <div className="timer-section" style={{ marginTop: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '12px' }}>
-                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: isTimerRunning ? '#FF5722' : '#333' }}>
+                        <div className="timer-section" style={{ marginTop: '20px', padding: '15px', background: isDarkMode ? '#2C2C2C' : '#f9f9f9', borderRadius: '12px' }}>
+                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: isTimerRunning ? '#FF5722' : (isDarkMode ? '#FFF' : '#333') }}>
                                 {formatTime(timer)}
                             </div>
                             <button 
@@ -165,14 +168,31 @@
 
                         <div className="stats-mini" style={{ marginTop: '20px', padding: '15px', border: '1px solid #eee', borderRadius: '12px' }}>
                             <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem' }}>{t.stats}</h4>
-                            {/* ... chart code ... */}
+                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '60px', padding: '0 10px' }}>
+                                {[40, 70, 90, 60, 80, 50, 95].map((val, i) => (
+                                    <div key={i} style={{ 
+                                        width: '20px', 
+                                        height: `${val}%`, 
+                                        background: val > 80 ? 'var(--success-green)' : 'var(--crab-orange)',
+                                        borderRadius: '4px 4px 0 0'
+                                    }}></div>
+                                ))}
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginTop: '5px', opacity: 0.6 }}>
+                                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                            </div>
                         </div>
                         
                         <div className="achievements-mini" style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
                             <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem' }}>{t.achievements}</h4>
-                            {/* ... icons ... */}
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '15px' }}>
+                                <span title="Miracle Morning" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🌅</span>
+                                <span title="Work-Crab Rookie" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🦀</span>
+                                <span title="Health Master" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🥗</span>
+                            </div>
                         </div>
                     </section>
+
 
 
 

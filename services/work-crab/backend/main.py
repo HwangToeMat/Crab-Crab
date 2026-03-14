@@ -55,30 +55,37 @@ class DiarySchema(DiaryCreate):
 
 # Endpoints
 @app.get("/")
-def read_root():
-    return {"message": "Welcome to Work-Crab API!"}
+async def read_root():
+    return {"message": "Welcome to Work-Crab API v2.0 (Evolution)"}
 
 @app.post("/tasks", response_model=TaskSchema)
-def create_task(task: TaskCreate, db: Session = Depends(get_db)):
+async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db_task = Task(**task.dict())
     db.add(db_task)
+    # Log activity
+    log = ActivityLog(user_id=task.user_id, activity_type="TaskCreate", details=task.title)
+    db.add(log)
     db.commit()
     db.refresh(db_task)
     return db_task
 
 @app.get("/tasks/{user_id}", response_model=List[TaskSchema])
-def get_tasks(user_id: int, db: Session = Depends(get_db)):
+async def get_tasks(user_id: int, db: Session = Depends(get_db)):
     return db.query(Task).filter(Task.user_id == user_id).all()
 
 @app.post("/diary", response_model=DiarySchema)
-def create_diary(diary: DiaryCreate, db: Session = Depends(get_db)):
+async def create_diary(diary: DiaryCreate, db: Session = Depends(get_db)):
     # Simple Mock Emotion Analysis
     emotion_score = 0.5 if "happy" in diary.content.lower() else -0.1
     db_diary = Diary(user_id=diary.user_id, content=diary.content, emotion_score=emotion_score)
     db.add(db_diary)
+    # Log activity
+    log = ActivityLog(user_id=diary.user_id, activity_type="DiaryWrite", details=f"Score: {emotion_score}")
+    db.add(log)
     db.commit()
     db.refresh(db_diary)
     return db_diary
+
 
 @app.get("/burnout-status/{user_id}")
 def get_burnout_status(user_id: int, db: Session = Depends(get_db)):

@@ -50,6 +50,18 @@ class Achievement(Base):
     
     user = relationship("User", back_populates="achievements")
 
+class ActivityLog(Base):
+    __tablename__ = "activity_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    activity_type = Column(String) # TaskComplete, BreakStart, DiaryWrite
+    details = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    user = relationship("User", back_populates="activity_logs")
+
 # Update User model relationship
 User.achievements = relationship("Achievement", back_populates="user")
+User.activity_logs = relationship("ActivityLog", back_populates="user")
+
 

@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 </header>
-                ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image">` : '<div class="post-image" aria-hidden="true">No Image</div>'}
+                ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image" loading="lazy" decoding="async">` : '<div class="post-image" aria-hidden="true">No Image</div>'}
                 <div style="font-size: 0.8rem; color: #555; margin-bottom: 5px;" aria-label="Location">📍 ${window.i18n.getLang() === 'ko' ? '역삼동' : 'Yeoksam'}</div>
                 <h3>${post.title}</h3>
                 <p>${post.content}</p>
