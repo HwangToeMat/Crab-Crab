@@ -1,9 +1,14 @@
 const API_URL = 'http://localhost:3001/api';
 
 async function fetchData() {
-    const tasksRes = await fetch(`${API_URL}/tasks`);
-    const tasks = await tasksRes.json();
-    
+    const list = document.getElementById('tasks');
+    list.innerHTML = '<li style="border:none; justify-content:center;">Loading tasks... 🦀</li>';
+
+    try {
+        const tasksRes = await fetch(`${API_URL}/tasks`);
+        const tasks = await tasksRes.json();
+...
+
     const crabRes = await fetch(`${API_URL}/crab/status`);
     const crab = await crabRes.json();
     
