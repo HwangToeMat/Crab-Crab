@@ -71,8 +71,31 @@ function addHistory(mood, memo) {
 
 async function toggleChallenge(id) {
     console.log(`Challenge ${id} toggled`);
-    // API call simulation
-    document.getElementById('recovery-score').innerText = parseInt(document.getElementById('recovery-score').innerText) + 10;
+    const scoreEl = document.getElementById('recovery-score');
+    let currentScore = parseInt(scoreEl.innerText);
+    scoreEl.innerText = currentScore + 10;
+    
+    // Check if all done
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const allChecked = Array.from(checkboxes).every(c => c.checked);
+    if (allChecked) {
+        alert("🎉 모든 꽃게 퀘스트를 완료했습니다! 번아웃 회복 속도가 빨라지고 있어요.");
+    }
+}
+
+function shareProgress() {
+    const score = document.getElementById('recovery-score').innerText;
+    const text = `오늘 나의 무드게 번아웃 회복 지수는 ${score}%! 🦀✨ #무드게 #MoodGe #번아웃탈출`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: '무드게 기록 공유',
+            text: text,
+            url: window.location.href,
+        }).catch(console.error);
+    } else {
+        alert("클립보드에 복사되었습니다: " + text);
+    }
 }
 
 // Initial Load
