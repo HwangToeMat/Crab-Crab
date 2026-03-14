@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const moodEmoji = document.getElementById('mood-emoji');
     const moodTitle = document.getElementById('mood-category-title');
     const crabMessage = document.getElementById('crab-message');
+    const moodHistory = document.getElementById('mood-history');
     const activityList = document.getElementById('activity-list');
     const sentimentMeter = document.getElementById('sentiment-meter-fill');
     const activeCount = document.getElementById('active-count');
@@ -75,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'Happy': '😊',
             'Sad': '😢',
             'Angry': '😡',
+            'Anxious': '😰',
             'Neutral': '😐'
         };
 
@@ -82,9 +84,21 @@ document.addEventListener('DOMContentLoaded', () => {
         moodTitle.textContent = `당신은 지금 [${moodData.mood_category}] 상태군요!`;
         crabMessage.textContent = moodData.message;
         
-        // 센티먼트 미터 업데이트 (-1.0 ~ 1.0 범위를 0% ~ 100%로 변환)
+        // 센티먼트 미터 업데이트
         const percentage = ((moodData.sentiment_score + 1) / 2) * 100;
         sentimentMeter.style.width = `${percentage}%`;
+
+        // 히스토리 렌더링
+        moodHistory.innerHTML = '';
+        if (moodData.history && moodData.history.length > 0) {
+            moodData.history.forEach(item => {
+                const date = new Date(item.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const historyDiv = document.createElement('div');
+                historyDiv.className = 'history-item';
+                historyDiv.innerHTML = `<span>${date}</span> <strong>${emojis[item.mood] || '❓'}</strong>`;
+                moodHistory.appendChild(historyDiv);
+            });
+        }
 
         // 액티비티 목록 렌더링
         activityList.innerHTML = '';

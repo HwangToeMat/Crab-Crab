@@ -45,33 +45,70 @@ async def health_check():
     """서버 상태 확인용 헬스 체크 엔드포인트"""
     return {"status": "ok", "timestamp": datetime.now()}
 
+# 데이터 모델 정의 확장
+class MoodRequest(BaseModel):
+    user_id: str
+    mood_text: str
+
+class MoodHistoryItem(BaseModel):
+    date: datetime
+    mood: str
+    score: float
+
+class MoodResponse(BaseModel):
+    sentiment_score: float
+    mood_category: str
+    message: str
+    history: List[MoodHistoryItem] = [] # 사용자 히스토리 추가
+
+# 임시 사용자 히스토리 저장소 (DB 대체)
+USER_HISTORIES = {}
+
 @app.post("/api/mood/analyze", response_model=MoodResponse)
 async def analyze_mood(request: MoodRequest):
     """
-    사용자의 텍스트를 분석하여 감정 점수와 카테고리를 반환하는 엔드포인트.
-    MVP 단계에서는 간단한 키워드 매칭 및 랜덤 스코어링을 활용함.
+    고도화된 키워드 분석 및 사용자 히스토리 연동.
     """
-    # 간단한 키워드 기반 감정 분석 로직 (Mocking)
     text = request.mood_text.lower()
-    score = random.uniform(-1.0, 1.0) # 실제 구현 시 NLP 모델 연동 필요
     
-    if "기뻐" in text or "좋아" in text or "행복" in text:
-        category = "Happy"
-        message = "오늘 정말 기분이 좋으시군요! 꽃게도 함께 기뻐요."
-    elif "슬퍼" in text or "우울" in text or "힘들어" in text:
-        category = "Sad"
-        message = "마음이 힘든 날이군요. 꽃게가 당신을 꼭 안아줄게요."
-    elif "화나" in text or "짜증" in text:
-        category = "Angry"
-        message = "잠시 숨을 고르며 마음을 가라앉혀 보세요. 꽃게가 도와줄게요."
-    else:
-        category = "Neutral"
-        message = "평온한 하루군요. 지금 이 순간을 온전히 느껴보세요."
-        
+    # 확장된 키워드 셋
+    keywords = {
+        "Happy": ["기뻐", "좋아", "행복", "신나", "즐거워", "최고", "뿌듯"],
+        "Sad": ["슬퍼", "우울", "힘들어", "지쳐", "눈물", "외로워", "속상"],
+        "Angry": ["화나", "짜증", "분노", "답답", "미워", "열받아"],
+        "Anxious": ["불안", "걱정", "초조", "떨려", "무서워"] # 새로운 카테고리 추가
+    }
+    
+    category = "Neutral"
+    score = random.uniform(-0.2, 0.2)
+    
+    for cat, words in keywords.items():
+        if any(w in text for w in words):
+            category = cat
+            score = 0.8 if cat == "Happy" else -0.8 if cat in ["Sad", "Anxious"] else -1.0
+            break
+
+    # 메시지 정교화
+    messages = {
+        "Happy": "빛나는 하루네요! 이 긍정적인 에너지를 꽃게도 나누고 싶어요.",
+        "Sad": "혼자 견디기 힘든 날이죠. 꽃게가 당신의 이야기를 다 들어줄게요.",
+        "Angry": "잠시만요, 깊게 숨을 세 번만 들이마셔 볼까요? 꽃게가 곁에 있어요.",
+        "Anxious": "불안은 구름처럼 왔다가 지나갈 거예요. 지금 이 순간에 집중해봐요.",
+        "Neutral": "담백한 하루군요. 이런 평온함이 때로는 가장 큰 힘이 돼요."
+    }
+    
+    # 히스토리 저장 로직 (Simulated)
+    if request.user_id not in USER_HISTORIES:
+        USER_HISTORIES[request.user_id] = []
+    
+    new_entry = MoodHistoryItem(date=datetime.now(), mood=category, score=round(score, 2))
+    USER_HISTORIES[request.user_id].append(new_entry)
+    
     return MoodResponse(
         sentiment_score=round(score, 2),
         mood_category=category,
-        message=message
+        message=messages.get(category, "오늘도 당신을 응원합니다."),
+        history=USER_HISTORIES[request.user_id][-5:] # 최근 5개 기록 반환
     )
 
 @app.get("/api/activities/recommend", response_model=List[Activity])

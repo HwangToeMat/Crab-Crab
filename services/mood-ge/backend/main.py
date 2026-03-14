@@ -31,25 +31,27 @@ all_challenges = [
     {"id": 5, "title": "친구에게 안부 문자 보내기 (관계)", "completed": False, "category": "Social"},
     {"id": 6, "title": "오늘의 명언 읽기 (마음)", "completed": False, "category": "Mind"},
 ]
-daily_challenges = all_challenges[:3] # Initial 3
+daily_challenges = all_challenges[:3]
+cheers_count = 0  # 커뮤니티 응원 총합 (Mock)
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to Mood-Ge API!"}
+@app.get("/api/v1/challenges")
+def get_challenges(mood: Optional[str] = "neutral"):
+    # AI Recommendation Logic (Simple Heuristic)
+    if mood == "tired":
+        return [c for c in all_challenges if c["category"] == "Body"][:3]
+    elif mood == "sad":
+        return [c for c in all_challenges if c["category"] == "Mind"][:3]
+    return all_challenges[:3]
 
-@app.get("/api/v1/moods", response_model=List[MoodLog])
-def get_moods():
-    return mood_history
+@app.post("/api/v1/cheers")
+def send_cheer():
+    global cheers_count
+    cheers_count += 1
+    return {"cheers_count": cheers_count}
 
-@app.post("/api/v1/moods")
-def create_mood(log: MoodLog):
-    log.id = len(mood_history) + 1
-    mood_history.append(log)
-    return log
-
-@app.get("/api/v1/challenges", response_model=List[Challenge])
-def get_challenges():
-    return daily_challenges
+@app.get("/api/v1/cheers")
+def get_cheers():
+    return {"cheers_count": cheers_count}
 
 @app.patch("/api/v1/challenges/{challenge_id}/complete")
 def complete_challenge(challenge_id: int):

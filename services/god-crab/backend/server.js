@@ -20,6 +20,19 @@ let crab_status = {
   name: 'Crabby'
 };
 
+// Evolution v2: League Data
+let rankings = [
+  { name: 'PowerCrab', level: 15, streak: 42, score: 1500 },
+  { name: 'GodsaengMaster', level: 12, streak: 28, score: 1250 },
+  { name: 'DailyCrab', level: 8, streak: 15, score: 850 },
+  { name: 'BabyCrab', level: 3, streak: 5, score: 300 }
+];
+
+// API Endpoints
+app.get('/api/league/rankings', (req, res) => {
+  res.json(rankings);
+});
+
 // API Endpoints
 app.get('/api/tasks', (req, res) => {
   res.json(tasks);
