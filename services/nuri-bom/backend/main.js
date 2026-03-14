@@ -89,12 +89,22 @@ app.post('/api/missions/:id/join', async (req, res) => {
   const missionId = req.params.id;
   const { userId } = req.body;
   
-  // Create chat room
+  const mission = await db.get('SELECT * FROM missions WHERE id = ?', [missionId]);
+  
+  // AI Matching Reason Simulation
+  const reasons = [
+    "이웃님의 과거 활동과 관심사가 일치해요.",
+    "매너 온도가 높고 신뢰할 수 있는 이웃이에요.",
+    "가장 가까운 거리(0.5km 이내)에 계신 분이에요.",
+    "비슷한 시간대에 자주 활동하시는 분이라 매칭했어요."
+  ];
+  const matchingReason = reasons[Math.floor(Math.random() * reasons.length)];
+
   const roomId = 'room-' + nanoid(6);
   await db.run('INSERT INTO chat_rooms (id, mission_id) VALUES (?, ?)', [roomId, missionId]);
   await db.run('UPDATE missions SET status = "matched" WHERE id = ?', [missionId]);
   
-  res.json({ matched: true, roomId });
+  res.json({ matched: true, roomId, matchingReason });
 });
 
 // Socket.io for Real-time Chat

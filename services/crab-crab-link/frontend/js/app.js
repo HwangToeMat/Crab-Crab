@@ -12,6 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.querySelector('.close-btn');
     const locationBannerText = document.getElementById('current-location');
     const locationTextInModal = document.getElementById('location-text');
+    const langSelect = document.getElementById('lang-select');
+
+    // 언어 선택 이벤트
+    langSelect.value = window.i18n.getLang();
+    langSelect.addEventListener('change', (e) => {
+        window.i18n.setLanguage(e.target.value);
+        // 이미 렌더링된 요소들 업데이트
+        if (isUserVerified) {
+            locationBannerText.innerText = `${window.i18n.t('verifiedPrefix')}${userLocation}`;
+            verifyBtn.innerText = window.i18n.t('verifiedSuccess');
+        } else {
+            locationBannerText.innerText = window.i18n.t('verifyBanner');
+            verifyBtn.innerText = window.i18n.t('verifyBtn');
+        }
+        renderPosts(allPosts);
+    });
 
     // 초기 데이터 페칭
     fetchPosts();
@@ -37,9 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 인증 확인 버튼
     confirmVerifyBtn.addEventListener('click', () => {
         isUserVerified = true;
-        userLocation = locationTextInModal.innerText.replace('현재 위치: ', '');
-        locationBannerText.innerText = `📍 인증됨: ${userLocation}`;
-        verifyBtn.innerText = '인증 완료';
+        userLocation = locationTextInModal.innerText.replace(window.i18n.t('locationPrefix'), '');
+        locationBannerText.innerText = `${window.i18n.t('verifiedPrefix')}${userLocation}`;
+        verifyBtn.innerText = window.i18n.t('verifiedSuccess');
         verifyBtn.disabled = true;
         verifyBtn.style.backgroundColor = '#ccc';
         verifyModal.style.display = 'none';
@@ -53,19 +69,26 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     // 실제 서비스라면 여기서 역지오코딩 API를 호출하겠지만, 여기선 모의 데이터 사용
-                    const mockNeighborhoods = ["서울시 강남구 역삼동", "서울시 서초구 서초동", "서울시 송파구 잠실동"];
-                    const randomLoc = mockNeighborhoods[Math.floor(Math.random() * mockNeighborhoods.length)];
-                    locationTextInModal.innerText = `현재 위치: ${randomLoc}`;
+                    const mockNeighborhoods = {
+                        ko: ["서울시 강남구 역삼동", "서울시 서초구 서초동", "서울시 송파구 잠실동"],
+                        en: ["Yeoksam-dong, Gangnam-gu, Seoul", "Seocho-dong, Seocho-gu, Seoul", "Jamsil-dong, Songpa-gu, Seoul"],
+                        ja: ["ソウル市江南区駅三洞", "ソウル市瑞草区瑞草洞", "ソウル市松坡区蚕室洞"]
+                    };
+                    const lang = window.i18n.getLang();
+                    const list = mockNeighborhoods[lang] || mockNeighborhoods.en;
+                    const randomLoc = list[Math.floor(Math.random() * list.length)];
+                    locationTextInModal.innerText = `${window.i18n.t('locationPrefix')}${randomLoc}`;
                 },
                 () => {
-                    locationTextInModal.innerText = "위치 정보를 가져올 수 없습니다. (역삼동으로 자동 설정)";
+                    locationTextInModal.innerText = window.i18n.getLang() === 'ko' ? "위치 정보를 가져올 수 없습니다. (역삼동으로 자동 설정)" : "Unable to get location. (Auto-set to Yeoksam-dong)";
                     setTimeout(() => {
-                        locationTextInModal.innerText = "현재 위치: 서울시 강남구 역삼동";
+                        const defaultLoc = { ko: "서울시 강남구 역삼동", en: "Yeoksam-dong, Gangnam-gu, Seoul", ja: "ソウル市江南区駅三洞" };
+                        locationTextInModal.innerText = `${window.i18n.t('locationPrefix')}${defaultLoc[window.i18n.getLang()] || defaultLoc.en}`;
                     }, 1000);
                 }
             );
         } else {
-            locationTextInModal.innerText = "이 브라우저에서는 위치 정보를 지원하지 않습니다.";
+            locationTextInModal.innerText = "Error: Geolocation not supported.";
         }
     }
 

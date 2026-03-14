@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const moodHistory = document.getElementById('mood-history');
     const activityList = document.getElementById('activity-list');
     const sentimentMeter = document.getElementById('sentiment-meter-fill');
+    const sameMoodInfo = document.getElementById('same-mood-info');
+    const cheerSection = document.getElementById('cheer-section');
+    const cheerText = document.getElementById('cheer-text');
     const activeCount = document.getElementById('active-count');
 
     // API 연동 설정 (로컬 환경 기준)
@@ -52,8 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const recResponse = await fetch(`${API_BASE_URL}/activities/recommend?mood=${moodData.mood_category}`);
             const activities = await recResponse.json();
 
-            // 3. 결과 업데이트
-            updateUI(moodData, activities);
+            // 3. 응원 메시지 요청
+            const cheerRes = await fetch(`${API_BASE_URL}/cheer?mood=${moodData.mood_category}`);
+            const cheers = await cheerRes.json();
+            const randomCheer = cheers[Math.floor(Math.random() * cheers.length)];
+
+            // 4. 결과 업데이트
+            updateUI(moodData, activities, randomCheer);
         } catch (error) {
             console.error('Error:', error);
             alert('서버와 연결할 수 없습니다. 백엔드 서버가 실행 중인지 확인하세요.');
@@ -70,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         moodInput.value = '';
     });
 
-    function updateUI(moodData, activities) {
+    function updateUI(moodData, activities, cheer) {
         // 이모지 매칭
         const emojis = {
             'Happy': '😊',
@@ -87,6 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // 센티먼트 미터 업데이트
         const percentage = ((moodData.sentiment_score + 1) / 2) * 100;
         sentimentMeter.style.width = `${percentage}%`;
+
+        // 동일 무드 정보 업데이트
+        sameMoodInfo.textContent = `현재 당신과 같은 [${moodData.mood_category}] 기분을 느끼는 메이트가 ${moodData.same_mood_count}명 더 있어요!`;
+
+        // 응원 메시지 표시
+        if (cheer) {
+            cheerText.textContent = `"${cheer}"`;
+            cheerSection.classList.remove('hidden');
+        }
 
         // 히스토리 렌더링
         moodHistory.innerHTML = '';

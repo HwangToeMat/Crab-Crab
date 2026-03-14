@@ -346,6 +346,28 @@ footer {
     cursor: pointer;
 }
 
+/* Cycle 07: Internationalization UI */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.lang-selector {
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid #ddd;
+    background-color: var(--color-white);
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.lang-selector:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
 .verified-badge {
     background-color: #e3f2fd;
     color: #1976d2;
