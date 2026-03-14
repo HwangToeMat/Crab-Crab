@@ -128,7 +128,12 @@
 
 
                     <section className="tasks-section">
-                        <h2>오늘의 할 일</h2>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h2>오늘의 할 일</h2>
+                            <button onClick={() => alert("Listening... (Speech API Mock)")} style={{ background: '#1A237E', padding: '5px 12px' }}>
+                                🎤 Voice
+                            </button>
+                        </div>
                         {tasks.map(task => (
                             <div key={task.id} className="task-card">
                                 <div className="task-info">
