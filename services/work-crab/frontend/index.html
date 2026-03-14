@@ -179,8 +179,16 @@
                             value={diary}
                             onChange={(e) => setDiary(e.target.value)}
                         ></textarea>
-                        <button onClick={handleDiarySubmit} style={{ width: '100%' }}>오늘의 회고 저장하기</button>
+                        <button onClick={handleDiarySubmit} style={{ width: '100%', marginBottom: '15px' }}>오늘의 회고 저장하기</button>
+                        
+                        <button 
+                            onClick={() => alert("Instagram Sharing... (Mock Interface)")} 
+                            style={{ width: '100%', background: 'linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)', fontWeight: 'bold' }}
+                        >
+                            📸 오늘의 갓생 인스타 공유하기
+                        </button>
                     </section>
+
                 </div>
             );
         }
