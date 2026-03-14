@@ -339,3 +339,104 @@ footer {
     opacity: 0.9;
 }
 
+/* Cycle 05: Neighborhood Verification UI */
+.location-banner {
+    background-color: #e3f2fd;
+    padding: 12px 0;
+    border-bottom: 1px solid #bbdefb;
+}
+
+.location-banner .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#current-location {
+    font-weight: 600;
+    color: #1976d2;
+}
+
+.btn-verify-small {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.verified-badge {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    border: 1px solid #1976d2;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.map-preview {
+    background-color: #f0f0f0;
+    height: 200px;
+    border-radius: var(--radius-md);
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+}
+
+#mock-map {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#location-text {
+    font-weight: 700;
+    color: #333;
+}
+

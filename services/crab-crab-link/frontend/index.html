@@ -34,6 +34,13 @@
             </div>
         </section>
 
+        <div class="location-banner">
+            <div class="container">
+                <span id="current-location">📍 내 동네를 인증해주세요.</span>
+                <button id="verify-location-btn" class="btn-verify-small">인증하기</button>
+            </div>
+        </div>
+
         <section class="feed">
             <div class="container">
                 <div class="section-header">
@@ -60,6 +67,23 @@
             <p>&copy; 2026 CrabTeam. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Verification Modal -->
+    <div id="verify-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>동네 인증하기 🏠</h2>
+            <p>꽃게링크는 신뢰할 수 있는 이웃 간의 거래를 위해 동네 인증이 필요합니다.</p>
+            <div class="map-preview">
+                <!-- Mock Map Area -->
+                <div id="mock-map">
+                    📍
+                </div>
+                <p id="location-text">현재 위치를 가져오는 중...</p>
+            </div>
+            <button id="confirm-verify-btn" class="btn-primary" style="width: 100%;">이 동네로 인증 완료</button>
+        </div>
+    </div>
 
     <script src="js/app.js"></script>
 </body>
