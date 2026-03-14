@@ -1,0 +1,14 @@
+{
+  "name": "nuri-bom-backend",
+  "version": "1.0.0",
+  "description": "Hyper-local Mission Matching Platform Backend",
+  "main": "main.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5",
+    "sqlite3": "^5.1.6",
+    "sqlite": "^5.0.1",
+    "nanoid": "^3.3.6"
+  }
+}

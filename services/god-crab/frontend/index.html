@@ -9,10 +9,14 @@
 <body>
     <div id="app">
         <header>
-            <h1>🦀 갓게 (God-Crab)</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>🦀 갓게 (God-Crab)</h1>
+                <button id="theme-toggle" style="background:none; font-size: 1.5rem;">🌓</button>
+            </div>
             <div id="crab-info">
                 <span id="crab-name">크래비</span> (LV.<span id="crab-level">1</span>)
                 <div class="progress-bar"><div id="crab-exp" style="width: 40%;"></div></div>
+                <p id="crab-saying" style="font-style: italic; color: var(--primary); margin-top: 10px;">"오늘도 껍질을 깨고 성장해봐요!"</p>
             </div>
         </header>
 

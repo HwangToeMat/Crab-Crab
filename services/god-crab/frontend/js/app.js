@@ -23,11 +23,29 @@ function renderTasks(tasks) {
     });
 }
 
+const sayings = [
+    "오늘도 껍질을 깨고 성장해봐요!",
+    "작은 걸음이 큰 게를 만들어요!",
+    "옆으로 걸어도 목표는 앞으로!",
+    "집게로 오늘의 할 일을 꽉 잡으세요!",
+    "당신의 갓생을 응원합니다! 🦀"
+];
+
 function renderCrab(crab) {
     document.getElementById('crab-name').textContent = crab.name;
     document.getElementById('crab-level').textContent = crab.level;
     document.getElementById('crab-exp').style.width = `${crab.exp}%`;
+    
+    // Random saying update
+    const sayingElem = document.getElementById('crab-saying');
+    if (sayingElem) {
+        sayingElem.textContent = `"${sayings[Math.floor(Math.random() * sayings.length)]}"`;
+    }
 }
+
+document.getElementById('theme-toggle').onclick = () => {
+    document.body.classList.toggle('dark-mode');
+};
 
 async function toggleTask(id) {
     await fetch(`${API_URL}/tasks/${id}`, { method: 'PATCH' });
