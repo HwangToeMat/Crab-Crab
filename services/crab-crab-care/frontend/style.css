@@ -1,0 +1,102 @@
+body {
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    font-size: 1.2rem; /* Larger font for seniors */
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ff6b6b;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+h1 { color: #ff6b6b; margin: 0; }
+
+.status-normal { color: #2ecc71; font-weight: bold; }
+.status-alert { color: #f1c40f; font-weight: bold; }
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: #fff9f9;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #ffe3e3;
+}
+
+.card h3 { margin-top: 0; color: #555; }
+
+.stats .stat { margin: 10px 0; font-size: 1.4rem; }
+.label { font-weight: bold; color: #777; }
+
+.chat-section {
+    background: #fdfdfd;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #eee;
+}
+
+.chat-window {
+    height: 300px;
+    overflow-y: auto;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.message {
+    margin: 10px 0;
+    padding: 12px 18px;
+    border-radius: 20px;
+    max-width: 80%;
+}
+
+.user { background: #ff6b6b; color: white; align-self: flex-end; margin-left: auto; }
+.bot { background: #f1f1f1; color: #333; }
+.system { background: #e8f4fd; color: #2980b9; text-align: center; font-size: 0.9rem; }
+
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 15px;
+    font-size: 1.2rem;
+    border: 2px solid #eee;
+    border-radius: 10px;
+}
+
+button {
+    padding: 15px 30px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover { background: #ee5253; }

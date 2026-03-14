@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crab-Crab Care | 실버 케어 AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦀 Crab-Crab Care</h1>
+            <div id="status-indicator" class="status-normal">상태: 정상</div>
+        </header>
+
+        <main>
+            <section class="dashboard">
+                <div class="card health">
+                    <h3>오늘의 건강</h3>
+                    <div class="stats">
+                        <div class="stat"><span class="label">심박수:</span> <span id="heart-rate">--</span> bpm</div>
+                        <div class="stat"><span class="label">걸음수:</span> <span id="steps">--</span> 보</div>
+                        <div class="stat"><span class="label">수면시간:</span> <span id="sleep">--</span> 시간</div>
+                    </div>
+                </div>
+
+                <div class="card alerts">
+                    <h3>알림</h3>
+                    <ul id="alert-list">
+                        <li>알림을 불러오는 중...</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="chat-section">
+                <h3>AI 말벗 (Crab-Care)</h3>
+                <div id="chat-window" class="chat-window">
+                    <div class="message system">반가워요! 이야기를 나눠볼까요?</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="user-input" placeholder="하고 싶은 말을 입력하세요...">
+                    <button id="send-btn">말하기</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
