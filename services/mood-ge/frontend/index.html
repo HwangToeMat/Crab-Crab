@@ -14,7 +14,7 @@
         </header>
 
         <section class="mood-crab-section">
-            <div id="mood-crab" class="crab neutral">
+            <div id="mood-crab" class="crab neutral animated">
                 <div class="crab-body">
                     <div class="eyes">
                         <div class="eye"></div>
@@ -25,6 +25,18 @@
                 <div class="claw right"></div>
             </div>
             <p id="crab-message">"반가워요! 오늘은 어떤 기분인가요?"</p>
+            <button class="share-btn" onclick="shareProgress()">결과 공유하기 📤</button>
+        </section>
+
+        <section class="weekly-report">
+            <h2>주간 번아웃 리포트</h2>
+            <div class="chart-container">
+                <div class="bar" style="height: 40%">월</div>
+                <div class="bar" style="height: 60%">화</div>
+                <div class="bar" style="height: 80%">수</div>
+                <div class="bar active" style="height: 20%">목</div>
+                <div class="bar" style="height: 50%">금</div>
+            </div>
         </section>
 
         <section class="mood-picker">
@@ -42,6 +54,13 @@
             <h2>오늘의 꽃게 퀘스트</h2>
             <ul id="challenge-list">
                 <!-- Challenges will be loaded here -->
+            </ul>
+        </section>
+
+        <section class="history">
+            <h2>최근 꽃게 기록</h2>
+            <ul id="history-list">
+                <!-- Logs will be loaded here -->
             </ul>
         </section>
 

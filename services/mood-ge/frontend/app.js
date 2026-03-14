@@ -33,6 +33,7 @@ function renderChallenges(challenges) {
 function logMood(mood, score) {
     const crab = document.getElementById('mood-crab');
     const message = document.getElementById('crab-message');
+    const memo = document.getElementById('mood-memo').value;
     
     crab.className = `crab ${mood}`;
     
@@ -47,6 +48,25 @@ function logMood(mood, score) {
     
     // Update score (simple visual effect)
     document.getElementById('recovery-score').innerText = score;
+    
+    // Add to History
+    addHistory(mood, memo);
+    document.getElementById('mood-memo').value = ''; // Clear memo
+}
+
+function addHistory(mood, memo) {
+    const list = document.getElementById('history-list');
+    const li = document.createElement('li');
+    li.className = 'history-item';
+    const emojis = {happy: '😊', neutral: '😐', tired: '😫', sad: '😢'};
+    li.innerHTML = `
+        <span class="history-mood">${emojis[mood]}</span>
+        <div class="history-content">
+            <span class="history-date">${new Date().toLocaleTimeString()}</span>
+            <p class="history-memo">${memo || '내용 없음'}</p>
+        </div>
+    `;
+    list.prepend(li);
 }
 
 async function toggleChallenge(id) {
