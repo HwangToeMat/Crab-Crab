@@ -65,12 +65,11 @@ function updateLanguage() {
     document.getElementById('new-task-title').placeholder = i18n[currentLang].placeholder;
 }
 
-document.getElementById('rename-btn').onclick = async () => {
-    const newName = prompt("New Crab Name?");
-    if (newName) {
-        // Mock update
-        document.getElementById('crab-name').textContent = newName;
-    }
+document.getElementById('share-btn').onclick = () => {
+    const name = document.getElementById('crab-name').textContent;
+    const level = document.getElementById('crab-level').textContent;
+    const text = `🦀 [갓게] ${name}와(과) 함께하는 갓생! 현재 LV.${level}\n오늘도 보람찬 하루를 보냈습니다! #갓생 #갓게`;
+    navigator.clipboard.writeText(text).then(() => alert('공유 텍스트가 복사되었습니다!'));
 };
 
 document.querySelectorAll('.tmpl-btn').forEach(btn => {
