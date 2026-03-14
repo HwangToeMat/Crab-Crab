@@ -21,6 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // 로딩 상태 시작
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = '<span class="spinner"></span>분석 중...';
+
         try {
             // 1. 감정 분석 요청
             const response = await fetch(`${API_BASE_URL}/mood/analyze`, {
@@ -39,6 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error:', error);
             alert('서버와 연결할 수 없습니다. 백엔드 서버가 실행 중인지 확인하세요.');
+        } finally {
+            // 로딩 상태 해제
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '분석 및 위로받기';
         }
     });
 
