@@ -6,24 +6,22 @@
 
 ---
 
-## 0. 꽃게팀의 결과물들 (Service Showcase)
+## 0. 꽃게팀 서비스 포트폴리오 (Service Showcase)
 
-"이런 에이전트들이 모여서 실제로 무엇을 만드는가?"에 대한 답입니다. 꽃게팀은 기획부터 고도화까지 자율적으로 수행하며 다음과 같은 서비스들을 탄생시켰습니다.
+"이런 에이전트들이 모여서 실제로 무엇을 만드는가?"에 대한 답입니다. 꽃게팀은 자율 기획 및 10회 진화 사이클을 통해 다음과 같은 다양한 영역의 서비스들을 성공적으로 탄생시켰습니다.
 
-### 🦀 [꽃게메이트 (Crab-Mate)](./services/crab-mate/)
-- **한줄 소개**: "오늘 당신의 기분에 딱 맞는 메이트를 찾아보세요."
-- **핵심 기술**: FastAPI + AI Sentiment Analysis + Vanilla JS
-- **특징**: 사용자의 일기/텍스트를 분석하여 5가지 감정 상태를 도출하고, 그에 맞는 힐링 액티비티를 추천합니다. '진화 감독관'에 의해 익명 응원 메시지와 감정 히스토리 시각화 기능이 추가되었습니다.
-
-### 🦀 [꽃게케어 (Crab-Crab-Care)](./services/crab-crab-care/)
-- **한줄 소개**: "부모님의 안전을 AI가 지킵니다."
-- **핵심 기술**: Python Backend + Vision Analysis
-- **특징**: 시니어 사용자의 활동 데이터를 분석하여 낙상 위험이나 이상 징후를 감지하는 실버 케어 솔루션입니다. 따뜻한 오렌지색 톤의 접근성 높은 UI가 특징입니다.
-
-### 🦀 [소소행 (Soso-Haeng)](./services/soso-haeng/)
-- **한줄 소개**: "일상 속 작은 성취가 모여 큰 행복이 됩니다."
-- **핵심 기술**: Node.js Backend + Interactive Web
-- **특징**: 바쁜 현대인들을 위해 매일 작지만 확실한 행복(미션)을 제안하고 성취감을 관리해주는 라이프스타일 앱입니다.
+| 서비스명 | 한줄 소개 | 핵심 가치 |
+| :--- | :--- | :--- |
+| **[꽃게메이트 (Crab-Mate)](./services/crab-mate/)** | 오늘 당신의 기분에 딱 맞는 메이트를 찾아보세요. | 감정 분석 기반 힐링 큐레이션 |
+| **[꽃게케어 (Crab-Crab-Care)](./services/crab-crab-care/)** | 부모님의 안전을 AI가 지키는 시니어 전용 케어 앱. | 비전 기반 낙상 감지 및 건강 모니터링 |
+| **[꽃게링크 (Crab-Crab-Link)](./services/crab-crab-link/)** | 흩어진 업무 도구들을 하나로 연결하는 워크플로우 허브. | 생산성 도구 자동화 및 연동 |
+| **[소소행 (Soso-Haeng)](./services/soso-haeng/)** | 일상 속 작은 성취가 모여 큰 행복이 되는 습관 관리. | 마이크로 미션 기반 라이프스타일 앱 |
+| **[누리봄 (Nuri-Bom)](./services/nuri-bom/)** | 디지털 격차를 줄이는 고령층 전용 AI 비서 서비스. | 시니어 디지털 리터러시 강화 |
+| **[에코차지 (Eco-Charge)](./services/eco-charge-optimizer/)** | 전기차 충전 효율을 AI가 실시간으로 최적화합니다. | 그린 에너지 최적화 및 비용 절감 |
+| **[무드게 (Mood-Ge)](./services/mood-ge/)** | 텍스트 너머의 진심을 읽는 감정 데이터 자산화 서비스. | 초정밀 텍스트 감성 분석 엔진 |
+| **[센티크립토 (SentiCrypto)](./services/senticrypto-analyzer/)** | 소셜 감성 지수로 가상자산 시장의 향방을 예측합니다. | 금융 데이터와 감성 분석의 결합 |
+| **[워크꽃게 (Work-Crab)](./services/work-crab/)** | 팀의 업무 효율을 극대화하는 자율 협업 가이드 에이전트. | 사내 프로세스 최적화 및 자동화 |
+| **[갓게 (God-Crab)](./services/god-crab/)** | 모든 질문에 답하는 꽃게팀의 전지전능한 AI 멘토. | 지식 공유 및 문제 해결 허브 |
 
 ---
 
@@ -52,8 +50,7 @@
 ### 2.2 기술 설계 및 구현 그룹
 - **Tech Architect**: [설정 파일](./agents/tech_architect.md) - 시스템 아키텍처 설계 및 DB 스키마 정의.
 - **UI/UX Designer**: [설정 파일](./agents/ui_ux_designer.md) - 디자인 토큰 정의 및 사용자 여정 설계.
-- **Backend Dev**: [설정 파일](./agents/backend_dev.md) - FastAPI/Node.js 등 서버 로직 구현.
-- **Frontend Dev**: [설정 파일](./agents/frontend_dev.md) - React/Vanilla JS UI 및 API 연동.
+- **Backend Dev**: [설정 파일(BE)](./agents/backend_dev.md) | **Frontend Dev**: [설정 파일(FE)](./agents/frontend_dev.md) - 서버 로직 및 UI 구현 담당.
 
 ### 2.3 품질 및 거버넌스 그룹 (중요)
 - **Global Validator**: [설정 파일](./agents/global_validator.md) - **팀 내 최고 권위자.** 논리적 모순 제거 및 무결성 체크.
@@ -75,10 +72,6 @@
 - [Cycle 05 Report](./outputs/cycle_reports/cycle_05_report.md) - 소셜 연결 기능 도입
 - [Cycle 10 Report](./outputs/cycle_reports/cycle_10_report.md) - 최종 폴리싱 및 성능 최적화
 
-### 3.2 리포트의 가치 (Why it matters)
-- **이력 추적(Traceability)**: "이 기능은 왜 추가되었지?"에 대한 답을 과거 리포트에서 즉시 찾을 수 있습니다.
-- **에이전트 책임성(Accountability)**: 각 결정이 어떤 에이전트의 제안이었는지 명확히 기록되어 시스템의 신뢰도를 높입니다.
-
 ---
 
 ## 4. 진화 감독관(Evolution Director)의 메커니즘
@@ -94,7 +87,7 @@
 3. **결론**: 꽃게팀 프로젝트는 LLM 에이전트가 스스로 사고하고 기록하며 진화하는 **'진정한 팀 동료'**로서 기능할 수 있음을 증명했습니다.
 
 ---
-**발표 팁**: 
+**발표 시 참고 자료**: 
 - `agents/` 디렉토리의 설정 파일들을 열어 구체적인 프롬프트 구조를 보여주세요.
 - `services/` 폴더 내의 각 서비스 README를 통해 에이전트가 기획한 '서비스 비전'을 공유하세요.
 - `outputs/cycle_reports/`를 통해 에이전트들이 서로를 견제하며 고도화하는 과정을 증명해 보세요.
