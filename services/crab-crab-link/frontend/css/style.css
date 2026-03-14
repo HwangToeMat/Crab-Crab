@@ -1,9 +1,10 @@
 :root {
-    --color-primary: #FF6B35;
-    --color-secondary: #E63946;
+    --color-primary: #D64D12; /* Slightly darker for better contrast */
+    --color-secondary: #C1121F;
     --color-bg: #F8F9FA;
-    --color-text: #212529;
+    --color-text: #1A1D20;
     --color-white: #FFFFFF;
+    --color-focus: #0056b3;
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
@@ -13,10 +14,10 @@
     --radius-lg: 16px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Accessibility: Focus Visible */
+:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
 }
 
 body {
@@ -24,84 +25,61 @@ body {
     background-color: var(--color-bg);
     color: var(--color-text);
     line-height: 1.6;
-    font-size: 1.1rem; /* Increased from default */
-}
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 var(--space-md);
-}
-
-header {
-    background-color: var(--color-white);
-    border-bottom: 2px solid var(--color-primary); /* More distinct */
-    padding: var(--space-md) 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; /* Responsive */
-    gap: var(--space-md);
-}
-
-.logo {
-    font-size: 1.8rem; /* Larger */
-    font-weight: 800;
-    color: var(--color-primary);
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    gap: var(--space-lg);
-}
-
-nav a {
-    text-decoration: none;
-    color: var(--color-text);
-    font-weight: 500;
     font-size: 1.1rem;
 }
 
-nav a.active {
+/* Larger hit areas for buttons */
+button, a {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
     color: var(--color-primary);
-    font-weight: 700;
+    min-width: auto; /* Logo doesn't need 44px min-width */
 }
 
-.hero {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: var(--color-white);
-    padding: 100px 0; /* Larger */
-    text-align: center;
+.filter-btn {
+    background-color: #e9ecef;
+    border: 2px solid transparent; /* Prepare for focus/active */
+    padding: 8px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 600;
+    transition: all 0.2s;
+    color: #495057;
 }
 
-.hero h1 {
-    font-size: 3rem; /* Larger */
-    margin-bottom: var(--space-md);
+.filter-btn.active {
+    background-color: var(--color-primary);
+    color: white;
 }
 
-.hero p {
-    font-size: 1.4rem; /* Larger */
-    margin-bottom: var(--space-lg);
-    opacity: 0.9;
+.filter-btn:hover {
+    background-color: #dee2e6;
 }
 
 .btn-primary {
     background-color: var(--color-white);
     color: var(--color-primary);
-    border: none;
-    padding: var(--space-md) 40px; /* Larger */
-    border-radius: var(--radius-lg); /* Rounded */
+    border: 2px solid var(--color-primary);
+    padding: var(--space-md) 40px;
+    border-radius: var(--radius-lg);
     font-weight: 700;
     cursor: pointer;
-    font-size: 1.2rem; /* Larger */
+    font-size: 1.2rem;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #fff5f0;
 }
 
 .btn-secondary {

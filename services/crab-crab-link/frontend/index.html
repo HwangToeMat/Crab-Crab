@@ -3,82 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>꽃게링크 (crab-crab-link) - 1인 가구의 현명한 동네 생활</title>
+    <title>꽃게링크 - 1인 가구의 현명한 동네 생활</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 </head>
 <body>
-    <header>
+    <header role="banner">
         <div class="container">
-            <div class="logo">🦀 꽃게링크</div>
-            <nav>
+            <div class="logo" aria-label="꽃게링크 로고">🦀 꽃게링크</div>
+            <nav role="navigation" aria-label="메인 메뉴">
                 <ul>
-                    <li><a href="#" class="active">홈</a></li>
+                    <li><a href="#" class="active" aria-current="page">홈</a></li>
                     <li><a href="#">꽃게 스플릿</a></li>
                     <li><a href="#">꽃게 라이브러리</a></li>
                     <li><a href="#">꽃게 꿀팁</a></li>
                 </ul>
             </nav>
             <div class="user-menu">
-                <button id="login-btn">로그인</button>
+                <button id="login-btn" class="btn-secondary">로그인</button>
             </div>
         </div>
     </header>
 
-    <main>
-        <section class="hero">
+    <main role="main">
+        <section class="hero" aria-labelledby="hero-title">
             <div class="container">
-                <h1>나누면 커지는 이득,<br>꽃게링크로 연결하세요.</h1>
+                <h1 id="hero-title">나누면 커지는 이득,<br>꽃게링크로 연결하세요.</h1>
                 <p>동네 이웃과 함께 사고, 빌리고, 정보를 나눠보세요.</p>
-                <button class="btn-primary">시작하기</button>
+                <button class="btn-primary" aria-label="꽃게링크 서비스 시작하기">시작하기</button>
             </div>
         </section>
 
-        <div class="location-banner">
+        <div class="location-banner" role="status" aria-live="polite">
             <div class="container">
                 <span id="current-location">📍 내 동네를 인증해주세요.</span>
                 <button id="verify-location-btn" class="btn-verify-small">인증하기</button>
             </div>
         </div>
 
-        <section class="feed">
+        <section class="feed" aria-labelledby="feed-title">
             <div class="container">
                 <div class="section-header">
-                    <h2>최근 게시글</h2>
-                    <button class="btn-secondary" id="create-post-btn">글쓰기</button>
+                    <h2 id="feed-title">최근 게시글</h2>
+                    <button class="btn-secondary" id="create-post-btn" aria-label="새 글 작성하기">글쓰기</button>
                 </div>
                 
-                <div class="filter-tabs">
-                    <button class="filter-btn active" data-category="ALL">전체</button>
-                    <button class="filter-btn" data-category="식재료">식재료</button>
-                    <button class="filter-btn" data-category="생필품">생필품</button>
-                    <button class="filter-btn" data-category="도구/공유">도구/공유</button>
-                </div>
+                <nav class="filter-tabs" aria-label="카테고리 필터">
+                    <button class="filter-btn active" data-category="ALL" aria-pressed="true">전체</button>
+                    <button class="filter-btn" data-category="식재료" aria-pressed="false">식재료</button>
+                    <button class="filter-btn" data-category="생필품" aria-pressed="false">생필품</button>
+                    <button class="filter-btn" data-category="도구/공유" aria-pressed="false">도구/공유</button>
+                </nav>
 
-                <div id="post-list" class="post-grid">
+                <div id="post-list" class="post-grid" role="list">
                     <!-- 게시글이 여기에 동적으로 추가됩니다 -->
                 </div>
             </div>
         </section>
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <div class="container">
             <p>&copy; 2026 CrabTeam. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Verification Modal -->
-    <div id="verify-modal" class="modal">
+    <div id="verify-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>동네 인증하기 🏠</h2>
+            <span class="close-btn" aria-label="닫기">&times;</span>
+            <h2 id="modal-title">동네 인증하기 🏠</h2>
             <p>꽃게링크는 신뢰할 수 있는 이웃 간의 거래를 위해 동네 인증이 필요합니다.</p>
             <div class="map-preview">
-                <!-- Mock Map Area -->
-                <div id="mock-map">
-                    📍
-                </div>
+                <div id="mock-map" aria-hidden="true">📍</div>
                 <p id="location-text">현재 위치를 가져오는 중...</p>
             </div>
             <button id="confirm-verify-btn" class="btn-primary" style="width: 100%;">이 동네로 인증 완료</button>

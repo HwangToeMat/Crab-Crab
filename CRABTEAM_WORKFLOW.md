@@ -33,5 +33,12 @@ This document outlines the mandatory steps for developing any new service under 
     -   Market Success Potential.
 -   **Final Step**: Merge the integrated feature branch into the `main` branch directly and push to the remote repository. No PR is required.
 
-## Trigger Command
--   **"꽃게팀 작업개시"**: This initiates the entire workflow from Phase 1 to Phase 4.
+## Phase 5: Continuous Evolution (Post-Launch)
+-   **Director**: **Evolution Director (진화 감독관)**
+-   **Process**: A rigorous 10+ cycle iteration to upgrade the service.
+-   **Data Sources**: Customer Feedback, Internal Experts, Internet Research, Competitor Analysis.
+-   **Execution**: Each cycle is planned, delegated to builders, verified, and committed (`evolve: Cycle [N] - [Goal]`).
+
+## Trigger Commands
+-   **"꽃게팀 작업개시"**: This initiates the entire workflow for a NEW service (Phase 1 to Phase 4).
+-   **"꽃게팀 진화개시 [서비스명]"**: This triggers the **Evolution Director** to take over an EXISTING service and run the 10+ cycle evolution process (Phase 5).

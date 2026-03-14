@@ -27,6 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (e) => {
         if (e.target === verifyModal) verifyModal.style.display = 'none';
     });
+    // ESC 키로 모달 닫기
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && verifyModal.style.display === 'block') {
+            verifyModal.style.display = 'none';
+        }
+    });
 
     // 인증 확인 버튼
     confirmVerifyBtn.addEventListener('click', () => {
@@ -115,34 +121,34 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPosts(posts) {
         postList.innerHTML = '';
         posts.forEach(post => {
-            const card = document.createElement('div');
+            const card = document.createElement('article');
             card.className = 'post-card';
+            card.setAttribute('role', 'listitem');
             let tempColor = '#3498db';
             if (post.user_temperature >= 37.5) tempColor = '#f39c12';
             if (post.user_temperature >= 40) tempColor = '#e74c3c';
 
-            // 모든 더미 게시글은 인증된 게시글로 시뮬레이션
             const isVerifiedPost = true;
 
             card.innerHTML = `
-                <div class="post-header">
+                <header class="post-header">
                     <div>
                         <span class="user-name">${post.user_name || '익명게'}</span>
-                        ${isVerifiedPost ? '<span class="verified-badge">인증됨</span>' : ''}
+                        ${isVerifiedPost ? '<span class="verified-badge" aria-label="인증된 사용자">인증됨</span>' : ''}
                     </div>
-                    <div class="temp-wrapper">
-                        <span class="temp-value" style="color: ${tempColor}">${post.user_temperature}℃</span>
-                        <div class="temp-bar-bg">
+                    <div class="temp-wrapper" aria-label="매너 온도 ${post.user_temperature}도">
+                        <span class="temp-value" style="color: ${tempColor}" aria-hidden="true">${post.user_temperature}℃</span>
+                        <div class="temp-bar-bg" aria-hidden="true">
                             <div class="temp-bar-fill" style="width: ${Math.min(post.user_temperature * 2, 100)}%; background-color: ${tempColor}"></div>
                         </div>
                     </div>
-                </div>
-                ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image">` : '<div class="post-image">이미지 없음</div>'}
-                <div style="font-size: 0.8rem; color: #888; margin-bottom: 5px;">📍 역삼동</div>
+                </header>
+                ${post.image_url ? `<img src="${post.image_url}" alt="${post.title} 상품 이미지" class="post-image">` : '<div class="post-image" aria-hidden="true">이미지 없음</div>'}
+                <div style="font-size: 0.8rem; color: #555; margin-bottom: 5px;" aria-label="지역: 역삼동">📍 역삼동</div>
                 <h3>${post.title}</h3>
                 <p>${post.content}</p>
-                <div class="tags">${(post.tags || '').split(',').map(tag => tag ? `<span class="tag">${tag.trim()}</span>` : '').join('')}</div>
-                <button class="btn-secondary" style="margin-top: 15px; width: 100%;">참여하기</button>
+                <div class="tags" aria-label="태그목록">${(post.tags || '').split(',').map(tag => tag ? `<span class="tag">${tag.trim()}</span>` : '').join('')}</div>
+                <button class="btn-secondary" style="margin-top: 15px; width: 100%;" aria-label="${post.title} 참여하기">참여하기</button>
             `;
             postList.appendChild(card);
         });
