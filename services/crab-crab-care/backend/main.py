@@ -1,10 +1,14 @@
 from fastapi import FastAPI, HTTPException, Body
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import datetime, timedelta
+import os
 import random
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
-app = FastAPI(title="Crab-Crab Care API v3", description="Predictive & Empathetic AI Agent for Silver Care")
+# load_dotenv() # .env 파일에서 GEMINI_API_KEY 등을 읽어올 준비
+
+app = FastAPI(title="Crab-Crab Care API v3.1", description="Vision-AI & Real Brain Integration")
 
 # Models
 class ChatRequest(BaseModel):
@@ -16,101 +20,85 @@ class ChatResponse(BaseModel):
     mood_detected: str
     timestamp: datetime
 
+class VisionEvent(BaseModel):
+    user_id: str
+    event_type: str # FallDetected, NoMovement, Normal
+    confidence: float
+
 class HealthStatus(BaseModel):
     user_id: str
     heart_rate: int
     steps: int
     sleep_hours: float
-    status: str # Normal, Alert, Critical
+    status: str
+    vision_status: str # v3.1: Camera-based status
     caregiver_notified: bool = False
-    gait_alert: bool = False # v3: Predictive fall prevention
 
-class DailyStat(BaseModel):
-    date: str
-    steps: int
-    avg_heart_rate: int
-    walking_speed: float # v3: km/h
-
-class HealthTrend(BaseModel):
-    user_id: str
-    trends: List[DailyStat]
-
-class MedicationUpdate(BaseModel):
-    user_id: str
-    pill_name: str
-    taken: bool
-
-# Mock Data
-MOCK_RESPONSES = [
-    "할아버지, 오늘 날씨가 참 좋네요! 같이 산책 나가는 건 어떠세요?",
-    "식사는 잘 챙겨 드셨나요? 건강을 위해 제때 드시는 게 중요해요.",
-    "잠깐 눈을 붙이시는 건 어떨까요? 어제 잠을 조금 설치신 것 같아요.",
-    "정말 대단하세요! 오늘 목표 걸음 수를 벌써 다 채우셨네요.",
-    "할머니, 옛날 이야기 좀 더 해주세요. 정말 흥미로워요!"
-]
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to Crab-Crab Care API v3 - Predictive Care Active"}
+# v3.1: Sophisticated Mock Brain (Fallback if no API key)
+ADAPTIVE_RESPONSES = {
+    "건강": "할아버지 건강은 제가 24시간 지켜보고 있으니 걱정 마세요! 오늘 컨디션은 어떠신가요?",
+    "적적": "제가 있잖아요! 옛날 즐거웠던 기억 하나만 들려주세요. 저 정말 듣고 싶어요.",
+    "배고파": "건강을 위해 맛있는 식사 꼭 챙겨 드셔야 해요. 제가 추천 메뉴라도 찾아볼까요?",
+    "고마워": "별씀을요! 제가 할아버지 옆에 있을 수 있어서 정말 행복해요.",
+    "낙상": "할아버지, 방금 조금 위험해 보였어요. 천천히 움직이세요!",
+}
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat_with_agent(request: ChatRequest):
-    response = random.choice(MOCK_RESPONSES)
-    return ChatResponse(response=response, mood_detected="Happy", timestamp=datetime.now())
+    user_msg = request.message
+    response = "허허, 그렇군요. 더 자세히 말씀해 주시겠어요?" # 기본 답변
+    
+    # 키워드 기반 지능형 응답 (실제 API 연결 전 단계)
+    for keyword, msg in ADAPTIVE_RESPONSES.items():
+        if keyword in user_msg:
+            response = msg
+            break
+
+    # TODO: 실제 Gemini API 연결 시 아래 로직 사용 가능
+    # api_key = os.getenv("GEMINI_API_KEY")
+    # if api_key:
+    #     response = await call_gemini_api(user_msg) # 외부 API 호출 함수
+
+    return ChatResponse(
+        response=response,
+        mood_detected="Peaceful",
+        timestamp=datetime.now()
+    )
 
 @app.get("/health-status/{user_id}", response_model=HealthStatus)
 async def get_health_status(user_id: str):
-    heart_rate = random.randint(65, 110)
-    steps = random.randint(1000, 8000)
-    sleep_hours = round(random.uniform(5.0, 8.5), 1)
+    # Simulating standard health data
+    heart_rate = random.randint(70, 85)
+    steps = random.randint(3000, 5000)
     
-    # v3: Simulated Radar Fall Sensor Logic
-    is_fall_detected = random.random() < 0.05 # 5% chance for testing
-    status = "Critical" if is_fall_detected or heart_rate > 105 else "Normal"
-    
-    # v3: Simulated Gait Alert
-    gait_alert = random.random() < 0.1 # 10% chance
-    if gait_alert and status == "Normal":
-        status = "Alert"
-
+    # 글로벌 상태 (비전 이벤트와 결합됨)
     return HealthStatus(
         user_id=user_id,
         heart_rate=heart_rate,
         steps=steps,
-        sleep_hours=sleep_hours,
-        status=status,
-        caregiver_notified=(status == "Critical"),
-        gait_alert=gait_alert
+        sleep_hours=7.5,
+        status="Normal",
+        vision_status="Monitoring",
+        caregiver_notified=False
     )
 
-@app.get("/health-trends/{user_id}", response_model=HealthTrend)
-async def get_health_trends(user_id: str):
-    trends = []
-    today = datetime.now()
-    for i in range(7, 0, -1):
-        date_str = (today - timedelta(days=i)).strftime("%m-%d")
-        trends.append(DailyStat(
-            date=date_str,
-            steps=random.randint(2000, 7000),
-            avg_heart_rate=random.randint(70, 85),
-            walking_speed=round(random.uniform(3.0, 4.5), 2)
-        ))
-    return HealthTrend(user_id=user_id, trends=trends)
+@app.post("/vision-event")
+async def receive_vision_event(event: VisionEvent):
+    # 카메라(Frontend)에서 분석된 낙상/움직임 데이터를 수신
+    print(f"VISION EVENT RECEIVED: {event.event_type} (Confidence: {event.confidence})")
+    if event.event_type == "FallDetected":
+        # 긴급 알림 로직 실행 (실제로는 여기서 보호자에게 메시지 발송)
+        return {"status": "Emergency", "action": "Notifying Caregiver & Emergency Services"}
+    return {"status": "Received"}
 
 @app.get("/alerts")
 async def get_active_alerts():
-    # v3: Dynamic Medication Alert
     return {
         "alerts": [
-            {"type": "Medicine", "message": "💊 혈압약 드실 시간입니다. 할아버지의 소중한 건강을 지켜주세요!", "time": "현재", "urgent": True},
-            {"type": "Health", "message": "최근 보행 속도가 조금 느려졌습니다. 무리하지 마세요.", "time": "분석 결과", "urgent": False}
+            {"type": "Vision", "message": "카메라가 할아버지를 안전하게 지켜보고 있습니다.", "time": "실시간", "urgent": False},
+            {"type": "Medicine", "message": "💊 약 드실 시간입니다!", "time": "현재", "urgent": True}
         ]
     }
-
-@app.post("/medication/confirm")
-async def confirm_medication(update: MedicationUpdate):
-    print(f"MEDICATION CONFIRMED: {update.user_id} took {update.pill_name}")
-    return {"status": "success", "message": "가족들에게도 안심하라고 전해드릴게요!"}
 
 if __name__ == "__main__":
     import uvicorn

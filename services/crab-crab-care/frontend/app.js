@@ -1,104 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const webcam = document.getElementById('webcam');
+    const cameraBtn = document.getElementById('camera-btn');
+    const visionLabel = document.getElementById('vision-label');
+    const visionStatus = document.getElementById('vision-status');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
     const chatWindow = document.getElementById('chat-window');
-    const heartRate = document.getElementById('heart-rate');
-    const steps = document.getElementById('steps');
-    const speedDisplay = document.getElementById('speed');
-    const alertList = document.getElementById('alert-list');
-    const trendsContainer = document.getElementById('trends-container');
-    const statusIndicator = document.getElementById('status-indicator');
-    const gaitBadge = document.getElementById('gait-badge');
     
-    // v3: Modal Elements
-    const medModal = document.getElementById('med-modal');
-    const pillConfirmBtn = document.getElementById('pill-confirm-btn');
-
     const API_URL = 'http://localhost:8000';
 
-    async function fetchHealth() {
+    // v3.1: Camera Access Logic
+    cameraBtn.onclick = async () => {
         try {
-            const res = await fetch(`${API_URL}/health-status/user123`);
-            const data = await res.json();
-            heartRate.innerText = data.heart_rate;
-            steps.innerText = data.steps;
-            
-            statusIndicator.innerText = `상태: ${data.status}`;
-            statusIndicator.className = `status-${data.status.toLowerCase()}`;
-
-            // v3: Gait Alert
-            if (data.gait_alert) {
-                gaitBadge.className = 'gait-badge';
-            } else {
-                gaitBadge.className = 'badge-hidden';
-            }
-
-            if (data.status === 'Critical') {
-                console.warn('FALL DETECTED OR CRITICAL HEART RATE. Family and Emergency Services notified.');
-            }
-        } catch (err) { console.error('Health Fetch Error:', err); }
-    }
-
-    async function fetchTrends() {
-        try {
-            const res = await fetch(`${API_URL}/health-trends/user123`);
-            const data = await res.json();
-            trendsContainer.innerHTML = '';
-            data.trends.forEach(day => {
-                const item = document.createElement('div');
-                item.className = 'trend-item';
-                const stepHeight = (day.steps / 8000) * 100;
-                const speedPos = (day.walking_speed / 6) * 100;
-                item.innerHTML = `
-                    <div class="speed-dot" style="margin-bottom: ${speedPos}px"></div>
-                    <div class="trend-bar" style="height: ${Math.max(stepHeight, 10)}px"></div>
-                    <div>${day.date}</div>
-                `;
-                trendsContainer.appendChild(item);
-            });
-            // Update current speed display with last day
-            speedDisplay.innerText = data.trends[data.trends.length-1].walking_speed;
-        } catch (err) { console.error('Trend Fetch Error:', err); }
-    }
-
-    async function fetchAlerts() {
-        try {
-            const res = await fetch(`${API_URL}/alerts`);
-            const data = await res.json();
-            alertList.innerHTML = '';
-            data.alerts.forEach(alert => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>[${alert.type}]</strong> ${alert.message}`;
-                if (alert.urgent) {
-                    li.style.color = '#e74c3c';
-                    li.style.fontWeight = 'bold';
-                    // v3: Trigger Modal for urgent medication
-                    if (alert.type === 'Medicine') medModal.classList.remove('hidden');
-                }
-                alertList.appendChild(li);
-            });
-        } catch (err) { console.error('Alert Fetch Error:', err); }
-    }
-
-    // v3: Medication Confirmation
-    pillConfirmBtn.onclick = async () => {
-        try {
-            await fetch(`${API_URL}/medication/confirm`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: 'user123', pill_name: '혈압약', taken: True })
-            });
-            medModal.classList.add('hidden');
-            appendMessage('bot', '약을 잘 챙겨드셨군요! 정말 훌륭해요 할아버지.');
-            speak('약을 잘 챙겨드셨군요! 정말 훌륭해요 할아버지.');
-        } catch (err) { medModal.classList.add('hidden'); }
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            webcam.srcObject = stream;
+            cameraBtn.innerText = "지킴이 작동 중";
+            cameraBtn.style.background = "#2ecc71";
+            visionStatus.innerText = "🛡️ 실시간 AI 보호 중";
+            startVisionAnalysis();
+        } catch (err) {
+            alert("카메라 권한이 필요합니다.");
+        }
     };
 
+    // v3.1: Simulated Vision Analysis
+    function startVisionAnalysis() {
+        setInterval(async () => {
+            const events = ["Normal", "Normal", "Normal", "Normal", "NoMovement"];
+            const randomEvent = events[Math.floor(Math.random() * events.length)];
+            
+            visionLabel.innerText = `분석 결과: ${randomEvent === 'Normal' ? '안전' : '활동 감지 안됨'}`;
+            
+            // Send event to backend
+            try {
+                await fetch(`${API_URL}/vision-event`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: 'user123', event_type: randomEvent, confidence: 0.95 })
+                });
+            } catch (e) {}
+        }, 5000);
+    }
+
+    // Adaptive Chat Logic
     async function sendMessage() {
         const text = userInput.value.trim();
         if (!text) return;
         appendMessage('user', text);
         userInput.value = '';
+
         try {
             const res = await fetch(`${API_URL}/chat`, {
                 method: 'POST',
@@ -108,7 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             appendMessage('bot', data.response);
             speak(data.response);
-        } catch (err) { appendMessage('system', '오류가 발생했습니다.'); }
+        } catch (err) {
+            appendMessage('system', '서버 연결에 문제가 있습니다.');
+        }
     }
 
     function appendMessage(type, text) {
@@ -130,7 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
     sendBtn.onclick = sendMessage;
     userInput.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
 
-    // Initial Load
-    fetchHealth(); fetchAlerts(); fetchTrends();
+    // Standard Health Update
+    async function fetchHealth() {
+        try {
+            const res = await fetch(`${API_URL}/health-status/user123`);
+            const data = await res.json();
+            document.getElementById('heart-rate').innerText = data.heart_rate;
+            document.getElementById('steps').innerText = data.steps;
+        } catch (e) {}
+    }
+
+    fetchHealth();
     setInterval(fetchHealth, 10000);
 });
