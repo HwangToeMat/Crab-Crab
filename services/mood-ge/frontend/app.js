@@ -1,33 +1,28 @@
 const API_URL = "http://localhost:8000/api/v1";
 
-async function fetchChallenges() {
-    // For prototype, if backend not running, use mock
+async function fetchChallenges(mood = "neutral") {
     try {
-        const response = await fetch(`${API_URL}/challenges`);
+        const response = await fetch(`${API_URL}/challenges?mood=${mood}`);
         const data = await response.json();
         renderChallenges(data);
     } catch (e) {
         console.log("Using local mock data for challenges");
-        renderChallenges([
+        // Simple client-side recommendation mock
+        let mockData = [
             {id: 1, title: "물 한 잔 마시기", completed: false},
             {id: 2, title: "1분간 하늘 보기", completed: false},
             {id: 3, title: "감사한 일 1개 적기", completed: false}
-        ]);
+        ];
+        if (mood === "tired") mockData[0].title = "가벼운 스트레칭 5분 (AI 추천)";
+        renderChallenges(mockData);
     }
 }
 
-function renderChallenges(challenges) {
-    const list = document.getElementById('challenge-list');
-    list.innerHTML = '';
-    challenges.forEach(c => {
-        const li = document.createElement('li');
-        li.className = `challenge-item ${c.completed ? 'completed' : ''}`;
-        li.innerHTML = `
-            <input type="checkbox" ${c.completed ? 'checked' : ''} onchange="toggleChallenge(${c.id})">
-            <span>${c.title}</span>
-        `;
-        list.appendChild(li);
-    });
+async function sendCheer() {
+    const totalEl = document.getElementById('cheer-total');
+    let count = parseInt(totalEl.innerText);
+    totalEl.innerText = count + 1;
+    alert("❤️ 다른 사용자에게 응원을 보냈습니다!");
 }
 
 function logMood(mood, score) {
@@ -35,23 +30,23 @@ function logMood(mood, score) {
     const message = document.getElementById('crab-message');
     const memo = document.getElementById('mood-memo').value;
     
-    crab.className = `crab ${mood}`;
+    crab.className = `crab ${mood} animated`;
+    
+    // Refresh challenges based on mood (Evolution Cycle 1)
+    fetchChallenges(mood);
     
     const messages = {
         happy: "정말 멋진 하루군요! 꽃게도 기뻐요!",
         neutral: "평온한 하루네요. 무난함이 행복의 시작이죠.",
-        tired: "오늘은 많이 지치셨군요. 꽃게가 토닥토닥해드릴게요.",
-        sad: "슬퍼도 괜찮아요. 내일은 조금 더 나을 거예요."
+        tired: "오늘은 많이 지치셨군요. 맞춤형 챌린지를 준비했어요!",
+        sad: "슬퍼도 괜찮아요. 마음을 돌보는 챌린지를 해볼까요?"
     };
     
     message.innerText = messages[mood];
     
-    // Update score (simple visual effect)
     document.getElementById('recovery-score').innerText = score;
-    
-    // Add to History
     addHistory(mood, memo);
-    document.getElementById('mood-memo').value = ''; // Clear memo
+    document.getElementById('mood-memo').value = '';
 }
 
 function addHistory(mood, memo) {
@@ -69,17 +64,39 @@ function addHistory(mood, memo) {
     list.prepend(li);
 }
 
+let crabPoints = 0;
+let crabLevel = 1;
+
 async function toggleChallenge(id) {
-    console.log(`Challenge ${id} toggled`);
     const scoreEl = document.getElementById('recovery-score');
     let currentScore = parseInt(scoreEl.innerText);
     scoreEl.innerText = currentScore + 10;
     
-    // Check if all done
+    // Evolution: Point & Level System
+    crabPoints += 20;
+    if (crabPoints >= 100) {
+        crabLevel++;
+        crabPoints = 0;
+        alert(`🎊 축하합니다! 꽃게가 레벨 ${crabLevel}로 진화했습니다!`);
+        updateLevelUI();
+    }
+    
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     const allChecked = Array.from(checkboxes).every(c => c.checked);
     if (allChecked) {
-        alert("🎉 모든 꽃게 퀘스트를 완료했습니다! 번아웃 회복 속도가 빨라지고 있어요.");
+        alert("🎉 오늘 모든 퀘스트 완료! 꽃게가 아주 건강해졌어요.");
+    }
+}
+
+function updateLevelUI() {
+    const titleEl = document.querySelector('header h1');
+    if (!document.querySelector('.level-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'level-badge';
+        badge.innerText = `Lv.${crabLevel}`;
+        titleEl.appendChild(badge);
+    } else {
+        document.querySelector('.level-badge').innerText = `Lv.${crabLevel}`;
     }
 }
 

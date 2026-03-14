@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'Sad': '😢',
             'Angry': '😡',
             'Anxious': '😰',
-            'Neutral': '😐'
+            'Neutral': '😐',
+            'Complex': '🌀'
         };
 
         moodEmoji.textContent = emojis[moodData.mood_category] || '🤔';

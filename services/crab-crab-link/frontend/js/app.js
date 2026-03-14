@@ -178,10 +178,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getDummyData() {
-        return [
-            { id: 1, title: '샤인머스캣 소분하실 분!', content: '대용량 1박스 샀는데 혼자 먹기 많아서 3송이 나눔합니다.', category: '식재료', tags: '식재료, 소분', user_name: '포도대장', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop' },
-            { id: 2, title: '전동 드릴 빌려주실 분 계신가요?', content: '서랍장 조립하려고 하는데 1시간만 빌려주실 분 찾습니다.', category: '도구/공유', tags: '도구, 공유', user_name: '뚝딱이', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop' },
-            { id: 3, title: '화장지 30롤 너무 많아서 10롤 나눕니다', content: '쿠팡에서 잘못 시켰네요. 필요하신 분 가져가세요.', category: '생필품', tags: '생필품, 나눔', user_name: '깔끔이', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop' }
-        ];
+        const lang = window.i18n.getLang();
+        const data = {
+            ko: [
+                { id: 1, title: '샤인머스캣 소분하실 분!', content: '대용량 1박스 샀는데 혼자 먹기 많아서 3송이 나눔합니다.', category: '식재료', tags: '식재료, 소분', user_name: '포도대장', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop' },
+                { id: 2, title: '전동 드릴 빌려주실 분 계신가요?', content: '서랍장 조립하려고 하는데 1시간만 빌려주실 분 찾습니다.', category: '도구/공유', tags: '도구, 공유', user_name: '뚝딱이', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop' },
+                { id: 3, title: '화장지 30롤 너무 많아서 10롤 나눕니다', content: '쿠팡에서 잘못 시켰네요. 필요하신 분 가져가세요.', category: '생필품', tags: '생필품, 나눔', user_name: '깔끔이', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop' }
+            ],
+            en: [
+                { id: 1, title: 'Anyone want to split Shine Muscat?', content: 'Bought a large box, too much for one. Sharing 3 bunches.', category: '식재료', tags: 'food, split', user_name: 'GrapeMaster', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop' },
+                { id: 2, title: 'Can I borrow a power drill?', content: 'Assembling a drawer, need it for just 1 hour.', category: '도구/공유', tags: 'tools, sharing', user_name: 'HandyMan', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop' },
+                { id: 3, title: '30 rolls of TP is too many, sharing 10', content: 'Ordered too many online. Please take some.', category: '생필품', tags: 'necessities, free', user_name: 'CleanGuy', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop' }
+            ],
+            ja: [
+                { id: 1, title: 'シャインマスカットを分け合いたい方！', content: '大容量1箱買いましたが一人では多いので3房お分けします。', category: '식재료', tags: '食材, 分け合い', user_name: 'ブドウ大将', user_temperature: 42.5, image_url: 'https://images.unsplash.com/photo-1596333522248-111f9902f465?w=400&h=300&fit=crop' },
+                { id: 2, title: '電動ドリルを貸していただける方いますか？', content: '引き出しを組み立てるのに1時間だけ借りたいです。', category: '도구/공유', tags: '道具, 共有', user_name: 'トントン', user_temperature: 36.5, image_url: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=300&fit=crop' },
+                { id: 3, title: 'トイレットペーパー30ロールは多すぎて10ロール分けます', content: '通販で買いすぎました。必要な方どうぞ。', category: '생필품', tags: '日用品, お裾分け', user_name: 'きれい好き', user_temperature: 38.2, image_url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop' }
+            ]
+        };
+        return data[lang] || data.en;
     }
 });

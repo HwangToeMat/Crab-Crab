@@ -74,56 +74,39 @@ CHEER_MESSAGES = {
     "Neutral": ["평화로운 오늘을 즐기세요.", "안정적인 마음이 가장 큰 자산입니다."]
 }
 
+# 캐시 저장소
+ANALYSIS_CACHE = {}
+
 @app.post("/api/mood/analyze", response_model=MoodResponse)
 async def analyze_mood(request: MoodRequest):
     """
-    고도화된 키워드 분석 및 사용자 히스토리 연동.
+    캐싱 및 복합 감정 분석 지원.
     """
-    text = request.mood_text.lower()
-    
-    # 확장된 키워드 셋
-    keywords = {
-        "Happy": ["기뻐", "좋아", "행복", "신나", "즐거워", "최고", "뿌듯"],
-        "Sad": ["슬퍼", "우울", "힘들어", "지쳐", "눈물", "외로워", "속상"],
-        "Angry": ["화나", "짜증", "분노", "답답", "미워", "열받아"],
-        "Anxious": ["불안", "걱정", "초조", "떨려", "무서워"] # 새로운 카테고리 추가
-    }
-    
-    category = "Neutral"
-    score = random.uniform(-0.2, 0.2)
-    
-    for cat, words in keywords.items():
-        if any(w in text for w in words):
-            category = cat
-            score = 0.8 if cat == "Happy" else -0.8 if cat in ["Sad", "Anxious"] else -1.0
-            break
+    # 캐시 체크
+    cache_key = f"{request.user_id}:{request.mood_text}"
+    if cache_key in ANALYSIS_CACHE:
+        return ANALYSIS_CACHE[cache_key]
 
-    # 메시지 정교화
-    messages = {
-        "Happy": "빛나는 하루네요! 이 긍정적인 에너지를 꽃게도 나누고 싶어요.",
-        "Sad": "혼자 견디기 힘든 날이죠. 꽃게가 당신의 이야기를 다 들어줄게요.",
-        "Angry": "잠시만요, 깊게 숨을 세 번만 들이마셔 볼까요? 꽃게가 곁에 있어요.",
-        "Anxious": "불안은 구름처럼 왔다가 지나갈 거예요. 지금 이 순간에 집중해봐요.",
-        "Neutral": "담백한 하루군요. 이런 평온함이 때로는 가장 큰 힘이 돼요."
-    }
-    
-    # 히스토리 저장 로직 (Simulated)
-    if request.user_id not in USER_HISTORIES:
-        USER_HISTORIES[request.user_id] = []
-    
-    new_entry = MoodHistoryItem(date=datetime.now(), mood=category, score=round(score, 2))
-    USER_HISTORIES[request.user_id].append(new_entry)
-    
-    # 동일 무드 사용자 수 시뮬레이션
-    same_mood_count = random.randint(1, 50)
-    
-    return MoodResponse(
+    text = request.mood_text.lower()
+...
+    # 복합 감정 체크 (예: 슬픈데 화남)
+    if "슬퍼" in text and "화나" in text:
+        category = "Complex"
+        message = "여러 감정이 섞여 혼란스러우시죠? 천천히 하나씩 풀어가 봐요."
+        score = -0.5
+
+    # 결과 생성
+    result = MoodResponse(
         sentiment_score=round(score, 2),
         mood_category=category,
-        message=messages.get(category, "오늘도 당신을 응원합니다."),
-        history=USER_HISTORIES[request.user_id][-5:], # 최근 5개 기록 반환
-        same_mood_count=same_mood_count
+        message=messages.get(category, message),
+        history=USER_HISTORIES[request.user_id][-5:],
+        same_mood_count=random.randint(1, 50)
     )
+    
+    # 캐시 저장
+    ANALYSIS_CACHE[cache_key] = result
+    return result
 
 @app.get("/api/cheer", response_model=List[str])
 async def get_cheer(mood: str):
