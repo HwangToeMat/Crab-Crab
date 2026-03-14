@@ -172,6 +172,29 @@ button {
     margin-bottom: 2rem;
 }
 
+.history-list {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.5rem 0 1.5rem 0;
+}
+
+.history-item {
+    background: #F3F4F6;
+    padding: 0.8rem;
+    border-radius: 1rem;
+    text-align: center;
+    min-width: 80px;
+    flex-shrink: 0;
+}
+
+.history-item span {
+    display: block;
+    font-size: 0.75rem;
+    color: #6B7280;
+    margin-bottom: 0.3rem;
+}
+
 .activity-item {
     background: white;
     padding: 1.5rem;
