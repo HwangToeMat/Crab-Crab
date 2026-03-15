@@ -4,10 +4,13 @@ __pycache__/
 *$py.class
 venv/
 .env
+*.db
 
 # Node
 node_modules/
 dist/
+dist-ssr
+*.local
 
 # OS
 .DS_Store
@@ -18,7 +21,19 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
 # Project Specific
-outputs/*.md
-tasks/state.json
+outputs/
+tasks/
+reports/cycles/cycle_*_report.md
+services/**/build/
+services/**/.gradle/
+services/**/bin/
+services/**/out/
+services/**/node_modules/
+services/**/dist/
+services/**/.env
