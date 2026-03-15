@@ -16,3 +16,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+google:
+  gemini:
+    api-key: ${GEMINI_API_KEY:default_value}
