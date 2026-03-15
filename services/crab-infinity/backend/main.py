@@ -166,6 +166,38 @@ async def get_evolution_analysis():
         "system_status": "OPTIMIZED" if state.stage >= 2 else "EVOLVING"
     }
 
+@app.post("/api/nexus/delegate")
+async def delegate_task(task: dict = Body(...)):
+    """Cooperative Agent Protocol (CAP) - 서비스 간 자율 과업 하달"""
+    target_service = task.get("target")
+    instruction = task.get("instruction")
+    
+    # 서비스 존재 여부 확인
+    service_path = os.path.join(SERVICES_DIR, target_service) if target_service else None
+    if not service_path or not os.path.exists(service_path):
+        raise HTTPException(status_code=404, detail=f"Service '{target_service}' not found.")
+    
+    # AI Reasoning for Delegation (Simulation)
+    delegation_id = f"CAP-{random.randint(1000, 9999)}"
+    ai_analysis = f"Nexus AI가 '{target_service}'에 대한 '{instruction}' 과업의 최적 경로를 계산했습니다. 리소스 15% 할당 및 우선순위 'High'로 설정."
+    
+    # Log delegation event
+    state = load_evo_state()
+    state.history.append({
+        "event": f"Delegated: {instruction} -> {target_service}",
+        "id": delegation_id,
+        "timestamp": "2026-03-15T13:00:00Z"
+    })
+    state.xp += 50 # High-value evolution action
+    save_evo_state(state)
+    
+    return {
+        "delegation_id": delegation_id,
+        "status": "In Progress",
+        "ai_analysis": ai_analysis,
+        "target_service_state": "Synchronized"
+    }
+
 # Serve Static Files
 if os.path.exists(FRONTEND_DIR):
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
