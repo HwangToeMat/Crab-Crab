@@ -170,6 +170,22 @@ async function delegateTask() {
             <p style="color: var(--accent-color);">[${data.delegation_id}] Status: ${data.status}</p>
             <p>${data.ai_analysis}</p>
         `;
+
+        const historyContainer = document.getElementById("delegation-history");
+        if (historyContainer.querySelector("p") && historyContainer.querySelector("p").innerText === "No recent commands.") {
+            historyContainer.innerHTML = "";
+        }
+        
+        const historyItem = document.createElement("div");
+        historyItem.style.padding = "5px 0";
+        historyItem.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+        historyItem.innerHTML = `
+            <span style="color: #888;">[${new Date().toLocaleTimeString()}]</span> 
+            <strong style="color: var(--accent-color);">${target}:</strong> 
+            <span style="color: #ccc;">${instruction}</span>
+        `;
+        historyContainer.prepend(historyItem);
+
         document.getElementById("delegation-input").value = "";
         updateNexus();
     } catch (err) {

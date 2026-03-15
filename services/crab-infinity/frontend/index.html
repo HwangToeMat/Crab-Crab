@@ -40,7 +40,10 @@
                     <input type="text" id="delegation-input" placeholder="Enter Nexus Command (e.g., 'Enhance security audit')" style="background: var(--bg-color); color: white; border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; flex: 2;">
                     <button id="delegate-btn" class="btn" style="margin-top: 0;">DELEGATE</button>
                 </div>
-                <div id="delegation-result" style="font-size: 0.8rem; font-style: italic; color: var(--secondary);">Waiting for Nexus command...</div>
+                <div id="delegation-result" style="font-size: 0.8rem; font-style: italic; color: var(--secondary); margin-bottom: 10px;">Waiting for Nexus command...</div>
+                <div id="delegation-history" style="font-size: 0.75rem; max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 4px;">
+                    <p style="color: #666;">No recent commands.</p>
+                </div>
             </div>
         </section>
 
