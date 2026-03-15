@@ -1,9 +1,0 @@
-fastapi
-uvicorn
-sqlalchemy
-pydantic
-openai
-pytest
-httpx
-python-multipart
-python-dotenv
