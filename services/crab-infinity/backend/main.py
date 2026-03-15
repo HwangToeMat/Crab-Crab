@@ -37,20 +37,32 @@ class DelegationRequest(BaseModel):
 
 @app.post("/api/nexus/delegate")
 async def delegate_nexus(req: DelegationRequest):
-    """CAP (Cooperative Agent Protocol) Delegation Endpoint"""
+    """CAP (Cooperative Agent Protocol) Delegation Endpoint with AI Refinement"""
     state = load_evo_state()
     
-    # Simulate delegation logic
+    # AI Refinement Simulation
+    refinements = {
+        "security": "Enforcing zero-trust architecture and scanning for dependency leaks.",
+        "optimize": "Refactoring critical loops and enabling persistent caching mechanisms.",
+        "sync": "Synchronizing cross-service state using the Nexus Transcendence Protocol.",
+        "evolve": "Triggering next-gen evolution cycle and updating autonomous agent personas."
+    }
+    
+    refined_task = req.instruction
+    for key, val in refinements.items():
+        if key in req.instruction.lower():
+            refined_task = f"{req.instruction} -> Refined: {val}"
+            break
+            
     delegation_id = f"CAP-{random.randint(1000, 9999)}"
+    ai_analysis = f"Nexus AI has refined and transmitted the command to '{req.target}': {refined_task}"
     
-    ai_analysis = f"Nexus AI has analyzed the command: '{req.instruction}'. Target planet '{req.target}' is now executing the transcended protocol."
-    
-    # Gain XP for using CAP
-    state.xp += 25
+    # Gain XP
+    state.xp += 30
     state.history.append({
-        "event": f"CAP Delegation to {req.target}: {req.instruction}",
-        "xp": 25,
-        "timestamp": "2026-03-15T12:00:00Z"
+        "event": f"CAP Refined Delegation to {req.target}: {refined_task}",
+        "xp": 30,
+        "timestamp": "2026-03-15T12:05:00Z"
     })
     
     # Handle Stage 4: Transcendence
