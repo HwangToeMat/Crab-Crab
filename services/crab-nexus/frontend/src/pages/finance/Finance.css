@@ -28,7 +28,7 @@
 }
 
 .finance-page .classify-section, .finance-page .stats-section {
-    background: white;
+    background: var(--bg-elevated);
     padding: 25px;
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);

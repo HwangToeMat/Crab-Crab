@@ -6,7 +6,7 @@
 
 .crypto-page .pulse-item {
     flex: 1;
-    background: white;
+    background: var(--bg-elevated);
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);
@@ -17,7 +17,7 @@
 
 .crypto-page .pulse-item span {
     font-size: 0.8rem;
-    color: #666;
+    color: var(--text-sub);
 }
 
 .crypto-page .pulse-item strong {
@@ -43,7 +43,7 @@
 }
 
 .crypto-page .analyze-card {
-    background: white;
+    background: var(--bg-elevated);
     padding: 30px;
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);

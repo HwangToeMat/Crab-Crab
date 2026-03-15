@@ -6,7 +6,7 @@
 }
 
 .link-page .recommendation-section, .link-page .link-chat-section, .link-page .posts-section {
-    background: white;
+    background: var(--bg-elevated);
     padding: 30px;
     border-radius: 24px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);
@@ -22,7 +22,7 @@
 
 .link-page .rec-item p {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-sub);
     margin-top: 5px;
 }
 
@@ -78,5 +78,5 @@
     align-items: center;
     gap: 15px;
     font-size: 0.8rem;
-    color: #666;
+    color: var(--text-sub);
 }

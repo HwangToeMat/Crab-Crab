@@ -260,9 +260,17 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Fix for any remaining white cards */
-.card, .section, .box, .stat-card, .service-card, .item, .list-item {
+/* NUCLEAR FIX FOR WHITE BOXES */
+.dashboard, .page, .card, .section, .box, .container, .main, .content, 
+.stat-card, .service-card, .task-item, .item-card, .status-card, .ai-insight-box,
+.chat-window, .input-group, .form-card, .result-box {
   background-color: var(--bg-elevated) !important;
   color: var(--text-main) !important;
-  border: 1px solid var(--border-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+div[style*="background: white"], div[style*="background-color: white"], 
+div[style*="background: rgb(255, 255, 255)"], div[style*="background-color: #fff"] {
+  background-color: var(--bg-elevated) !important;
+  color: var(--text-main) !important;
 }
