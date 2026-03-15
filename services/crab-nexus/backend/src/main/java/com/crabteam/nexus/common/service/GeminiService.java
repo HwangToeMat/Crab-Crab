@@ -50,10 +50,10 @@ public class GeminiService {
                     return (String) parts.get(0).get("text");
                 }
             }
-            return "AI 분석 결과가 비어 있습니다. (Check API Quota)";
+            return "현재 AI 엔진이 분석 내용을 정리하고 있습니다. 잠시 후 다시 확인해 주세요! 🦀";
         } catch (Exception e) {
             log.error("Gemini API call failed: {}", e.getMessage());
-            return "AI 분석 호출 실패: " + e.getMessage();
+            return "현재 AI 엔진이 다음 진화를 위해 에너지를 충전 중입니다. 잠시 후 다시 시도해 주세요! ⚡";
         }
     }
 }
