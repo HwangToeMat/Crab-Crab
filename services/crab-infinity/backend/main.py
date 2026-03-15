@@ -140,7 +140,7 @@ async def get_services():
 
 @app.get("/api/guardian/scan")
 async def guardian_scan():
-    """모든 서비스 대상 보안 및 무결성 스캔 시뮬레이션"""
+    """모든 서비스 대상 보안 및 무결성 스캔 시뮬레이션 (Crab-Shield 데이터 연동 포함)"""
     results = []
     if os.path.exists(SERVICES_DIR):
         for s in os.listdir(SERVICES_DIR):
@@ -148,6 +148,17 @@ async def guardian_scan():
                 # Simulate scan logic
                 score = random.randint(85, 100)
                 issues = []
+                
+                # Special simulation for Crab-Shield integration
+                shield_intelligence = "No anomalous activity reported by Crab-Shield."
+                if s == "crab-shield":
+                    score = random.randint(95, 100)
+                    shield_intelligence = "Shield AI monitoring is active across all channels."
+                elif random.random() < 0.2: # 20% chance of anomaly
+                    score = random.randint(70, 89)
+                    shield_intelligence = "Crab-Shield detected unusual resonance patterns in this quadrant."
+                    issues.append("External interference detected by Shield AI.")
+                
                 if score < 90:
                     issues.append("Minor dependency vulnerability detected.")
                 if not os.path.exists(os.path.join(SERVICES_DIR, s, "Dockerfile")):
@@ -157,7 +168,8 @@ async def guardian_scan():
                     "name": s,
                     "score": score,
                     "status": "Safe" if score >= 90 else "Caution",
-                    "issues": issues
+                    "issues": issues,
+                    "shield_intel": shield_intelligence
                 })
     return {"scan_results": results, "total_score": sum(r["score"] for r in results) / len(results) if results else 0}
 

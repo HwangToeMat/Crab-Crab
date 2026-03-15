@@ -123,6 +123,7 @@ async function runScan() {
             html += `
                 <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 4px; border-left: 3px solid ${r.status === 'Safe' ? '#238636' : '#d29922'}">
                     <strong>${r.name}</strong> - ${r.status} (${r.score}%)
+                    <p style="font-size: 0.65rem; color: #58a6ff; margin: 4px 0;">Shield Intel: ${r.shield_intel}</p>
                     <ul style="font-size: 0.65rem; color: #aaa; padding-left: 15px; margin-top: 5px;">
                         ${r.issues.length > 0 ? r.issues.map(i => `<li>${i}</li>`).join('') : '<li>No issues found</li>'}
                     </ul>
