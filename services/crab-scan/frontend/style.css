@@ -1,0 +1,117 @@
+:root {
+    --primary: #7F00FF; /* Electric Purple */
+    --secondary: #0000FF; /* Deep Blue */
+    --bg: #0b0b1a;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text: #e0e0e0;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Pretendard', sans-serif;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+#app {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid rgba(127, 0, 255, 0.3);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.score-meter {
+    height: 12px;
+    background: #222;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#score-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7F00FF, #00D2FF);
+    width: 85%;
+    transition: width 1s ease;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+input {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #333;
+    color: white;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+button:hover {
+    transform: scale(1.02);
+    background: #6a00d9;
+}
+
+.ai-insight {
+    background: rgba(127,0,255,0.15);
+    padding: 15px;
+    border-radius: 15px;
+    border-left: 4px solid var(--primary);
+    margin-top: 15px;
+}
+
+#expense-list {
+    list-style: none;
+    padding: 0;
+}
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.quest-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: rgba(0,210,255,0.05);
+    border-radius: 12px;
+}
+
+.quest-item.completed {
+    opacity: 0.6;
+    text-decoration: line-through;
+}
