@@ -75,7 +75,7 @@ public class AiEvolutionService {
                         "각 엔드포인트의 목적, 요청 파라미터, 응답 예시, 그리고 이 서비스의 '꽃게팀 세계관' 내에서의 역할을 포함하라.";
                 return geminiService.analyzeWithAi(systemPrompt, sourceCode);
             } else {
-                return "[Error] 소스 코드를 찾을 수 없습니다: " + controllerDirPath;
+                return "[Error] 소스 코드를 찾을 수 없습니다: " + dirPath.toString();
             }
         } catch (IOException e) {
             log.error("Failed to read source code for AI documentation: {}", e.getMessage());

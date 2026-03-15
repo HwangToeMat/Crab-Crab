@@ -105,11 +105,15 @@ function App() {
       .then(res => setServices(res.data))
       .catch(err => {
         console.error("Service fetch error", err);
-        // Fallback for demo
+        // Full fallback list for better UX during startup
         setServices([
-          { id: 'crab-infinity', name: 'Crab-Infinity', icon: 'infinity' },
-          { id: 'crab-shield', name: 'Crab-Shield', icon: 'shield' },
-          { id: 'mood-ge', name: 'Mood-Ge', icon: 'mood' }
+          { id: 'crab-infinity', name: 'Crab-Infinity', icon: 'infinity', description: 'AI 오케스트레이터' },
+          { id: 'work-crab', name: 'Work-Crab', icon: 'work', description: '생산성 관리' },
+          { id: 'god-crab', name: 'God-Crab', icon: 'god', description: '갓생 챌린지' },
+          { id: 'crab-shield', name: 'Crab-Shield', icon: 'shield', description: '보안 시스템' },
+          { id: 'mood-ge', name: 'Mood-Ge', icon: 'mood', description: '감정 분석' },
+          { id: 'crab-mate', name: 'Crab-Mate', icon: 'mate', description: '소셜 커뮤니티' },
+          { id: 'crab-finance', name: 'Crab-Finance', icon: 'finance', description: '핀테크 리워드' }
         ]);
       });
   }, []);
