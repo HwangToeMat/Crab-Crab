@@ -46,7 +46,7 @@
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-md); /* 둥글게 */
   color: var(--text-sub);
   font-size: 0.95rem;
   font-weight: 500;
@@ -142,7 +142,7 @@
 .stat-card {
   background-color: var(--bg-elevated);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg); /* 둥글게 */
   border: 1px solid var(--border-color);
 }
 
@@ -169,7 +169,7 @@
 
 .service-card {
   background-color: var(--bg-elevated);
-  border-radius: 12px;
+  border-radius: var(--radius-lg); /* 둥글게 */
   overflow: hidden;
   border: 1px solid var(--border-color);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -233,7 +233,7 @@ input, textarea, select {
   background-color: var(--bg-elevated) !important;
   color: var(--text-main) !important;
   border: 1px solid var(--border-color) !important;
-  border-radius: 8px;
+  border-radius: var(--radius-md) !important; /* 둥글게 */
   padding: 10px 14px;
 }
 
@@ -247,6 +247,8 @@ button {
   border: none;
   cursor: pointer;
   font-weight: 700;
+  border-radius: var(--radius-md) !important; /* 둥글게 */
+  padding: 10px 20px; /* 기존 사이즈 유지용 */
   transition: all 0.2s;
 }
 
@@ -267,6 +269,7 @@ button:disabled {
   background-color: var(--bg-elevated) !important;
   color: var(--text-main) !important;
   border-color: var(--border-color) !important;
+  border-radius: var(--radius-lg) !important; /* 둥글게 */
 }
 
 div[style*="background: white"], div[style*="background-color: white"], 
