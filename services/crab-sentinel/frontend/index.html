@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRAB-SENTINEL | AI Security Nexus</title>
+    <style>
+        :root {
+            --bg-black: #050505;
+            --alert-red: #ff003c;
+            --secure-green: #00ff88;
+            --warning-amber: #ffaa00;
+            --sentinel-blue: #0088ff;
+            --text-gray: #aaaaaa;
+        }
+        body {
+            background-color: var(--bg-black);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            border-bottom: 2px solid var(--alert-red);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { margin: 0; color: var(--alert-red); font-size: 1.5rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: rgba(255, 0, 60, 0.05);
+            border: 1px solid rgba(255, 0, 60, 0.2);
+            padding: 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .card:hover { border-color: var(--alert-red); background: rgba(255, 0, 60, 0.1); }
+        .score { font-size: 2.5rem; font-weight: bold; margin: 10px 0; }
+        .Secure { color: var(--secure-green); }
+        .Warning { color: var(--warning-amber); }
+        .Critical { color: var(--alert-red); }
+        .vulnerabilities { font-size: 0.8rem; color: var(--text-gray); }
+        .vulnerabilities ul { padding-left: 20px; }
+        footer { margin-top: 50px; text-align: center; color: #444; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CRAB-SENTINEL v2.0_EVO</h1>
+        <div id="status-indicator">[ SYSTEM: STEALTH MODE ]</div>
+    </header>
+
+    <main>
+        <div id="audit-summary" style="margin-bottom: 30px;">
+            <button onclick="startAudit()" style="background: var(--alert-red); color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold;">INITIATE SYSTEM AUDIT</button>
+        </div>
+        <div id="results-grid" class="grid">
+            <!-- Audit results will be injected here -->
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 CRABTEAM SECURITY DIVISION - CRAB-SENTINEL.IO
+    </footer>
+
+    <script>
+        async function startAudit() {
+            document.getElementById('status-indicator').innerText = '[ SYSTEM: SCANNING... ]';
+            try {
+                const res = await fetch('/api/audit/all');
+                const data = await res.json();
+                renderResults(data.audit_results);
+                document.getElementById('status-indicator').innerText = '[ SYSTEM: IDLE ]';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('status-indicator').innerText = '[ ERROR: SCAN FAILED ]';
+            }
+        }
+
+        function renderResults(results) {
+            const grid = document.getElementById('results-grid');
+            grid.innerHTML = '';
+            results.forEach(res => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h3>${res.service_name}</h3>
+                    <div class="score ${res.status}">${res.security_score}%</div>
+                    <p>STATUS: <span class="${res.status}">${res.status.toUpperCase()}</span></p>
+                    <div class="vulnerabilities">
+                        <strong>LOGS:</strong>
+                        <ul>
+                            ${res.vulnerabilities.length > 0 ? 
+                                res.vulnerabilities.map(v => `<li>${v}</li>`).join('') : 
+                                '<li>No critical vulnerabilities detected.</li>'}
+                        </ul>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        // Initial Audit
+        startAudit();
+    </script>
+</body>
+</html>
