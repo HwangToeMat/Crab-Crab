@@ -1,76 +1,83 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
-import sqlite3
+import random
 
-app = FastAPI(title="Mood-Ge API")
+app = FastAPI(title="Mood-Ge v2.0 'Infinite Evolution'")
 
-# Simple In-memory/SQLite Mock for Prototype
-# In a real scenario, SQLAlchemy would be used.
-
-class MoodLog(BaseModel):
-    id: Optional[int] = None
+# --- Evolution v2.0: Data Structures ---
+class UserMood(BaseModel):
     mood: str
-    score: int
-    note: Optional[str] = None
-    created_at: datetime = datetime.now()
+    note: str
 
-class Challenge(BaseModel):
-    id: int
-    title: str
-    completed: bool = False
+class EvolutionState:
+    def __init__(self):
+        self.points = 1000  # Initial "Crab Tokens"
+        self.burnout_score = 45
+        self.streak = 5
+        self.cheers = 120
+        self.active_challenges = [
+            {"id": 1, "title": "따뜻한 차 한 잔 마시기", "completed": False, "reward": 50},
+            {"id": 2, "title": "5분간 눈 감고 호흡하기", "completed": False, "reward": 80},
+            {"id": 3, "title": "오늘 나에게 고생했다 말하기", "completed": False, "reward": 100}
+        ]
+        self.ambassadors = [
+            {"id": "zen-crab", "name": "명상하는 게", "motto": "파도처럼 마음을 다스려요.", "track": "Mindfulness"},
+            {"id": "fit-crab", "name": "운동하는 게", "motto": "움직임이 기쁨을 만듭니다.", "track": "Vitality"}
+        ]
 
-# Mock Data
-mood_history = []
-all_challenges = [
-    {"id": 1, "title": "물 한 잔 마시기 (신체)", "completed": False, "category": "Body"},
-    {"id": 2, "title": "1분간 하늘 보기 (마음)", "completed": False, "category": "Mind"},
-    {"id": 3, "title": "감사한 일 1개 적기 (마음)", "completed": False, "category": "Mind"},
-    {"id": 4, "title": "가벼운 스트레칭 5분 (신체)", "completed": False, "category": "Body"},
-    {"id": 5, "title": "친구에게 안부 문자 보내기 (관계)", "completed": False, "category": "Social"},
-    {"id": 6, "title": "오늘의 명언 읽기 (마음)", "completed": False, "category": "Mind"},
-]
-daily_challenges = all_challenges[:3]
-cheers_count = 0  # 커뮤니티 응원 총합 (Mock)
+state = EvolutionState()
+
+# --- Evolution v2.0: AI Engine (Gemini Mock) ---
+def analyze_emotion_ai(note: str):
+    # This simulates a Gemini API call for sentiment analysis & recommendation
+    keywords = ["힘들다", "지친다", "번아웃", "슬프다", "피곤"]
+    detected = [k for k in keywords if k in note]
+    
+    if detected:
+        advice = f"당신의 기록에서 '{detected[0]}' 같은 감정이 느껴집니다. 무한진화 중인 무드게 AI는 지금 당신에게 '깊은 호흡 3회'와 '좋아하는 음악 듣기'를 강력 추천합니다. 당신의 번아웃 회복을 위해 50포인트를 선물로 드릴게요!"
+        return advice, "Supportive"
+    return "오늘 하루도 잘 보내셨네요! 당신의 갓생 진화를 응원합니다.", "Positive"
+
+# --- API Endpoints ---
+
+@app.get("/api/v1/evolution/status")
+def get_status():
+    return {
+        "points": state.points,
+        "burnout_score": state.burnout_score,
+        "streak": state.streak,
+        "cheers": state.cheers,
+        "ambassadors": state.ambassadors
+    }
+
+@app.post("/api/v1/ai/analyze")
+def post_analyze(payload: UserMood):
+    advice, mood_type = analyze_emotion_ai(payload.note)
+    if mood_type == "Supportive":
+        state.points += 50 # AI reward for emotional expression
+    return {"advice": advice, "type": mood_type}
 
 @app.get("/api/v1/challenges")
-def get_challenges(mood: Optional[str] = "neutral"):
-    # AI Recommendation Logic (Simple Heuristic)
-    if mood == "tired":
-        return [c for c in all_challenges if c["category"] == "Body"][:3]
-    elif mood == "sad":
-        return [c for c in all_challenges if c["category"] == "Mind"][:3]
-    return all_challenges[:3]
+def get_challenges():
+    return state.active_challenges
 
-@app.post("/api/v1/cheers")
-def send_cheer():
-    global cheers_count
-    cheers_count += 1
-    return {"cheers_count": cheers_count}
-
-@app.get("/api/v1/cheers")
-def get_cheers():
-    return {"cheers_count": cheers_count}
-
-@app.patch("/api/v1/challenges/{challenge_id}/complete")
-def complete_challenge(challenge_id: int):
-    for c in daily_challenges:
-        if c["id"] == challenge_id:
+@app.patch("/api/v1/challenges/{cid}/complete")
+def complete_challenge(cid: int):
+    for c in state.active_challenges:
+        if c["id"] == cid and not c["completed"]:
             c["completed"] = True
-            return c
-    raise HTTPException(status_code=404, detail="Challenge not found")
+            state.points += c["reward"]
+            state.burnout_score += 5
+            return {"status": "success", "reward": c["reward"], "new_points": state.points}
+    raise HTTPException(status_code=400, detail="Already completed or not found")
 
-@app.get("/api/v1/stats")
-def get_stats():
-    # Simple logic for burnout recovery score
-    completion_rate = sum(1 for c in daily_challenges if c["completed"]) / len(daily_challenges)
-    recovery_score = int(completion_rate * 100)
-    return {
-        "recovery_score": recovery_score,
-        "mood_average": "Good" if recovery_score > 50 else "Stable",
-        "streak": 3
-    }
+@app.post("/api/v1/community/cheer")
+def send_cheer():
+    state.cheers += 1
+    state.points += 10 # Reward for community engagement
+    return {"total_cheers": state.cheers}
 
 if __name__ == "__main__":
     import uvicorn
