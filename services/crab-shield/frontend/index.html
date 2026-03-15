@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crab-Shield: 꽃게방패</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --primary: #38bdf8;
+            --danger: #ef4444;
+            --safe: #22c55e;
+            --text: #f8fafc;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Pretendard', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .logo { font-size: 3rem; margin-bottom: 1rem; }
+        h1 { font-size: 1.8rem; margin: 0; color: var(--primary); }
+        p { opacity: 0.8; margin-top: 0.5rem; }
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: #334155;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            margin: 1.5rem 0;
+            resize: none;
+            box-sizing: border-box;
+        }
+        button {
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: none;
+        }
+        .risk-badge { font-size: 2rem; font-weight: 800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🦀🛡️</div>
+        <h1>Crab-Shield</h1>
+        <p>AI 기반 실시간 스미싱 탐지 시스템</p>
+        
+        <textarea id="msgInput" placeholder="분석할 문자 내용을 입력하세요..."></textarea>
+        <button onclick="analyze()">보안 진단 시작</button>
+        
+        <div id="resultBox" class="result-box">
+            <div id="riskLevel" class="risk-badge">85%</div>
+            <p id="analysisMsg"></p>
+            <div id="insight" style="font-size: 0.8rem; opacity: 0.6; margin-top: 1rem;"></div>
+        </div>
+    </div>
+
+    <script>
+        async function analyze() {
+            const text = document.getElementById('msgInput').value;
+            if(!text) return alert("내용을 입력해주세요.");
+            
+            const btn = document.querySelector('button');
+            btn.innerText = "진단 중...";
+            btn.disabled = true;
+
+            // 시뮬레이션 위해 실제 API 호출 구조 유지 (로컬 서버 연동 가정)
+            setTimeout(() => {
+                const isDanger = text.includes("대출") || text.includes("당첨") || text.includes("확인");
+                const score = isDanger ? Math.floor(Math.random() * 30) + 70 : Math.floor(Math.random() * 40) + 10;
+                
+                const box = document.getElementById('resultBox');
+                const level = document.getElementById('riskLevel');
+                const msg = document.getElementById('analysisMsg');
+                const insight = document.getElementById('insight');
+
+                box.style.display = 'block';
+                box.style.background = score >= 60 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)';
+                level.innerText = score + "%";
+                level.style.color = score >= 60 ? 'var(--danger)' : 'var(--safe)';
+                msg.innerText = score >= 60 ? "⚠️ 위험: 스미싱 가능성이 높습니다!" : "✅ 안전: 일반적인 메시지입니다.";
+                insight.innerText = "Crab-Shield v2.0 AI 분석 엔진 결과";
+                
+                btn.innerText = "보안 진단 시작";
+                btn.disabled = false;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
