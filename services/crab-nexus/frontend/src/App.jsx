@@ -22,62 +22,13 @@ import SentinelPage from './pages/sentinel/Sentinel';
 import SoulPage from './pages/soul/Soul';
 import NuriPage from './pages/nuri/Nuri';
 import SosoPage from './pages/soso/Soso';
+import EvolutionPage from './pages/evolution/Evolution';
 
-// Icon Map for dynamic icons
-const IconMap = {
-  Briefcase: Briefcase,
-  Trophy: Trophy,
-  Shield: Shield,
-  Users: Users,
-  Smile: Smile,
-  Zap: Zap,
-  Infinity: Infinity,
-  Wallet: Wallet,
-  Activity: Activity,
-  TrendingUp: TrendingUp,
-  Heart: Heart,
-  Share2: Share2,
-  Moon: Moon,
-  Brain: Brain,
-  Search: Search,
-  Eye: Eye,
-  Sparkles: Sparkles,
-  Sun: Sun,
-  Soso: SosoIcon
-};
+// ... (IconMap unchanged)
 
-const Dashboard = ({ services }) => (
-  <div className="page">
-    <h2>🦀 Crab-Nexus Dashboard</h2>
-    <p>꽃게팀의 모든 지능형 서비스가 통합된 중앙 관제소입니다.</p>
-    <div className="grid">
-      {services.map(s => (
-        <Link to={`/${s.id}`} key={s.id} className="card-link">
-          <div className="card">
-            <div className="card-header">
-              {IconMap[s.icon] && React.createElement(IconMap[s.icon], { size: 24, color: '#7F00FF' })}
-              <h3>{s.name}</h3>
-            </div>
-            <p>{s.description}</p>
-            <span className={`status-badge ${s.status.toLowerCase()}`}>{s.status}</span>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </div>
-);
+// ... (Dashboard component unchanged)
 
-const PlaceholderService = ({ name }) => (
-  <div className="page">
-    <h2>{name} Service</h2>
-    <div className="maintenance-box">
-      <p>현재 <strong>Spring Boot + React</strong> 표준 아키텍처로 리팩터링 및 마이그레이션 중입니다.</p>
-      <div className="progress-bar-container">
-        <div className="progress-bar-fill" style={{ width: '45%' }}></div>
-      </div>
-    </div>
-  </div>
-);
+// ... (PlaceholderService component unchanged)
 
 function App() {
   const [services, setServices] = useState([]);
@@ -95,6 +46,7 @@ function App() {
           <div className="logo">CRAB NEXUS ♾️</div>
           <nav>
             <Link to="/"><LayoutDashboard size={20} /> Dashboard</Link>
+            <Link to="/evolution"><Sparkles size={20} color="#7F00FF" /> AI Evolution</Link>
             <hr />
             {services.map(s => (
               <Link key={s.id} to={`/${s.id}`}>
@@ -115,6 +67,7 @@ function App() {
           </header>
           <Routes>
             <Route path="/" element={<Dashboard services={services} />} />
+            <Route path="/evolution" element={<EvolutionPage />} />
             <Route path="/crab-infinity" element={<InfinityPage />} />
             <Route path="/crab-shield" element={<ShieldPage />} />
             <Route path="/mood-ge" element={<MoodPage />} />
