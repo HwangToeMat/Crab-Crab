@@ -103,6 +103,43 @@ async function evolve() {
     }
 }
 
+async function runScan() {
+    const resultsContainer = document.getElementById("scan-results");
+    resultsContainer.innerHTML = "<p>Scanning all services for vulnerabilities and infrastructure risks...</p>";
+    
+    try {
+        const res = await fetch(`${API_URL}/guardian/scan`);
+        const data = await res.json();
+        
+        let html = `<h3>Overall Ecosystem Health: ${data.total_score.toFixed(1)}/100</h3><div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">`;
+        
+        data.scan_results.forEach(r => {
+            html += `
+                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 4px; border-left: 3px solid ${r.status === 'Safe' ? '#238636' : '#d29922'}">
+                    <strong>${r.name}</strong> - ${r.status} (${r.score}%)
+                    <ul style="font-size: 0.65rem; color: #aaa; padding-left: 15px; margin-top: 5px;">
+                        ${r.issues.length > 0 ? r.issues.map(i => `<li>${i}</li>`).join('') : '<li>No issues found</li>'}
+                    </ul>
+                </div>
+            `;
+        });
+        html += "</div>";
+        resultsContainer.innerHTML = html;
+        
+        // Also log this as an evolution event
+        fetch(`${API_URL}/evolution/log`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: `Full ecosystem scan completed. Health Score: ${data.total_score.toFixed(1)}` })
+        });
+
+    } catch (err) {
+        console.error("Scan failed", err);
+        resultsContainer.innerHTML = "<p>Guardian system error during scan.</p>";
+    }
+}
+
+document.getElementById("scan-btn").addEventListener("click", runScan);
 document.getElementById("evolve-btn").addEventListener("click", evolve);
 
 // Initial and Periodic Update

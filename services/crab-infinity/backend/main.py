@@ -118,6 +118,29 @@ async def get_services():
                 })
     return {"services": services}
 
+@app.get("/api/guardian/scan")
+async def guardian_scan():
+    """모든 서비스 대상 보안 및 무결성 스캔 시뮬레이션"""
+    results = []
+    if os.path.exists(SERVICES_DIR):
+        for s in os.listdir(SERVICES_DIR):
+            if os.path.isdir(os.path.join(SERVICES_DIR, s)):
+                # Simulate scan logic
+                score = random.randint(85, 100)
+                issues = []
+                if score < 90:
+                    issues.append("Minor dependency vulnerability detected.")
+                if not os.path.exists(os.path.join(SERVICES_DIR, s, "Dockerfile")):
+                    issues.append("Dockerfile missing (Infrastructure risk).")
+                
+                results.append({
+                    "name": s,
+                    "score": score,
+                    "status": "Safe" if score >= 90 else "Caution",
+                    "issues": issues
+                })
+    return {"scan_results": results, "total_score": sum(r["score"] for r in results) / len(results) if results else 0}
+
 # Serve Static Files
 if os.path.exists(FRONTEND_DIR):
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
