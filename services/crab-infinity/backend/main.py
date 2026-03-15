@@ -29,23 +29,43 @@ class EvolutionState(BaseModel):
     stage: int = 0
     xp: int = 0
     history: List[dict] = []
-    roadmap: List[str] = ["Initialize Nexus Hub", "Scan existing services", "AI-driven evolution loop"]
+    roadmap: List[str] = ["Initialize Nexus Hub", "Scan existing services", "AI-driven evolution loop", "Transcendence Protocol"]
 
-def load_evo_state() -> EvolutionState:
-    if os.path.exists(STATE_PATH):
-        try:
-            with open(STATE_PATH, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                # Handle both old/new state formats
-                return EvolutionState(**data) if "project" in data else EvolutionState()
-        except:
-            return EvolutionState()
-    return EvolutionState()
+class DelegationRequest(BaseModel):
+    target: str
+    instruction: str
 
-def save_evo_state(state: EvolutionState):
-    os.makedirs(os.path.dirname(STATE_PATH), exist_ok=True)
-    with open(STATE_PATH, "w", encoding="utf-8") as f:
-        json.dump(state.dict(), f, indent=4)
+@app.post("/api/nexus/delegate")
+async def delegate_nexus(req: DelegationRequest):
+    """CAP (Cooperative Agent Protocol) Delegation Endpoint"""
+    state = load_evo_state()
+    
+    # Simulate delegation logic
+    delegation_id = f"CAP-{random.randint(1000, 9999)}"
+    
+    ai_analysis = f"Nexus AI has analyzed the command: '{req.instruction}'. Target planet '{req.target}' is now executing the transcended protocol."
+    
+    # Gain XP for using CAP
+    state.xp += 25
+    state.history.append({
+        "event": f"CAP Delegation to {req.target}: {req.instruction}",
+        "xp": 25,
+        "timestamp": "2026-03-15T12:00:00Z"
+    })
+    
+    # Handle Stage 4: Transcendence
+    if state.xp >= 1000 and state.stage == 3:
+        state.stage = 4
+        ai_analysis += " CRITICAL: TRANSCENDENCE DETECTED. The ecosystem is evolving beyond Nexus King."
+
+    save_evo_state(state)
+    
+    return {
+        "status": "Transmitting",
+        "delegation_id": delegation_id,
+        "ai_analysis": ai_analysis,
+        "current_xp": state.xp
+    }
 
 @app.get("/api/evolution/status")
 async def get_status():
