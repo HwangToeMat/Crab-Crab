@@ -1,0 +1,79 @@
+.soul-page .input-card {
+    background: white;
+    padding: 40px;
+    border-radius: 32px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.soul-page .input-card p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.soul-page textarea {
+    width: 100%;
+    min-height: 180px;
+    padding: 25px;
+    border: 2px solid #f0f2f5;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    outline: none;
+    margin-bottom: 25px;
+    resize: none;
+}
+
+.soul-page .analyze-btn {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+}
+
+.soul-page .soul-result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.soul-page .emotion-card, .soul-page .therapy-card {
+    background: white;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.soul-page .emotion-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.soul-page .emoji { font-size: 2.5rem; }
+
+.soul-page .confidence {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 20px;
+}
+
+.soul-page .coach-msg {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #444;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.soul-page .therapy-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 0.95rem;
+}

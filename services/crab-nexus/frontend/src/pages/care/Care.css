@@ -1,0 +1,96 @@
+.care-page .care-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 25px;
+}
+
+.care-page .status-card, .care-page .alerts-section, .care-page .chat-section {
+    background: white;
+    padding: 25px;
+    border-radius: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.care-page .health-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.care-page .stat {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.care-page .stat strong { color: var(--primary); }
+.care-page .stat strong.safe { color: #48bb78; }
+
+.care-page .alert-item {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 12px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    border-left: 4px solid #ddd;
+}
+
+.care-page .alert-item.urgent {
+    background: #fff5f5;
+    border-left-color: #f56565;
+    color: #c53030;
+    font-weight: bold;
+}
+
+.care-page .chat-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.care-page .chat-window {
+    flex: 1;
+    min-height: 300px;
+    background: #f0f2f5;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 15px 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.care-page .chat-bubble {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+}
+
+.care-page .chat-bubble.user {
+    align-self: flex-end;
+    background: var(--primary);
+    color: white;
+}
+
+.care-page .chat-bubble.bot {
+    align-self: flex-start;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.care-page .chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.care-page .chat-input input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    outline: none;
+}

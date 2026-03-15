@@ -1,0 +1,86 @@
+.health-page .health-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.health-page .routine-section, .health-page .meal-section {
+    background: white;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.health-page h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.health-page .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.health-page select, .health-page textarea {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #f0f2f5;
+    border-radius: 12px;
+    outline: none;
+}
+
+.health-page textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+.health-page .routine-result ul {
+    list-style: none;
+    padding: 0;
+}
+
+.health-page .routine-result li {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.health-page .crab-advice {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(127, 0, 255, 0.05);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.health-page .score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.health-page .score-row strong {
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+.health-page .meal-result p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+}

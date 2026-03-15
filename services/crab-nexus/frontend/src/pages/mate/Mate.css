@@ -1,0 +1,88 @@
+.mate-page .mood-share-box {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    margin-bottom: 30px;
+}
+
+.mate-page .input-row {
+    display: flex;
+    gap: 15px;
+}
+
+.mate-page input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #f0f2f5;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.mate-page input:focus {
+    border-color: var(--primary);
+}
+
+.mate-page .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.mate-page .analysis-card, .mate-page .cheer-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.mate-page .mate-count {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.mate-page .cheer-card ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.mate-page .cheer-card li {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.mate-page .rec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.mate-page .rec-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    border-top: 4px solid var(--primary);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.mate-page .category-tag {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.7rem;
+    background: #7F00FF22;
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: bold;
+}
