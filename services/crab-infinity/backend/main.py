@@ -56,12 +56,36 @@ async def get_current_state():
 
 @app.get("/api/evolution/analysis")
 async def get_evolution_analysis():
+    services_data = await get_services()
+    services = services_data.get("services", [])
+    
+    total_services = len(services)
+    backend_count = sum(1 for s in services if s["has_backend"])
+    frontend_count = sum(1 for s in services if s["has_frontend"])
+    
+    analysis_text = f"현재 {total_services}개의 서비스가 감지되었습니다. (백엔드: {backend_count}, 프론트엔드: {frontend_count}). "
+    
+    recommendations = []
+    if backend_count < total_services:
+        recommendations.append("일부 서비스에 백엔드 구성이 누락되어 있습니다. API 연동을 검토하십시오.")
+    if frontend_count < total_services:
+        recommendations.append("프론트엔드가 없는 서비스의 사용자 인터페이스 제공 여부를 확인하십시오.")
+    
+    if total_services > 5:
+        analysis_text += "생태계 규모가 확장됨에 따라 서비스 간의 데이터 정규화와 통합 모니터링이 필수적입니다."
+        recommendations.append("중앙 집중식 로깅 시스템(ELK 또는 Prometheus) 도입을 고려하십시오.")
+    else:
+        analysis_text += "초기 생태계 구축 단계입니다. 각 서비스의 독립성을 유지하며 확장성을 고려하십시오."
+        recommendations.append("기본 인프라 보안(TLS/SSL) 및 API 인증 체계를 강화하십시오.")
+
     return {
-        "analysis": "현재 모든 시스템은 v2.0 '진화' 상태입니다. Crab-Infinity가 전체 생태계를 모니터링 중입니다.",
-        "recommendations": [
-            "각 서비스의 Docker 상태를 점검하여 리소스 사용량을 최적화하세요.",
-            "Gemini AI를 통해 서비스 간 데이터 시너지를 분석할 준비가 되었습니다."
-        ]
+        "analysis": analysis_text,
+        "recommendations": recommendations,
+        "metrics": {
+            "total_services": total_services,
+            "backend_ratio": backend_count / total_services if total_services > 0 else 0,
+            "frontend_ratio": frontend_count / total_services if total_services > 0 else 0
+        }
     }
 
 # 정적 파일 서빙 (프론트엔드)
