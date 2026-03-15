@@ -1,10 +1,10 @@
 # Backend Dockerfile
-FROM maven:3.8.4-openjdk-17-slim AS build
-COPY src /home/app/src
-COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package -DskipTests
+FROM openjdk:25-jdk-slim AS build
+WORKDIR /home/app
+COPY . /home/app
+RUN ./gradlew clean bootJar --no-daemon
 
-FROM openjdk:17-jdk-slim
-COPY --from=build /home/app/target/*.jar app.jar
+FROM openjdk:25-jdk-slim
+COPY --from=build /home/app/build/libs/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app.jar"]

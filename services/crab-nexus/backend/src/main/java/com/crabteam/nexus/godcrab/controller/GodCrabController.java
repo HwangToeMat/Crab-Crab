@@ -5,7 +5,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/godcrab")
-public class WorkCrabController {
+public class GodCrabController {
 
     @GetMapping("/status")
     public Map<String, Object> getStatus() {

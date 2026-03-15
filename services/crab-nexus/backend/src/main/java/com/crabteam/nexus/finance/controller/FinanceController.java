@@ -9,11 +9,11 @@ import java.util.*;
 @RequestMapping("/api/v1/finance")
 public class FinanceController {
 
-    private final Map<String, String> categoryMap = Map.of(
-        "점심", "식비", "커피", "식비", "마트", "식비",
-        "버스", "교통", "택시", "교통", "주유", "교통",
-        "넷플릭스", "취미", "구독", "취미", "영화", "취미",
-        "월세", "주거", "전기", "주거"
+    private final Map<String, String> categoryMap = Map.ofEntries(
+        Map.entry("점심", "식비"), Map.entry("커피", "식비"), Map.entry("마트", "식비"),
+        Map.entry("버스", "교통"), Map.entry("택시", "교통"), Map.entry("주유", "교통"),
+        Map.entry("넷플릭스", "취미"), Map.entry("구독", "취미"), Map.entry("영화", "취미"),
+        Map.entry("월세", "주거"), Map.entry("전기", "주거")
     );
 
     @PostMapping("/classify")
