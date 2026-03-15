@@ -23,16 +23,13 @@ public class GeminiService {
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
 
     public String analyzeWithAi(String systemPrompt, String userMessage) {
-        if ("default_value".equals(apiKey)) {
-            log.warn("Gemini API Key is not set. Returning dummy analysis.");
-            return "[AI 분석 결과] 꽃게팀의 지능형 엔진이 대기 중입니다. API 키를 설정해주세요.";
-        }
+        log.info("Requesting Gemini AI analysis with API key presence: {}", (apiKey != null && !apiKey.equals("default_value")));
 
         try {
             Map<String, Object> requestBody = Map.of(
                 "contents", List.of(
                     Map.of("parts", List.of(
-                        Map.of("text", systemPrompt + "\n\n사용자 메시지: " + userMessage)
+                        Map.of("text", systemPrompt + "\n\nUser Input: " + userMessage)
                     ))
                 )
             );
@@ -47,15 +44,16 @@ public class GeminiService {
             if (response != null && response.containsKey("candidates")) {
                 List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.get("candidates");
                 if (!candidates.isEmpty()) {
-                    Map<String, Object> content = (Map<String, Object>) candidates.get(0).get("content");
+                    Map<String, Object> candidate = candidates.get(0);
+                    Map<String, Object> content = (Map<String, Object>) candidate.get("content");
                     List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
                     return (String) parts.get(0).get("text");
                 }
             }
+            return "AI 분석 결과가 비어 있습니다. (Check API Quota)";
         } catch (Exception e) {
             log.error("Gemini API call failed: {}", e.getMessage());
+            return "AI 분석 호출 실패: " + e.getMessage();
         }
-
-        return "[AI 분석 오류] 요청 처리 중 문제가 발생했습니다. (Dummy)";
     }
 }

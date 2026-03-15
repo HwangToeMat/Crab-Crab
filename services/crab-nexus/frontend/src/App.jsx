@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Home, Briefcase, Trophy, Shield, Users, Smile, Zap, Settings, LayoutDashboard, Infinity, Wallet, Activity, TrendingUp, Heart, Share2, Moon, Brain, Search, Eye, Sparkles, Sun, Smile as SosoIcon } from 'lucide-react';
+import { 
+  Home, Briefcase, Trophy, Shield, Users, Smile, Zap, Settings, LayoutDashboard, 
+  Infinity, Wallet, Activity, TrendingUp, Heart, Share2, Moon, Brain, Search, 
+  Eye, Sparkles, Sun, Smile as SosoIcon, AlertTriangle, ShieldCheck, ZapOff,
+  Coins, MessageSquare, Send, Plus, MapPin, ThumbsUp, Quote, PenTool, 
+  Scan, BarChart3, Lock, Thermometer, UserCheck, Stethoscope
+} from 'lucide-react';
 import axios from 'axios';
 import './App.css';
 
@@ -23,12 +29,73 @@ import SoulPage from './pages/soul/Soul';
 import NuriPage from './pages/nuri/Nuri';
 import SosoPage from './pages/soso/Soso';
 import EvolutionPage from './pages/evolution/Evolution';
+import WorkPage from './pages/work/Work';
+import GodPage from './pages/god/God';
 
-// ... (IconMap unchanged)
+const IconMap = {
+  'infinity': Infinity,
+  'shield': Shield,
+  'mood': Smile,
+  'mate': Users,
+  'finance': Wallet,
+  'health': Activity,
+  'eco': Zap,
+  'crypto': TrendingUp,
+  'care': Heart,
+  'link': Share2,
+  'dream': Moon,
+  'mind': Brain,
+  'scan': Search,
+  'sentinel': Eye,
+  'soul': Sparkles,
+  'nuri': Sun,
+  'soso': SosoIcon,
+  'work': Briefcase,
+  'god': Trophy
+};
 
-// ... (Dashboard component unchanged)
+const Dashboard = ({ services }) => (
+  <div className="dashboard">
+    <header className="dashboard-header">
+      <h1>Crab Nexus Dashboard 🦀</h1>
+      <p>CrabTeam Evolution v2.0 - Hyper-Product Ecosystem</p>
+    </header>
+    
+    <div className="stats-row">
+      <div className="stat-card">
+        <h3>Total Services</h3>
+        <div className="value">{services.length}</div>
+      </div>
+      <div className="stat-card">
+        <h3>AI Evolution</h3>
+        <div className="value">Phase 5</div>
+      </div>
+      <div className="stat-card">
+        <h3>System Health</h3>
+        <div className="value">Optimal</div>
+      </div>
+    </div>
 
-// ... (PlaceholderService component unchanged)
+    <div className="service-grid">
+      {services.map(s => (
+        <Link key={s.id} to={`/${s.id}`} className="service-card">
+          <div className="service-icon">
+            {IconMap[s.icon] && React.createElement(IconMap[s.icon], { size: 32 })}
+          </div>
+          <h3>{s.name}</h3>
+          <p>{s.description || "지능형 서비스 분석 및 자동 최적화가 진행 중입니다."}</p>
+        </Link>
+      ))}
+    </div>
+  </div>
+);
+
+const PlaceholderService = ({ name }) => (
+  <div className="page">
+    <h2>{name}</h2>
+    <p>이 서비스는 현재 AI Evolution 엔진에 의해 고도화 중입니다. 잠시만 기다려 주세요.</p>
+  </div>
+);
 
 function App() {
   const [services, setServices] = useState([]);
@@ -36,7 +103,15 @@ function App() {
   useEffect(() => {
     axios.get('http://localhost:8080/api/v1/nexus/services')
       .then(res => setServices(res.data))
-      .catch(err => console.error("Service fetch error", err));
+      .catch(err => {
+        console.error("Service fetch error", err);
+        // Fallback for demo
+        setServices([
+          { id: 'crab-infinity', name: 'Crab-Infinity', icon: 'infinity' },
+          { id: 'crab-shield', name: 'Crab-Shield', icon: 'shield' },
+          { id: 'mood-ge', name: 'Mood-Ge', icon: 'mood' }
+        ]);
+      });
   }, []);
 
   return (
@@ -85,7 +160,9 @@ function App() {
             <Route path="/crab-soul-care" element={<SoulPage />} />
             <Route path="/nuri-bom" element={<NuriPage />} />
             <Route path="/soso-haeng" element={<SosoPage />} />
-            {services.filter(s => !['crab-infinity', 'crab-shield', 'mood-ge', 'crab-mate', 'crab-finance', 'crab-health', 'eco-charge-optimizer', 'senticrypto-analyzer', 'crab-crab-care', 'crab-crab-link', 'crab-deep-dream', 'crab-mind', 'crab-scan', 'crab-sentinel', 'crab-soul-care', 'nuri-bom', 'soso-haeng'].includes(s.id)).map(s => (
+            <Route path="/work-crab" element={<WorkPage />} />
+            <Route path="/god-crab" element={<GodPage />} />
+            {services.filter(s => !['crab-infinity', 'crab-shield', 'mood-ge', 'crab-mate', 'crab-finance', 'crab-health', 'eco-charge-optimizer', 'senticrypto-analyzer', 'crab-crab-care', 'crab-crab-link', 'crab-deep-dream', 'crab-mind', 'crab-scan', 'crab-sentinel', 'crab-soul-care', 'nuri-bom', 'soso-haeng', 'work-crab', 'god-crab'].includes(s.id)).map(s => (
               <Route key={s.id} path={`/${s.id}`} element={<PlaceholderService name={s.name} />} />
             ))}
           </Routes>
