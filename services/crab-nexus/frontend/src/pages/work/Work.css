@@ -1,42 +1,49 @@
 .work-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 1000px;
 }
 
 .task-input {
   display: flex;
   gap: 12px;
-  margin: 30px 0;
-  background: white;
-  padding: 10px;
+  margin: 32px 0;
+  background-color: var(--bg-elevated);
+  padding: 16px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
 }
 
 .task-input input {
   flex: 1;
-  border: 1px solid #eee;
-  padding: 12px;
+  background-color: var(--bg-base);
+  border: 1px solid var(--border-color);
+  padding: 14px 18px;
   border-radius: 8px;
   font-size: 1rem;
+  color: var(--text-main);
+  transition: border-color 0.2s;
+}
+
+.task-input input:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .task-input button {
-  background: var(--primary);
-  color: white;
+  background-color: var(--primary);
+  color: #000;
   border: none;
-  padding: 0 24px;
+  padding: 0 28px;
   border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 .task-input button:hover {
-  background: #6a00d9;
+  background-color: var(--primary-hover);
 }
 
 .task-list {
@@ -49,46 +56,44 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: white;
-  padding: 16px;
+  background-color: var(--bg-elevated);
+  padding: 18px 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: transform 0.2s;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
 }
 
 .task-item:hover {
-  transform: translateX(5px);
+  background-color: var(--bg-hover);
+  border-color: var(--border-color);
 }
 
 .task-item span {
   flex: 1;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .task-item.DONE {
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .task-item.DONE span {
   text-decoration: line-through;
-  color: #888;
+  color: var(--text-sub);
 }
 
 .status-badge {
-  font-size: 0.8rem;
-  padding: 4px 10px;
-  border-radius: 20px;
-  background: #f0f0f0;
-  color: #666;
-  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background-color: var(--bg-hover);
+  color: var(--text-sub);
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .task-item.IN_PROGRESS .status-badge {
-  background: #e0f2ff;
-  color: #3182ce;
-}
-
-.task-item.DONE .status-badge {
-  background: #f0fff4;
-  color: #38a169;
+  background-color: rgba(0, 255, 163, 0.1);
+  color: var(--primary);
 }
