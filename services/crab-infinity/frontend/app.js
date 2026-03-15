@@ -35,9 +35,15 @@ async function updateNexus() {
             const card = document.createElement("div");
             card.className = "service-card";
             card.innerHTML = `
-                <div class="status-indicator"></div>
-                <h4>${s.name}</h4>
-                <p style="font-size: 0.7rem; color: #888;">Evolution Active</p>
+                <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                    <div class="status-indicator"></div>
+                    <h4 style="margin: 0;">${s.name}</h4>
+                </div>
+                <p style="font-size: 0.75rem; color: #ccc; margin-bottom: 10px; min-height: 2.5em;">${s.description}</p>
+                <div style="display: flex; gap: 5px;">
+                    ${s.has_backend ? '<span class="badge" style="background:#0366d6; font-size: 0.6rem; padding: 2px 5px;">BE</span>' : ''}
+                    ${s.has_frontend ? '<span class="badge" style="background:#28a745; font-size: 0.6rem; padding: 2px 5px;">FE</span>' : ''}
+                </div>
             `;
             servicesList.appendChild(card);
         });
