@@ -38,7 +38,7 @@ public class EvolutionController {
     public Map<String, Object> getEvolutionStatus() {
         return Map.of(
             "phase", "Phase 5: Infinite Scaling",
-            "activeEngines", List.of("Gemini-1.5-Flash", "Sentinel-v2"),
+            "activeEngines", List.of("Gemini-2.0-Flash-Lite", "Sentinel-v2"),
             "connectedServices", 20,
             "evolutionLevel", "98.7%"
         );

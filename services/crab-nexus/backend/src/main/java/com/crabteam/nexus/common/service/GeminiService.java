@@ -23,7 +23,7 @@ public class GeminiService {
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-001:generateContent?key=";
 
     public String analyzeWithAi(String systemPrompt, String userMessage) {
-        log.info("Requesting Gemini AI analysis with API key presence: {}", (apiKey != null && !apiKey.equals("default_value")));
+        log.info("Requesting Gemini 2.0 Flash-Lite AI analysis with API key presence: {}", (apiKey != null && !apiKey.equals("default_value")));
 
         try {
             Map<String, Object> requestBody = Map.of(
