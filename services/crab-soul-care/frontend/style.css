@@ -27,7 +27,18 @@ header {
     margin-bottom: 30px;
 }
 
-h1 { color: var(--accent-color); font-size: 2.2rem; }
+h1 { color: var(--accent-color); font-size: 2.2rem; margin-top: 10px; }
+
+.mascot {
+    font-size: 5rem;
+    animation: float 3s infinite ease-in-out;
+    display: inline-block;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
 
 .card {
     background: var(--card-bg);

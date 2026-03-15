@@ -1,3 +1,8 @@
+const EMOTION_EMOJIS = {
+    "Joy": "🦀✨", "Stress": "🦀💦", "Sadness": "🦀💧", "Peace": "🦀🌙",
+    "Anxiety": "🦀🌀", "Loneliness": "🦀🐚", "Confidence": "🦀🔥", "Excitement": "🦀🚀"
+};
+
 document.getElementById('analyze-btn').addEventListener('click', async () => {
     const text = document.getElementById('emotion-input').value;
     if (!text) return alert("당신의 마음을 한 줄이라도 들려주세요.");
@@ -16,6 +21,7 @@ document.getElementById('analyze-btn').addEventListener('click', async () => {
 
         // UI 업데이트
         document.body.className = `theme-${data.emotion.toLowerCase()}`;
+        document.getElementById('crab-mascot').innerText = EMOTION_EMOJIS[data.emotion] || "🦀";
         document.getElementById('result-section').classList.remove('hidden');
         document.getElementById('emotion-badge').innerText = data.emotion;
         document.getElementById('ai-msg').innerText = data.ai_coach_msg;
