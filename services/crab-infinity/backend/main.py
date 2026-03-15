@@ -86,8 +86,36 @@ async def get_services():
     services = []
     if os.path.exists(SERVICES_DIR):
         for s in os.listdir(SERVICES_DIR):
-            if os.path.isdir(os.path.join(SERVICES_DIR, s)):
-                services.append({"name": s, "status": "active"})
+            service_path = os.path.join(SERVICES_DIR, s)
+            if os.path.isdir(service_path):
+                desc = "No description available."
+                # Try to find description in docs/prd.md or README.md
+                for doc_file in [os.path.join(service_path, "docs/prd.md"), os.path.join(service_path, "README.md")]:
+                    if os.path.exists(doc_file):
+                        try:
+                            with open(doc_file, "r", encoding="utf-8") as f:
+                                content = f.read()
+                                # Simple heuristic for "한줄 설명" or first heading
+                                lines = content.split('\n')
+                                for line in lines:
+                                    if "한줄 설명:" in line:
+                                        desc = line.split("한줄 설명:")[1].strip()
+                                        break
+                                    elif line.startswith("- Purpose:") or line.startswith("- 목적:"):
+                                        desc = line.split(":")[1].strip()
+                                        break
+                                if desc == "No description available." and len(lines) > 2:
+                                    desc = lines[2].strip()[:60] + "..."
+                        except: pass
+                        break
+                
+                services.append({
+                    "name": s, 
+                    "status": "active",
+                    "description": desc,
+                    "has_backend": os.path.exists(os.path.join(service_path, "backend")),
+                    "has_frontend": os.path.exists(os.path.join(service_path, "frontend"))
+                })
     return {"services": services}
 
 # Serve Static Files
