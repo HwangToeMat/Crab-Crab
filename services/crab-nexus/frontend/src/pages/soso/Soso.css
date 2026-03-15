@@ -1,8 +1,8 @@
 .soso-page .write-section {
-    background: white;
+    background-color: var(--bg-elevated);
     padding: 25px;
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
     margin-bottom: 30px;
 }
 
@@ -10,7 +10,10 @@
     width: 100%;
     min-height: 100px;
     padding: 15px;
-    border: none;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     font-family: inherit;
     font-size: 1rem;
     outline: none;
@@ -22,14 +25,15 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 15px;
-    border-top: 1px solid #f0f2f5;
+    border-top: 1px solid var(--border-color);
 }
 
 .soso-page select {
     padding: 8px 15px;
     border-radius: 12px;
-    border: 1px solid #eee;
-    background: #f8f9fa;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-hover);
+    color: var(--text-main);
     outline: none;
 }
 
@@ -40,11 +44,10 @@
 }
 
 .soso-page .soso-card {
-    background: white;
+    background-color: var(--bg-elevated);
     padding: 25px;
     border-radius: 24px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    border-left: 6px solid #ddd;
+    border: 1px solid var(--border-color);
     transition: transform 0.2s;
 }
 
@@ -59,12 +62,12 @@
     font-size: 0.9rem;
 }
 
-.soso-page .time { color: #999; }
+.soso-page .time { color: var(--text-sub); }
 
 .soso-page .post-content {
     font-size: 1.05rem;
     line-height: 1.6;
-    color: #333;
+    color: var(--text-main);
     margin-bottom: 20px;
 }
 
@@ -76,19 +79,20 @@
 
 .soso-page .analysis-tag {
     font-size: 0.8rem;
-    color: #666;
+    color: var(--text-sub);
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #f8f9fa;
+    background-color: var(--bg-hover);
     padding: 5px 12px;
     border-radius: 20px;
+    border: 1px solid var(--border-color);
 }
 
 .soso-page .like-btn {
-    background: #fff1f0;
+    background-color: rgba(255, 77, 79, 0.1);
     color: #ff4d4f;
-    border: none;
+    border: 1px solid rgba(255, 77, 79, 0.2);
     padding: 6px 15px;
     border-radius: 50px;
     font-size: 0.85rem;
@@ -96,4 +100,5 @@
     align-items: center;
     gap: 5px;
     font-weight: bold;
+    cursor: pointer;
 }

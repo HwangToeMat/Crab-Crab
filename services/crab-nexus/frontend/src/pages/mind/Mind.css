@@ -1,10 +1,10 @@
 .mind-page .quote-card {
-    background: white;
+    background-color: var(--bg-elevated);
     padding: 30px;
     border-radius: 24px;
     margin-bottom: 30px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid var(--border-color);
     border-top: 5px solid var(--primary);
 }
 
@@ -12,7 +12,7 @@
     margin-top: 15px;
     font-size: 1.1rem;
     font-style: italic;
-    color: #444;
+    color: var(--text-main);
 }
 
 .mind-page .mind-container {
@@ -22,10 +22,10 @@
 }
 
 .mind-page .journal-section, .mind-page .advice-section {
-    background: white;
+    background-color: var(--bg-elevated);
     padding: 30px;
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
 }
 
 .mind-page .mood-selector {
@@ -38,23 +38,27 @@
 .mind-page .mood-selector button {
     padding: 8px 15px;
     border-radius: 20px;
-    border: 1px solid #eee;
-    background: #f8f9fa;
-    color: #666;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-hover);
+    color: var(--text-sub);
     font-size: 0.85rem;
+    cursor: pointer;
 }
 
 .mind-page .mood-selector button.active {
-    background: var(--primary);
-    color: white;
+    background-color: var(--primary);
+    color: #000;
     border-color: var(--primary);
+    font-weight: bold;
 }
 
 .mind-page textarea {
     width: 100%;
     min-height: 150px;
     padding: 20px;
-    border: 2px solid #f0f2f5;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     margin-bottom: 20px;
     font-family: inherit;
@@ -65,6 +69,12 @@
 .mind-page .submit-btn {
     width: 100%;
     padding: 15px;
+    background-color: var(--primary);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .mind-page .advice-header {
@@ -77,7 +87,7 @@
 
 .mind-page .advice-section p {
     line-height: 1.7;
-    color: #444;
+    color: var(--text-main);
     font-size: 0.95rem;
     margin-bottom: 25px;
 }
@@ -86,7 +96,7 @@
     display: flex;
     justify-content: space-between;
     padding-top: 15px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color);
     font-size: 0.85rem;
-    color: #888;
+    color: var(--text-sub);
 }

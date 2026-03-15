@@ -1,8 +1,9 @@
 .sentinel-page .threat-banner {
-    background: #1a202c;
-    color: white;
+    background-color: var(--bg-elevated);
+    color: var(--text-main);
     padding: 20px 30px;
     border-radius: 20px;
+    border: 1px solid var(--border-color);
     margin-bottom: 30px;
     display: flex;
     align-items: center;
@@ -14,18 +15,21 @@
     align-items: center;
     gap: 10px;
     font-size: 0.9rem;
+    color: var(--text-sub);
 }
 
 .sentinel-page .threat-stat strong.safe { color: #48bb78; }
 
 .sentinel-page .re-audit-btn {
     margin-left: auto;
-    background: var(--primary);
+    background-color: var(--primary);
     border: none;
     padding: 8px 20px;
     border-radius: 10px;
-    color: white;
+    color: #000;
     font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .sentinel-page .audit-grid {
@@ -35,22 +39,22 @@
 }
 
 .sentinel-page .audit-card {
-    background: white;
+    background-color: var(--bg-elevated);
     padding: 25px;
     border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    border-top: 4px solid #ddd;
+    border: 1px solid var(--border-color);
 }
 
-.sentinel-page .audit-card.secure { border-top-color: #48bb78; }
-.sentinel-page .audit-card.warning { border-top-color: #ed8936; }
-.sentinel-page .audit-card.critical { border-top-color: #f56565; }
+.sentinel-page .audit-card.secure { border-top: 4px solid #48bb78; }
+.sentinel-page .audit-card.warning { border-top: 4px solid #ed8936; }
+.sentinel-page .audit-card.critical { border-top: 4px solid #f56565; }
 
 .sentinel-page .card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    color: var(--text-main);
 }
 
 .sentinel-page .score-row {
@@ -58,20 +62,21 @@
     justify-content: space-between;
     margin-bottom: 15px;
     font-size: 0.9rem;
+    color: var(--text-sub);
 }
 
-.sentinel-page .score-row strong { font-size: 1.2rem; }
+.sentinel-page .score-row strong { font-size: 1.2rem; color: var(--text-main); }
 
 .sentinel-page .vuln-list {
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid #f0f2f5;
+    border-top: 1px solid var(--border-color);
 }
 
 .sentinel-page .vuln-item {
     font-size: 0.75rem;
     color: #e53e3e;
-    background: #fff5f5;
+    background-color: rgba(229, 62, 62, 0.1);
     padding: 5px 10px;
     border-radius: 6px;
     margin-bottom: 5px;
@@ -79,4 +84,5 @@
     align-items: center;
     gap: 8px;
     font-family: monospace;
+    border: 1px solid rgba(229, 62, 62, 0.2);
 }

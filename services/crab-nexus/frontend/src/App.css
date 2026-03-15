@@ -227,3 +227,42 @@
 .page-header p {
   color: var(--text-sub);
 }
+
+/* Global Form Elements for Dark Mode */
+input, textarea, select {
+  background-color: var(--bg-elevated) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #555 !important;
+}
+
+button {
+  background-color: var(--primary);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+}
+
+button:disabled {
+  background-color: var(--bg-hover);
+  color: var(--text-sub);
+  cursor: not-allowed;
+}
+
+/* Fix for any remaining white cards */
+.card, .section, .box, .stat-card, .service-card, .item, .list-item {
+  background-color: var(--bg-elevated) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+}

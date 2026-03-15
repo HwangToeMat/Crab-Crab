@@ -1,15 +1,15 @@
 .soul-page .input-card {
-    background: white;
+    background-color: var(--bg-elevated);
     padding: 40px;
     border-radius: 32px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
     margin-bottom: 30px;
     text-align: center;
 }
 
 .soul-page .input-card p {
     font-size: 0.95rem;
-    color: #666;
+    color: var(--text-sub);
     margin-bottom: 25px;
 }
 
@@ -17,7 +17,9 @@
     width: 100%;
     min-height: 180px;
     padding: 25px;
-    border: 2px solid #f0f2f5;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     font-family: inherit;
     font-size: 1.05rem;
@@ -30,7 +32,12 @@
 .soul-page .analyze-btn {
     padding: 15px 40px;
     font-size: 1.1rem;
+    background-color: var(--primary);
+    color: #000;
+    border: none;
     border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .soul-page .soul-result-grid {
@@ -40,10 +47,10 @@
 }
 
 .soul-page .emotion-card, .soul-page .therapy-card {
-    background: white;
+    background-color: var(--bg-elevated);
     padding: 30px;
     border-radius: 24px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid var(--border-color);
 }
 
 .soul-page .emotion-header {
@@ -57,17 +64,18 @@
 
 .soul-page .confidence {
     font-size: 0.8rem;
-    color: #999;
+    color: var(--text-sub);
     margin-bottom: 20px;
 }
 
 .soul-page .coach-msg {
     font-size: 0.95rem;
     line-height: 1.6;
-    color: #444;
-    background: #f8f9fa;
+    color: var(--text-main);
+    background-color: var(--bg-hover);
     padding: 15px;
     border-radius: 12px;
+    border: 1px solid var(--border-color);
 }
 
 .soul-page .therapy-item {
@@ -76,4 +84,5 @@
     gap: 12px;
     margin-top: 20px;
     font-size: 0.95rem;
+    color: var(--text-main);
 }
