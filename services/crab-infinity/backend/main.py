@@ -79,6 +79,44 @@ async def delegate_nexus(req: DelegationRequest):
         "current_xp": state.xp
     }
 
+class BroadcastRequest(BaseModel):
+    instruction: str
+
+@app.post("/api/nexus/broadcast")
+async def broadcast_nexus(req: BroadcastRequest):
+    """CAP Multi-service Broadcast Coordination"""
+    state = load_evo_state()
+    
+    services = []
+    if os.path.exists(SERVICES_DIR):
+        services = [s for s in os.listdir(SERVICES_DIR) if os.path.isdir(os.path.join(SERVICES_DIR, s))]
+    
+    # AI Insight for coordination
+    ai_analysis = f"Synchronizing {len(services)} services for the global directive: '{req.instruction}'. Cross-resonance established."
+    
+    # Gain XP based on services
+    xp_gain = len(services) * 10
+    state.xp += xp_gain
+    state.history.append({
+        "event": f"CAP Broadcast Coordination: {req.instruction}",
+        "xp": xp_gain,
+        "timestamp": "2026-03-15T12:10:00Z"
+    })
+    
+    # Handle Stage 4
+    if state.xp >= 1000 and state.stage == 3:
+        state.stage = 4
+        ai_analysis += " CRITICAL: BROADCAST SYNC TRIGGERED TRANSCENDENCE."
+
+    save_evo_state(state)
+    
+    return {
+        "status": "Broadcasting",
+        "service_count": len(services),
+        "ai_analysis": ai_analysis,
+        "current_xp": state.xp
+    }
+
 @app.get("/api/evolution/status")
 async def get_status():
     state = load_evo_state()
@@ -208,6 +246,39 @@ async def get_evolution_analysis():
         "analysis": analysis,
         "recommendations": recommendations,
         "system_status": "OPTIMIZED" if state.stage >= 2 else "EVOLVING"
+    }
+
+@app.post("/api/nexus/broadcast")
+async def broadcast_task(task: dict = Body(...)):
+    """Nexus Broadcast - 생태계 전 서비스에 동시 명령 하달"""
+    instruction = task.get("instruction")
+    if not instruction:
+        raise HTTPException(status_code=400, detail="Instruction is required for broadcast.")
+    
+    targets = []
+    if os.path.exists(SERVICES_DIR):
+        for s in os.listdir(SERVICES_DIR):
+            if os.path.isdir(os.path.join(SERVICES_DIR, s)):
+                targets.append(s)
+    
+    broadcast_id = f"BC-{random.randint(1000, 9999)}"
+    ai_analysis = f"Nexus AI가 생태계 내 {len(targets)}개의 서비스에 '{instruction}' 명령을 동기화했습니다. 전역 최적화 모드 가동."
+    
+    # Log broadcast event
+    state = load_evo_state()
+    state.history.append({
+        "event": f"Broadcast: {instruction} to {len(targets)} services",
+        "id": broadcast_id,
+        "timestamp": "2026-03-15T13:30:00Z"
+    })
+    state.xp += 100 # High-value global evolution action
+    save_evo_state(state)
+    
+    return {
+        "broadcast_id": broadcast_id,
+        "status": "Broadcasting",
+        "targets": targets,
+        "ai_analysis": ai_analysis
     }
 
 # Serve Static Files

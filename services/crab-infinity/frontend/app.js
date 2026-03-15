@@ -194,6 +194,39 @@ async function delegateTask() {
     }
 }
 
+async function broadcastTask() {
+    const instruction = document.getElementById("delegation-input").value.trim();
+    const resultDiv = document.getElementById("delegation-result");
+    
+    if (!instruction) {
+        resultDiv.innerText = "Command is required for Nexus broadcast.";
+        return;
+    }
+    
+    resultDiv.innerText = "Broadcasting Nexus command through CAP...";
+    
+    try {
+        const res = await fetch(`${API_URL}/nexus/broadcast`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ instruction })
+        });
+        const data = await res.json();
+        
+        resultDiv.innerHTML = `
+            <p style="color: var(--warning-color);">[${data.broadcast_id}] Status: ${data.status}</p>
+            <p>${data.ai_analysis}</p>
+            <p style="font-size: 0.7rem; color: #888;">Targets: ${data.targets.join(', ')}</p>
+        `;
+        document.getElementById("delegation-input").value = "";
+        updateNexus();
+    } catch (err) {
+        console.error("Broadcast failed", err);
+        resultDiv.innerText = "Broadcast failed. Nexus synchronization error.";
+    }
+}
+
+document.getElementById("broadcast-btn").addEventListener("click", broadcastTask);
 document.getElementById("delegate-btn").addEventListener("click", delegateTask);
 document.getElementById("scan-btn").addEventListener("click", runScan);
 document.getElementById("evolve-btn").addEventListener("click", evolve);
