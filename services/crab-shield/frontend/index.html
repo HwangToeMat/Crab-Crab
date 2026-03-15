@@ -27,9 +27,35 @@
             max-width: 500px;
             background: #1e293b;
             padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 30px; /* 더 부드러운 라운딩 */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             text-align: center;
+            border: 2px solid #334155;
+        }
+        .shield-gauge {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            border: 8px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+            transition: all 0.5s ease;
+        }
+        .evo-badge {
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            color: #0f172a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
         }
         .logo { font-size: 3rem; margin-bottom: 1rem; }
         h1 { font-size: 1.8rem; margin: 0; color: var(--primary); }
@@ -68,9 +94,11 @@
 </head>
 <body>
     <div class="container">
+        <div class="evo-badge">v2.0 EVOLUTION</div>
         <div class="logo">🦀🛡️</div>
+        <div id="gauge" class="shield-gauge">100</div>
         <h1>Crab-Shield</h1>
-        <p>AI 기반 실시간 스미싱 탐지 시스템</p>
+        <p>AI가 당신의 디지털 영토를 수호합니다</p>
         
         <textarea id="msgInput" placeholder="분석할 문자 내용을 입력하세요..."></textarea>
         <button onclick="analyze()">보안 진단 시작</button>

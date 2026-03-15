@@ -13,7 +13,16 @@
         }
         body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 2rem; }
         .dashboard { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; }
-        .card { background: var(--card); padding: 2rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .card { background: var(--card); padding: 2rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-top: 4px solid var(--primary); }
+        .savings-box {
+            background: #fff7ed;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 2px dashed var(--primary);
+        }
+        .savings-amount { font-size: 2rem; font-weight: 900; color: #ea580c; }
         h1 { color: var(--primary); margin-top: 0; }
         .chart-container { position: relative; height: 300px; width: 100%; }
         .input-group { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
@@ -26,6 +35,11 @@
     <div class="dashboard">
         <div class="card">
             <h1>🦀💰 Crab-Finance</h1>
+            <div class="savings-box">
+                <div style="font-size: 0.9rem; color: #9a3412; margin-bottom: 0.5rem;">🦀 꽃게가 지켜낸 보물 (누적 절약액)</div>
+                <div class="savings-amount">₩ 152,400</div>
+                <div style="font-size: 0.8rem; opacity: 0.7;">지난달 대비 12% 증가!</div>
+            </div>
             <p>지능형 소비 분석 대시보드</p>
             <div class="chart-container">
                 <canvas id="expenseChart"></canvas>

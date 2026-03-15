@@ -1,23 +1,13 @@
 {
-  "project": "god-crab",
-  "status": "completed",
-  "current_phase": 5,
-  "step": "master_evolution_completed",
+  "project": "crab-soul-care",
+  "status": "in_progress",
+  "current_phase": 1,
+  "step": "planning_started",
   "history": [
     {
       "phase": 1,
-      "event": "Project initialized with 'God-Crab' idea.",
-      "timestamp": "2026-03-15T12:00:00Z"
-    },
-    {
-      "phase": 3,
-      "event": "10-cycle verification loop completed.",
-      "timestamp": "2026-03-15T12:05:00Z"
-    },
-    {
-      "phase": 5,
-      "event": "Master Evolution (Gemini AI Coach, HUD UI, Stake System) completed.",
-      "timestamp": "2026-03-15T12:30:00Z"
+      "event": "Project 'Crab-Soul-Care' (AI Mental Wellness) initiated.",
+      "timestamp": "2026-03-15T15:00:00Z"
     }
   ]
 }
