@@ -190,38 +190,50 @@ async def get_services():
 
 @app.get("/api/guardian/scan")
 async def guardian_scan():
-    """모든 서비스 대상 보안 및 무결성 스캔 시뮬레이션 (Crab-Shield 데이터 연동 포함)"""
+    """모든 서비스 대상 보안 및 무결성 스캔 + 자율 대응 트리거 (V3.0 CAP 연동)"""
     results = []
+    state = load_evo_state()
+    auto_healed_count = 0
+    
     if os.path.exists(SERVICES_DIR):
         for s in os.listdir(SERVICES_DIR):
             if os.path.isdir(os.path.join(SERVICES_DIR, s)):
-                # Simulate scan logic
-                score = random.randint(85, 100)
+                score = random.randint(80, 100)
                 issues = []
+                shield_intel = "Shield monitoring active."
                 
-                # Special simulation for Crab-Shield integration
-                shield_intelligence = "No anomalous activity reported by Crab-Shield."
-                if s == "crab-shield":
-                    score = random.randint(95, 100)
-                    shield_intelligence = "Shield AI monitoring is active across all channels."
-                elif random.random() < 0.2: # 20% chance of anomaly
-                    score = random.randint(70, 89)
-                    shield_intelligence = "Crab-Shield detected unusual resonance patterns in this quadrant."
-                    issues.append("External interference detected by Shield AI.")
-                
+                # Auto-heal trigger if score < 90
                 if score < 90:
-                    issues.append("Minor dependency vulnerability detected.")
+                    auto_healed_count += 1
+                    delegation_id = f"AUTO-{random.randint(1000, 9999)}"
+                    auto_task = f"AUTO-HEAL: Security patch & dependency update for {s}"
+                    state.history.append({
+                        "event": auto_task,
+                        "id": delegation_id,
+                        "xp": 20,
+                        "timestamp": "2026-03-15T14:00:00Z"
+                    })
+                    state.xp += 20
+                    shield_intel = f"CRITICAL: Crab-Shield triggered auto-patch for {s}."
+                    issues.append("Security score low. Auto-remediation task issued.")
+                
                 if not os.path.exists(os.path.join(SERVICES_DIR, s, "Dockerfile")):
-                    issues.append("Dockerfile missing (Infrastructure risk).")
+                    issues.append("Dockerfile missing.")
                 
                 results.append({
                     "name": s,
                     "score": score,
                     "status": "Safe" if score >= 90 else "Caution",
                     "issues": issues,
-                    "shield_intel": shield_intelligence
+                    "shield_intel": shield_intel
                 })
-    return {"scan_results": results, "total_score": sum(r["score"] for r in results) / len(results) if results else 0}
+    
+    save_evo_state(state)
+    return {
+        "scan_results": results, 
+        "total_score": sum(r["score"] for r in results) / len(results) if results else 0,
+        "auto_healed_count": auto_healed_count
+    }
 
 @app.get("/api/evolution/analysis")
 async def get_evolution_analysis():

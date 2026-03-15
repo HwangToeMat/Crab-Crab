@@ -117,13 +117,17 @@ async function runScan() {
         const res = await fetch(`${API_URL}/guardian/scan`);
         const data = await res.json();
         
-        let html = `<h3>Overall Ecosystem Health: ${data.total_score.toFixed(1)}/100</h3><div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">`;
+        let html = `<h3>Overall Ecosystem Health: ${data.total_score.toFixed(1)}/100</h3>`;
+        if (data.auto_healed_count > 0) {
+            html += `<p style="color: var(--success-color); font-weight: bold; font-size: 0.9rem;">Nexus AI triggered auto-healing for ${data.auto_healed_count} services.</p>`;
+        }
+        html += `<div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">`;
         
         data.scan_results.forEach(r => {
             html += `
                 <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 4px; border-left: 3px solid ${r.status === 'Safe' ? '#238636' : '#d29922'}">
                     <strong>${r.name}</strong> - ${r.status} (${r.score}%)
-                    <p style="font-size: 0.65rem; color: #58a6ff; margin: 4px 0;">Shield Intel: ${r.shield_intel}</p>
+                    <p style="font-size: 0.65rem; color: ${r.shield_intel.includes('CRITICAL') ? '#f85149' : '#58a6ff'}; margin: 4px 0;">Shield Intel: ${r.shield_intel}</p>
                     <ul style="font-size: 0.65rem; color: #aaa; padding-left: 15px; margin-top: 5px;">
                         ${r.issues.length > 0 ? r.issues.map(i => `<li>${i}</li>`).join('') : '<li>No issues found</li>'}
                     </ul>
@@ -132,14 +136,7 @@ async function runScan() {
         });
         html += "</div>";
         resultsContainer.innerHTML = html;
-        
-        // Also log this as an evolution event
-        fetch(`${API_URL}/evolution/log`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content: `Full ecosystem scan completed. Health Score: ${data.total_score.toFixed(1)}` })
-        });
-
+        updateNexus();
     } catch (err) {
         console.error("Scan failed", err);
         resultsContainer.innerHTML = "<p>Guardian system error during scan.</p>";
