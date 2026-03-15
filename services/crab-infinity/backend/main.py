@@ -141,6 +141,31 @@ async def guardian_scan():
                 })
     return {"scan_results": results, "total_score": sum(r["score"] for r in results) / len(results) if results else 0}
 
+@app.get("/api/evolution/analysis")
+async def get_evolution_analysis():
+    """Gemini AI 기반 통합 생태계 분석 (고도화된 시뮬레이션)"""
+    state = load_evo_state()
+    services_count = len(os.listdir(SERVICES_DIR)) if os.path.exists(SERVICES_DIR) else 0
+    
+    if state.stage < 3:
+        analysis = f"현재 생태계는 {services_count}개의 행성(서비스)으로 구성되어 있습니다. 넥서스 엔진이 동기화 중이며, 현재 단계는 '{stageNames[state.stage]}'입니다."
+        recommendations = [
+            "가디언 스캔을 통해 시스템의 보안 무결성을 95% 이상으로 유지하십시오.",
+            "서비스 간의 데이터 연결 고리를 강화하여 진화 에너지를 확보하십시오."
+        ]
+    else:
+        analysis = "승천 완료! Crab-Infinity가 꽃게팀 생태계의 완전한 조율자(Nexus King)로 등극했습니다. 모든 서비스가 초지능형 AI망으로 통합되었습니다."
+        recommendations = [
+            "글로벌 앰배서더 시스템을 가동하여 생태계를 외부로 확장하십시오.",
+            "무한 진화 루프가 안정화되었습니다. 이제 자율 운영 모드로 전환 가능합니다."
+        ]
+    
+    return {
+        "analysis": analysis,
+        "recommendations": recommendations,
+        "system_status": "OPTIMIZED" if state.stage >= 2 else "EVOLVING"
+    }
+
 # Serve Static Files
 if os.path.exists(FRONTEND_DIR):
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")

@@ -66,11 +66,19 @@ async function updateNexus() {
         `;
 
         // 4. Analysis
+        const analysisRes = await fetch(`${API_URL}/evolution/analysis`);
+        const analysisData = await analysisRes.json();
         const analysisContent = document.getElementById("analysis-content");
-        const latestHistory = status.history.length > 0 ? status.history[status.history.length - 1].event : "Waiting for first wave...";
+        
         analysisContent.innerHTML = `
-            <p><strong>Latest Insight:</strong> ${latestHistory}</p>
-            <p style="margin-top: 10px; color: var(--secondary);">AI Engine is scanning for next evolution paths...</p>
+            <div style="border-left: 4px solid ${analysisData.system_status === 'OPTIMIZED' ? '#3fb950' : '#58a6ff'}; padding-left: 15px;">
+                <p><strong>System Status:</strong> <span style="color: ${analysisData.system_status === 'OPTIMIZED' ? '#3fb950' : '#58a6ff'};">${analysisData.system_status}</span></p>
+                <p style="margin-top: 10px;">${analysisData.analysis}</p>
+                <h5 style="margin-top: 15px; margin-bottom: 5px;">Recommendations:</h5>
+                <ul style="font-size: 0.8rem; color: #aaa;">
+                    ${analysisData.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                </ul>
+            </div>
         `;
 
     } catch (err) {
