@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List
 import random
 
-app = FastAPI(title="Crab-Finance Engine v2.0-evo")
+app = FastAPI(title="Crab-Finance Engine")
 
 class ExpenseItem(BaseModel):
     title: str
@@ -12,32 +12,35 @@ class ExpenseItem(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"status": "Crab-Finance Evolution Active", "version": "v2.0-evo"}
+    return {"status": "Crab-Finance Active", "version": "v2.0-evo"}
 
-@app.post("/analyze-finance")
-async def analyze_finance(items: List[ExpenseItem]):
-    total_amount = sum(item.amount for item in items)
-    
-    # AI 맞춤형 조언 생성 (Phase 5 진화 로직)
-    expense_data = {item.category: item.amount for item in items}
-    
-    # 소비 유형 분류
-    if expense_data.get("식비", 0) > total_amount * 0.4:
-        spending_type = "미식가형"
-        advice = "전체 지출 중 식비 비중이 매우 높습니다. 배달 앱 삭제를 권장합니다."
-    elif expense_data.get("취미", 0) > total_amount * 0.2:
-        spending_type = "욜로(YOLO)형"
-        advice = "취미 생활도 좋지만 미래를 위한 저축 비중을 10% 더 높여보세요."
-    else:
-        spending_type = "알뜰형"
-        advice = "매우 건전한 소비 습관을 가지고 계십니다! 현재 패턴을 유지하세요."
-
-    return {
-        "spending_persona": spending_type,
-        "total_expense": total_amount,
-        "ai_financial_advice": advice,
-        "optimization_plan": f"현재 {spending_type} 성향에 맞춰 자산의 20%를 안전 자산으로 재배분할 것을 추천합니다."
+@app.post("/classify")
+async def classify_expense(text: str):
+    # 한국어 작업 의도: AI 텍스트 기반 카테고리 분류 시뮬레이션
+    categories = {
+        "점심": "식비", "커피": "식비", "마트": "식비",
+        "버스": "교통", "택시": "교통", "주유": "교통",
+        "넷플릭스": "취미", "구독": "취미", "영화": "취미",
+        "월세": "주거", "전기": "주거"
     }
+    
+    found_category = "기타"
+    for keyword, cat in categories.items():
+        if keyword in text:
+            found_category = cat
+            break
+            
+    return {"category": found_category, "raw_text": text}
+
+@app.get("/mock-stats")
+async def get_stats():
+    return [
+        {"category": "식비", "amount": 450000},
+        {"category": "교통", "amount": 120000},
+        {"category": "취미", "amount": 85000},
+        {"category": "주거", "amount": 600000},
+        {"category": "기타", "amount": 50000}
+    ]
 
 if __name__ == "__main__":
     import uvicorn
