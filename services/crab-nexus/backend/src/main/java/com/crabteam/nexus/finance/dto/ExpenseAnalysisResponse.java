@@ -8,4 +8,5 @@ import lombok.Getter;
 public class ExpenseAnalysisResponse {
     private String category;
     private String rawText;
+    private String aiAdvice;
 }

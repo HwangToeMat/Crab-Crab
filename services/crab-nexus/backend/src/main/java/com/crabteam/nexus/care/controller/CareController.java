@@ -2,6 +2,8 @@ package com.crabteam.nexus.care.controller;
 
 import com.crabteam.nexus.care.dto.CareChatResponse;
 import com.crabteam.nexus.care.dto.CareHealthStatus;
+import com.crabteam.nexus.common.service.GeminiService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -9,30 +11,23 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/care")
+@RequiredArgsConstructor
 public class CareController {
 
-    private final Map<String, String> adaptiveResponses = Map.of(
-        "건강", "건강은 제가 24시간 지켜보고 있으니 걱정 마세요! 오늘 컨디션은 어떠신가요?",
-        "적적", "제가 있잖아요! 옛날 즐거웠던 기억 하나만 들려주세요. 저 정말 듣고 싶어요.",
-        "배고파", "건강을 위해 맛있는 식사 꼭 챙겨 드셔야 해요. 제가 추천 메뉴라도 찾아볼까요?",
-        "낙상", "방금 조금 위험해 보였어요. 천천히 움직이세요!"
-    );
+    private final GeminiService geminiService;
 
     @PostMapping("/chat")
     public CareChatResponse chat(@RequestBody Map<String, String> request) {
         String userMsg = request.getOrDefault("message", "");
-        String response = "허허, 그렇군요. 더 자세히 말씀해 주시겠어요?";
-
-        for (Map.Entry<String, String> entry : adaptiveResponses.entrySet()) {
-            if (userMsg.contains(entry.getKey())) {
-                response = entry.getValue();
-                break;
-            }
-        }
+        
+        String aiResponse = geminiService.analyzeWithAi(
+            "너는 독거노인이나 돌봄이 필요한 분들을 위한 다정하고 따뜻한 돌봄 가이드 '꽃게 케어'야. 사용자의 말에 공감해주고 필요한 위로를 해줘. 너는 건강, 적적함, 배고픔, 낙상 등의 상황에 특히 잘 대응해야 해.",
+            userMsg
+        );
 
         return CareChatResponse.builder()
-                .response(response)
-                .moodDetected("Peaceful")
+                .response(aiResponse)
+                .moodDetected("AI_Analyzed")
                 .timestamp(LocalDateTime.now())
                 .build();
     }
@@ -40,13 +35,22 @@ public class CareController {
     @GetMapping("/health-status/{userId}")
     public CareHealthStatus getHealthStatus(@PathVariable String userId) {
         Random rand = new Random();
+        int heartRate = rand.nextInt(15) + 70;
+        int steps = rand.nextInt(2000) + 3000;
+        double sleepHours = 7.5;
+
+        String healthInsight = geminiService.analyzeWithAi(
+            "너는 어르신의 건강 데이터를 분석하여 보호자에게 리포트를 제공하는 '꽃게 케어'야. 심박수, 걸음 수, 수면 시간을 분석하여 현재 상태를 한 문장으로 알려줘.",
+            String.format("심박수: %d, 걸음수: %d, 수면시간: %.1f", heartRate, steps, sleepHours)
+        );
+
         return CareHealthStatus.builder()
                 .userId(userId)
-                .heartRate(rand.nextInt(15) + 70)
-                .steps(rand.nextInt(2000) + 3000)
-                .sleepHours(7.5)
+                .heartRate(heartRate)
+                .steps(steps)
+                .sleepHours(sleepHours)
                 .status("Normal")
-                .visionStatus("Monitoring")
+                .visionStatus(healthInsight)
                 .build();
     }
 
