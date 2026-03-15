@@ -4,32 +4,30 @@ const stageNames = ["EGG (초기화)", "HATCHLING (부화)", "WARRIOR (성장)",
 
 async function updateNexus() {
     try {
-        // 1. Status Update
+        // ... Existing logic ...
         const statusRes = await fetch(`${API_URL}/evolution/status`);
         const status = await statusRes.json();
         
-        const stateCard = document.getElementById("state-card");
-        stateCard.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h3>${status.project.toUpperCase()}</h3>
-                    <p>Stage: <strong>${stageNames[status.stage] || status.stage}</strong></p>
-                </div>
-                <div style="text-align: right;">
-                    <div class="metric-value">${status.xp}</div>
-                    <div style="font-size: 0.7rem; color: var(--secondary);">TOTAL XP</div>
-                </div>
-            </div>
-            <div class="xp-bar-container">
-                <div class="xp-bar" style="width: ${Math.min((status.xp % 300) / 3, 100)}%;"></div>
-            </div>
-        `;
-
-        // 2. Services Grid
+        // ... Existing state card logic ...
+        
+        // 2. Services Grid & Populating Select
         const servicesRes = await fetch(`${API_URL}/services`);
         const servicesData = await servicesRes.json();
         const servicesList = document.getElementById("services-list");
+        const targetSelect = document.getElementById("target-service");
+        
+        // Populate select only if it's empty
+        if (targetSelect && targetSelect.options.length <= 1) {
+            servicesData.services.forEach(s => {
+                const opt = document.createElement("option");
+                opt.value = s.name;
+                opt.innerText = s.name;
+                targetSelect.appendChild(opt);
+            });
+        }
+
         servicesList.innerHTML = "";
+        // ... Existing grid logic ...
         
         servicesData.services.forEach(s => {
             const card = document.createElement("div");
@@ -147,6 +145,39 @@ async function runScan() {
     }
 }
 
+async function delegateTask() {
+    const target = document.getElementById("target-service").value;
+    const instruction = document.getElementById("delegation-input").value.trim();
+    const resultDiv = document.getElementById("delegation-result");
+    
+    if (!target || !instruction) {
+        resultDiv.innerText = "Target planet and command are required for Nexus delegation.";
+        return;
+    }
+    
+    resultDiv.innerText = "Transmitting Nexus command through CAP...";
+    
+    try {
+        const res = await fetch(`${API_URL}/nexus/delegate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ target, instruction })
+        });
+        const data = await res.json();
+        
+        resultDiv.innerHTML = `
+            <p style="color: var(--accent-color);">[${data.delegation_id}] Status: ${data.status}</p>
+            <p>${data.ai_analysis}</p>
+        `;
+        document.getElementById("delegation-input").value = "";
+        updateNexus();
+    } catch (err) {
+        console.error("Delegation failed", err);
+        resultDiv.innerText = "Transmission failed. Galactic interference detected.";
+    }
+}
+
+document.getElementById("delegate-btn").addEventListener("click", delegateTask);
 document.getElementById("scan-btn").addEventListener("click", runScan);
 document.getElementById("evolve-btn").addEventListener("click", evolve);
 

@@ -4,77 +4,140 @@ const API_URL = 'http://localhost:3001/api';
  * 전역 데이터 로드 및 UI 초기화
  */
 async function fetchData() {
-    const list = document.getElementById('tasks');
-    if (list) list.innerHTML = '<div style="text-align:center; padding:20px;">무한한 가능성을 로딩 중... 🦀</div>';
-
+    const taskContainer = document.getElementById('tasks');
     try {
         const tasksRes = await fetch(`${API_URL}/tasks`);
         const tasks = await tasksRes.json();
-        const crabRes = await fetch(`${API_URL}/crab/status`);
-        const crab = await crabRes.json();
-        const trustRes = await fetch(`${API_URL}/trust/status`);
-        const trust = await trustRes.json();
         
-        renderTasks(tasks, trust.active_warranties);
-        renderCrab(crab);
+        const statusRes = await fetch(`${API_URL}/crab/status`);
+        const status = await statusRes.json();
+        
+        renderTasks(tasks);
+        renderHUD(status);
     } catch (e) {
-        console.error("Fetch error", e);
+        console.error("Master Data Fetch Error:", e);
     }
 }
 
 /**
- * 할 일 목록 렌더링 (보증 시스템 포함)
+ * 마스터 HUD (Heads-Up Display) 렌더링
  */
-function renderTasks(tasks, warranties) {
-    const list = document.getElementById('tasks');
-    if (!list) return;
-    list.innerHTML = '';
+function renderHUD(status) {
+    document.getElementById('crab-name').textContent = status.name;
+    document.getElementById('crab-level').textContent = status.level;
+    document.getElementById('crab-exp').style.width = `${status.exp}%`;
+    document.getElementById('user-points').textContent = `💰 ${status.user_points.toLocaleString()} P`;
+}
+
+/**
+ * 진화 목표(Tasks) 렌더링
+ */
+function renderTasks(tasks) {
+    const container = document.getElementById('tasks');
+    container.innerHTML = '';
+    
     tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.className = `task-item ${task.is_completed ? 'completed' : ''}`;
-        li.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #eee;';
+        const item = document.createElement('div');
+        item.className = `task-item ${task.is_completed ? 'completed' : ''}`;
         
-        const isWarranted = warranties.some(w => w.task_id === task.id);
-        
-        li.innerHTML = `
-            <div style="display:flex; align-items:center; gap:10px;">
-                <input type="checkbox" ${task.is_completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
-                <span style="${task.is_completed ? 'text-decoration:line-through; color:#999;' : ''}">${task.title}</span>
-                ${isWarranted ? '<span style="font-size:0.7rem; background:#7F00FF; color:white; padding:2px 6px; border-radius:4px;">🛡️ 보증됨</span>' : ''}
+        item.innerHTML = `
+            <div style="display:flex; align-items:center; gap:12px;">
+                <input type="checkbox" ${task.is_completed ? 'checked' : ''} 
+                       style="width:20px; height:20px; cursor:pointer;"
+                       onchange="toggleTask(${task.id})">
+                <span style="font-weight:700; ${task.is_completed ? 'text-decoration:line-through; opacity:0.5;' : ''}">${task.title}</span>
             </div>
-            ${!isWarranted && !task.is_completed ? `<button onclick="applyWarranty(${task.id})" style="font-size:0.7rem; padding:4px 8px; border-radius:8px; background:#eee; border:none; cursor:pointer;">Stake 💰</button>` : ''}
+            ${!task.is_completed ? `<button onclick="stakeWarranty(${task.id})" style="background:rgba(250, 204, 21, 0.1); border:1px solid var(--color-neon-gold); color:var(--color-neon-gold); padding:4px 10px; border-radius:8px; font-size:0.75rem; font-weight:800; cursor:pointer;">STAKE</button>` : ''}
         `;
-        list.appendChild(li);
+        container.appendChild(item);
     });
 }
 
 /**
- * 꽃게 상태 및 방 렌더링
+ * 습관 상태 전환 및 레벨업 체크
  */
-function renderCrab(crab) {
-    document.getElementById('crab-name').textContent = crab.name;
-    document.getElementById('crab-level').textContent = crab.level;
-    document.getElementById('crab-exp').style.width = `${crab.exp}%`;
-    
-    const streakEl = document.querySelector('[title="Streak"]');
-    if (streakEl) streakEl.textContent = `🔥 ${crab.streak}`;
-    
-    const pointsEl = document.getElementById('user-points');
-    if (pointsEl) pointsEl.textContent = `💰 ${crab.user_points.toLocaleString()}`;
-    
-    // 레벨에 따른 꽃게의 방(Crab Room) 진화
-    const roomEl = document.querySelector('#crab-room div');
-    if (roomEl) {
-        let items = '🦀';
-        if (crab.level >= 2) items = '🐚 ' + items + ' 🏖️';
-        if (crab.level >= 5) items = '💎 ' + items + ' 🏰';
-        if (crab.level >= 10) items = '👑 ' + items + ' ✨';
-        roomEl.textContent = items;
+async function toggleTask(id) {
+    try {
+        const res = await fetch(`${API_URL}/tasks/${id}`, { method: 'PATCH' });
+        const data = await res.json();
+        renderHUD({ ...data.status, user_points: data.points });
+        fetchData();
+        
+        if (data.task.is_completed) {
+            showEvolutionToast("진화 포인트 획득! +100P ✨");
+        }
+    } catch (e) {
+        console.error("Toggle Task Error:", e);
     }
 }
 
 /**
- * 탭 전환 로직
+ * AI 마스터 조언 받기 (Gemini Integration)
+ */
+document.getElementById('ask-ai-btn').onclick = async () => {
+    const adviceEl = document.getElementById('ai-advice');
+    const originalText = adviceEl.textContent;
+    adviceEl.textContent = "AI 마스터가 당신의 영혼을 읽는 중... 🔮";
+    adviceEl.style.opacity = "0.6";
+
+    try {
+        const tasksRes = await fetch(`${API_URL}/tasks`);
+        const tasks = await tasksRes.json();
+        const activeTasks = tasks.filter(t => !t.is_completed).map(t => t.title);
+        
+        const statusRes = await fetch(`${API_URL}/crab/status`);
+        const status = await statusRes.json();
+
+        const res = await fetch(`${API_URL}/ai/coach`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_tasks: activeTasks, status: status })
+        });
+        const data = await res.json();
+        
+        adviceEl.style.opacity = "1";
+        adviceEl.textContent = `"${data.advice}"`;
+        showEvolutionToast("마스터의 계시를 받았습니다. ⚡");
+    } catch (e) {
+        adviceEl.textContent = "통신 장애가 발생했으나, 당신의 의지는 장애가 없어야 합니다.";
+        adviceEl.style.opacity = "1";
+    }
+};
+
+/**
+ * 리그 랭킹 시스템 (Master League)
+ */
+async function fetchRankings() {
+    const list = document.getElementById('rankings-list');
+    list.innerHTML = '<div style="text-align:center; padding:20px; opacity:0.5;">리그 랭킹 산출 중...</div>';
+
+    try {
+        const res = await fetch(`${API_URL}/league/rankings`);
+        const rankings = await res.json();
+        
+        list.innerHTML = '';
+        rankings.forEach((r, idx) => {
+            const item = document.createElement('div');
+            const isTop = idx < 3;
+            item.className = `rank-item ${isTop ? 'top-rank' : ''}`;
+            
+            item.innerHTML = `
+                <div class="rank-number">${idx + 1}</div>
+                <div class="rank-name">
+                    ${r.name} 
+                    ${isTop ? '<span style="font-size:0.7rem; margin-left:5px;">🏆</span>' : ''}
+                </div>
+                <div class="rank-score">${r.score.toLocaleString()}</div>
+            `;
+            list.appendChild(item);
+        });
+    } catch (e) {
+        console.error("Ranking Fetch Error:", e);
+    }
+}
+
+/**
+ * 탭 전환 시스템
  */
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.onclick = () => {
@@ -90,154 +153,78 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 /**
- * 리그 랭킹 데이터 페칭 및 렌더링
- */
-async function fetchRankings() {
-    try {
-        const res = await fetch(`${API_URL}/league/rankings`);
-        const data = await res.json();
-        const list = document.getElementById('rankings-list');
-        if (!list) return;
-        list.innerHTML = '';
-        data.forEach((r, idx) => {
-            const li = document.createElement('li');
-            li.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:15px; margin-bottom:10px; background:#f9f9f9; border-radius:12px;';
-            
-            li.innerHTML = `
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <span style="font-weight:bold; color:var(--primary); font-size:1.1rem;">#${idx+1}</span>
-                    <div>
-                        <div style="font-weight:bold;">${r.name} ${r.name === '크래비' ? '(나)' : ''}</div>
-                        <div style="font-size:0.8rem; color:#666;">LV.${r.level} • 🔥 ${r.streak} streaks</div>
-                    </div>
-                </div>
-                <div>
-                    ${r.name !== '크래비' ? `<button onclick="alert('${r.name}님을 응원했습니다! 🦀💪')" style="padding: 5px 12px; border-radius: 20px; border: 1px solid var(--primary); background: white; color: var(--primary); cursor: pointer; font-size: 0.8rem;">👏 응원</button>` : ''}
-                </div>
-            `;
-            list.appendChild(li);
-        });
-    } catch (e) {
-        console.error("Ranking fetch error", e);
-    }
-}
-
-/**
- * 앰배서더 목록 페칭 및 렌더링
+ * 앰배서더 (마스터) 리스트
  */
 async function fetchAmbassadors() {
+    const list = document.getElementById('ambassadors-list');
+    list.innerHTML = '';
+    
     try {
         const res = await fetch(`${API_URL}/community/ambassadors`);
         const data = await res.json();
-        const list = document.getElementById('ambassador-list');
-        if (!list) return;
-        list.innerHTML = '';
-        data.forEach(a => {
-            const div = document.createElement('div');
-            div.style.cssText = 'padding:15px; background:white; border-radius:12px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05);';
-            div.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <b style="color:var(--secondary); font-size:1.1rem;">${a.name}</b>
-                        <p style="margin:5px 0; color:#666; font-size:0.85rem;">${a.track}</p>
-                        <span style="font-size:0.8rem; color:var(--primary);">👥 ${a.followers.toLocaleString()} 팔로워</span>
-                    </div>
-                    <button onclick="this.textContent='Following'; this.style.background='#eee'; this.style.color='#999';" style="padding: 8px 15px; border-radius: 20px; border:none; background: var(--secondary); color: white; cursor: pointer; font-weight:bold;">Follow</button>
-                </div>
-            `;
-            list.appendChild(div);
-        });
-    } catch (e) {
-        console.error("Ambassador fetch error", e);
-    }
-}
-
-/**
- * 보증(Warranty) 적용
- */
-async function applyWarranty(taskId) {
-    const stake = 500;
-    try {
-        const res = await fetch(`${API_URL}/trust/warranty`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ task_id: taskId, stake: stake })
-        });
-        if (res.ok) {
-            alert(`보증 시스템 가동! ${stake} 포인트를 스테이킹했습니다. 🛡️`);
-            fetchData();
-        } else {
-            const err = await res.json();
-            alert(err.error);
-        }
-    } catch (e) {
-        console.error("Warranty error", e);
-    }
-}
-
-/**
- * 할 일 상태 토글
- */
-async function toggleTask(id) {
-    await fetch(`${API_URL}/tasks/${id}`, { method: 'PATCH' });
-    fetchData();
-}
-
-/**
- * 할 일 추가
- */
-document.getElementById('add-task-btn').onclick = async () => {
-    const titleEl = document.getElementById('new-task-title');
-    const title = titleEl.value;
-    if (!title) return;
-    await fetch(`${API_URL}/tasks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title })
-    });
-    titleEl.value = '';
-    fetchData();
-};
-
-/**
- * AI 코치 상담
- */
-document.getElementById('ask-ai-btn').onclick = async () => {
-    const adviceEl = document.getElementById('ai-advice');
-    adviceEl.textContent = 'Infinite AI가 당신의 갓생 패턴을 분석 중입니다... 🦀';
-    
-    try {
-        const tasksRes = await fetch(`${API_URL}/tasks`);
-        const tasks = await tasksRes.json();
-        const activeTasks = tasks.filter(t => !t.is_completed).map(t => t.title);
         
-        const res = await fetch(`${API_URL}/ai/coach`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ current_tasks: activeTasks })
+        data.forEach(a => {
+            const item = document.createElement('div');
+            item.className = 'task-item';
+            item.style.flexDirection = 'column';
+            item.style.alignItems = 'flex-start';
+            item.innerHTML = `
+                <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                    <span style="font-weight:800; color:var(--color-neon-cyan);">${a.name}</span>
+                    <button class="btn-primary" style="padding:4px 12px; font-size:0.75rem; border-radius:20px;">FOLLOW</button>
+                </div>
+                <div style="font-size:0.85rem; color:#94A3B8; margin-top:5px;">${a.track}</div>
+                <div style="font-size:0.75rem; color:var(--color-electric-purple); font-weight:700; margin-top:5px;">👤 ${a.followers.toLocaleString()} 팔로워</div>
+            `;
+            list.appendChild(item);
         });
-        const data = await res.json();
-        adviceEl.textContent = data.advice;
     } catch (e) {
-        adviceEl.textContent = 'AI 엔진이 잠시 쉬고 있습니다. 나중에 다시 시도해주세요!';
+        console.error("Ambassador Fetch Error:", e);
     }
-};
+}
 
 /**
- * 테마 토글 및 공유 기능
+ * 갓생 보증금 스테이킹
  */
-document.getElementById('theme-toggle').onclick = () => {
-    document.body.classList.toggle('dark-mode');
-};
+async function stakeWarranty(taskId) {
+    if (confirm("500P를 걸고 이 습관을 반드시 완수하시겠습니까? 실패 시 포인트는 기부됩니다.")) {
+        try {
+            const res = await fetch(`${API_URL}/trust/warranty`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ task_id: taskId, stake: 500 })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showEvolutionToast("보증금이 걸렸습니다. 실패는 없습니다! 🛡️");
+                fetchData();
+            } else {
+                alert(data.error);
+            }
+        } catch (e) {
+            console.error("Stake Error:", e);
+        }
+    }
+}
 
-document.getElementById('share-btn').onclick = () => {
-    const name = document.getElementById('crab-name').textContent;
-    const level = document.getElementById('crab-level').textContent;
-    const text = `🦀 [갓게+] ${name}와(과) 함께하는 진화된 갓생! 현재 LV.${level}\n#갓생 #갓게 #CrabEvolution`;
-    navigator.clipboard.writeText(text).then(() => alert('공유 텍스트가 복사되었습니다!'));
-};
+/**
+ * 유틸리티: 토스트 메시지
+ */
+function showEvolutionToast(msg) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+        background: var(--ai-gradient); color: white; padding: 12px 25px;
+        border-radius: 30px; font-weight: 800; font-size: 0.9rem;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3); z-index: 9999;
+        animation: slideUp 0.3s ease-out;
+    `;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
 
-// 템플릿 버튼 이벤트 바인딩
+// 템플릿 버튼 이벤트
 document.querySelectorAll('.tmpl-btn').forEach(btn => {
     btn.onclick = async () => {
         const title = btn.getAttribute('data-title');
@@ -247,8 +234,33 @@ document.querySelectorAll('.tmpl-btn').forEach(btn => {
             body: JSON.stringify({ title })
         });
         fetchData();
+        showEvolutionToast("새로운 진화 목표 추가! 🎯");
     };
 });
 
-// 초기 데이터 로드
+// 할 일 수동 추가
+document.getElementById('new-task-title').onkeypress = async (e) => {
+    if (e.key === 'Enter') {
+        const title = e.target.value;
+        if (!title) return;
+        await fetch(`${API_URL}/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title })
+        });
+        e.target.value = '';
+        fetchData();
+        showEvolutionToast("커스텀 목표가 설정되었습니다. 🚀");
+    }
+};
+
+// 초기화
 fetchData();
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideUp {
+        from { transform: translate(-50%, 20px); opacity: 0; }
+        to { transform: translate(-50%, 0); opacity: 1; }
+    }
+`;
+document.head.appendChild(style);

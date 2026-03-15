@@ -13,7 +13,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Work-Crab API")
+app = FastAPI(title="Work-Crab API v2.0 (Infinite Evolution)")
 
 # Dependency
 def get_db():
@@ -42,29 +42,33 @@ class TaskSchema(TaskBase):
     class Config:
         from_attributes = True
 
-class DiaryCreate(BaseModel):
+# Infinite Evolution: AI Coach Model
+class AICoachRequest(BaseModel):
     user_id: int
-    content: str
+    current_tasks: List[str]
 
-class DiarySchema(DiaryCreate):
-    id: int
-    emotion_score: float
-    created_at: datetime.datetime
-    class Config:
-        from_attributes = True
+# Infinite Evolution: Trust & Warranty Models
+class WarrantyRequest(BaseModel):
+    user_id: int
+    task_id: int
+    stake_amount: int
 
-# Endpoints
+# Mock Data for Evolution
+warranties = []
+ambassadors = [
+    {"id": "elon-crab", "name": "Elon Crab", "track": "100-Hour Work Week (Hardcore)", "followers": 50000},
+    {"id": "zen-crab", "name": "Zen Crab", "track": "Deep Work & Meditation", "followers": 32000}
+]
+user_points = 10000
+
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome to Work-Crab API v2.0 (Evolution)"}
+    return {"message": "Welcome to Work-Crab API v2.0 (Infinite Evolution)"}
 
 @app.post("/tasks", response_model=TaskSchema)
 async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     db_task = Task(**task.dict())
     db.add(db_task)
-    # Log activity
-    log = ActivityLog(user_id=task.user_id, activity_type="TaskCreate", details=task.title)
-    db.add(log)
     db.commit()
     db.refresh(db_task)
     return db_task
@@ -73,59 +77,55 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
 async def get_tasks(user_id: int, db: Session = Depends(get_db)):
     return db.query(Task).filter(Task.user_id == user_id).all()
 
-@app.post("/diary", response_model=DiarySchema)
-async def create_diary(diary: DiaryCreate, db: Session = Depends(get_db)):
-    # Simple Mock Emotion Analysis
-    emotion_score = 0.5 if "happy" in diary.content.lower() else -0.1
-    db_diary = Diary(user_id=diary.user_id, content=diary.content, emotion_score=emotion_score)
-    db.add(db_diary)
-    # Log activity
-    log = ActivityLog(user_id=diary.user_id, activity_type="DiaryWrite", details=f"Score: {emotion_score}")
-    db.add(log)
-    db.commit()
-    db.refresh(db_diary)
-    return db_diary
+# --- Infinite Evolution Endpoints ---
 
+@app.post("/api/ai/coach")
+async def ai_coach(req: AICoachRequest):
+    # Gemini AI Mock Response for Phase 5
+    advice = f"Infinite AI 분석 결과: 현재 {len(req.current_tasks)}개의 핵심 업무가 있습니다. 가장 집중력이 높은 오전 시간에 창의적인 작업을 먼저 수행하고, 오후에는 반복 작업을 배치하세요. 당신의 무한한 생산성을 응원합니다!"
+    return {"advice": advice, "theme": "Deep Blue Intelligence"}
+
+@app.get("/api/trust/status")
+async def trust_status():
+    return {"user_points": user_points, "active_warranties": warranties}
+
+@app.post("/api/trust/warranty")
+async def create_warranty(req: WarrantyRequest):
+    global user_points
+    if user_points >= req.stake_amount:
+        user_points -= req.stake_amount
+        new_warranty = {"task_id": req.task_id, "staked_points": req.stake_amount, "status": "Active"}
+        warranties.append(new_warranty)
+        return new_warranty
+    else:
+        raise HTTPException(status_code=400, detail="Insufficient Crab Points for Warranty.")
+
+@app.get("/api/community/ambassadors")
+async def get_ambassadors():
+    return ambassadors
 
 @app.get("/burnout-status/{user_id}")
 async def get_burnout_status(user_id: int, db: Session = Depends(get_db)):
     # Enhanced logic: Consider time of day and task density
     tasks = db.query(Task).filter(Task.user_id == user_id).all()
-    diaries = db.query(Diary).filter(Diary.user_id == user_id).all()
-    
     now = datetime.datetime.now()
-    hour_penalty = 0
-    if now.hour > 22 or now.hour < 6:
-        hour_penalty = 20  # Late night work penalty
-    
+    hour_penalty = 20 if now.hour > 22 or now.hour < 6 else 0
     total_tasks = len(tasks)
     done_tasks = len([t for t in tasks if t.status == "Done"])
     todo_tasks = total_tasks - done_tasks
     
-    avg_emotion = sum([d.emotion_score for d in diaries]) / len(diaries) if diaries else 0.5
-    
-    # Base energy 100
-    energy_level = 100
-    
-    # Penalties
-    energy_level -= (todo_tasks * 10)  # Each pending task drains 10 energy
-    energy_level -= hour_penalty
-    energy_level += (avg_emotion * 40) - 20 # Emotion impact (-20 to +20)
-    
+    energy_level = 100 - (todo_tasks * 10) - hour_penalty
     energy_level = max(0, min(100, energy_level))
     
-    status = "Great"
-    if energy_level < 25:
-        status = "CRITICAL: Burnout Detected. Stop everything."
-    elif energy_level < 50:
-        status = "Warning: High Stress Level"
-    elif energy_level < 75:
-        status = "Moderate: You need a break soon"
+    status = "Infinite Flow"
+    if energy_level < 30:
+        status = "System Overload. Reboot Required."
+    elif energy_level < 60:
+        status = "Warning: Approaching Limits"
         
     return {
         "user_id": user_id,
-        "energy_level": round(energy_level, 2),
+        "energy_level": energy_level,
         "status": status,
-        "recommendation": "Emergency Rest Required!" if energy_level < 30 else "Take a 15-min walk." if energy_level < 60 else "You are doing great!"
+        "recommendation": "Activate Zen Mode." if energy_level < 30 else "Maintain Deep Work."
     }
-

@@ -29,6 +29,21 @@
             <p id="ai-msg" style="margin-top: 10px; font-style: italic; color: var(--secondary);">Waiting for input...</p>
         </section>
 
+        <section id="nexus-command">
+            <h2>Nexus Command Center (V3.0 CAP)</h2>
+            <div class="card" style="background: rgba(88, 166, 255, 0.05); border-color: var(--accent-color);">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <select id="target-service" style="background: var(--bg-color); color: white; border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; flex: 1;">
+                        <option value="">Select Target Planet (Service)</option>
+                        <!-- Options filled via JS -->
+                    </select>
+                    <input type="text" id="delegation-input" placeholder="Enter Nexus Command (e.g., 'Enhance security audit')" style="background: var(--bg-color); color: white; border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; flex: 2;">
+                    <button id="delegate-btn" class="btn" style="margin-top: 0;">DELEGATE</button>
+                </div>
+                <div id="delegation-result" style="font-size: 0.8rem; font-style: italic; color: var(--secondary);">Waiting for Nexus command...</div>
+            </div>
+        </section>
+
         <section id="guardian-system">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h2>Guardian System Scan</h2>

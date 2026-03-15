@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work-Crab | 당신의 갓생 파트너</title>
+    <title>Work-Crab | Infinite Evolution</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -16,234 +16,112 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const i18n = {
-            ko: {
-                title: "Work-Crab",
-                slogan: "게으르지 않게, 하지만 지치지 않게.",
-                energy: "나의 에너지 상태",
-                tasks: "오늘의 할 일",
-                diary: "감정 회고",
-                voice: "🎤 음성 입력",
-                focus: "집중 시작",
-                break: "짧은 휴식",
-                share: "📸 오늘의 갓생 인스타 공유하기",
-                save: "오늘의 회고 저장하기",
-                achievements: "획득한 업적",
-                stats: "주간 활동 추이",
-                activity: "최근 활동 내역"
-                },
-                en: {
-                title: "Work-Crab",
-                // ...
-                stats: "Weekly Activity",
-                activity: "Recent Activity"
-                },
-                ja: {
-                title: "ワーククラブ",
-                // ...
-                stats: "週間活動推移",
-                activity: "最近の活動履歴"
-                }
-                };
-
-
         function App() {
-            const [lang, setLang] = useState('ko');
-            const [tasks, setTasks] = useState([]);
-            const t = i18n[lang];
-            const [burnout, setBurnout] = useState({ energy_level: 80, status: "Healthy", recommendation: "Keep it up!" });
-            const [diary, setDiary] = useState("");
-            const [timer, setTimer] = useState(1500); // 25 mins default
-            const [isTimerRunning, setIsTimerRunning] = useState(false);
-            const [isDarkMode, setIsDarkMode] = useState(false);
-            const userId = 1; // Mock user ID
-
-            useEffect(() => {
-                document.body.className = isDarkMode ? 'dark-mode' : '';
-            }, [isDarkMode]);
-
-            useEffect(() => {
-                let interval = null;
-                if (isTimerRunning && timer > 0) {
-                    interval = setInterval(() => {
-                        setTimer(timer => timer - 1);
-                    }, 1000);
-                } else if (timer === 0) {
-                    setIsTimerRunning(false);
-                    alert("Time for a break! Crab says: Stretch your legs!");
-                }
-                return () => clearInterval(interval);
-            }, [isTimerRunning, timer]);
-
-            const formatTime = (seconds) => {
-                const mins = Math.floor(seconds / 60);
-                const secs = seconds % 60;
-                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            };
-
-            const handleDiarySubmit = () => {
-                alert("일기가 등록되었습니다! AI 분석 결과: 긍정적");
-                setDiary("");
-                setBurnout({ ...burnout, energy_level: 85 });
-            };
-
-            const addHabitTemplate = (type) => {
-                const templates = {
-                    miracle: [
-                        { id: Date.now() + 1, title: "기상 및 침구 정리", priority: "Mid", status: "Todo" },
-                        { id: Date.now() + 2, title: "명상 10분", priority: "Low", status: "Todo" },
-                        { id: Date.now() + 3, title: "독서 30분", priority: "High", status: "Todo" }
-                    ],
-                    health: [
-                        { id: Date.now() + 4, title: "물 2L 마시기", priority: "Low", status: "Todo" },
-                        { id: Date.now() + 5, title: "스트레칭", priority: "Mid", status: "Todo" },
-                        { id: Date.now() + 6, title: "헬스장 가기", priority: "High", status: "Todo" }
-                    ]
-                };
-                setTasks([...tasks, ...templates[type]]);
-                alert(`${type === 'miracle' ? '미라클 모닝' : '건강 챙기기'} 템플릿이 추가되었습니다!`);
+            const [tasks, setTasks] = useState([
+                { id: 1, title: "Q3 Strategy Planning", priority: "High", status: "Todo", warranted: true },
+                { id: 2, title: "Review PRs", priority: "Mid", status: "Done", warranted: false }
+            ]);
+            const [burnout, setBurnout] = useState({ energy_level: 80, status: "Infinite Flow", recommendation: "Maintain Deep Work." });
+            const [aiAdvice, setAiAdvice] = useState("AI 엔진 대기 중...");
+            const [userPoints, setUserPoints] = useState(10000);
+            
+            const handleAskAI = () => {
+                setAiAdvice("Infinite AI가 당신의 뇌파 패턴과 업무 밀도를 분석 중입니다...");
+                setTimeout(() => {
+                    setAiAdvice("Infinite AI 분석 결과: 현재 1개의 핵심 업무가 있습니다. 가장 집중력이 높은 오전 시간에 창의적인 작업을 먼저 수행하고, 오후에는 반복 작업을 배치하세요. 당신의 무한한 생산성을 응원합니다!");
+                }, 1500);
             };
 
             const toggleTask = (id) => {
                 setTasks(tasks.map(t => t.id === id ? { ...t, status: t.status === "Done" ? "Todo" : "Done" } : t));
             };
 
+            const applyWarranty = (id) => {
+                if (userPoints >= 500) {
+                    setUserPoints(p => p - 500);
+                    setTasks(tasks.map(t => t.id === id ? { ...t, warranted: true } : t));
+                    alert("500 포인트 스테이킹 완료! 성공 시 두 배 보상 🛡️");
+                } else {
+                    alert("포인트가 부족합니다.");
+                }
+            };
+
             return (
                 <div className="container">
                     <header>
-                        <div style={{ textAlign: 'right', marginBottom: '-30px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                            <select onChange={(e) => setLang(e.target.value)} value={lang} style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '5px' }}>
-                                <option value="ko">KR</option>
-                                <option value="en">EN</option>
-                                <option value="ja">JP</option>
-                            </select>
-                            <button onClick={() => setIsDarkMode(!isDarkMode)} style={{ background: 'transparent', boxShadow: 'none', fontSize: '1.2rem' }}>
-                                {isDarkMode ? '🌙' : '☀️'}
-                            </button>
+                        <div style={{ textAlign: 'right', marginBottom: '-30px', color: '#FFDC00', fontWeight: 'bold' }}>
+                            💰 {userPoints} CP
                         </div>
-                        <h1>{t.title}</h1>
-                        <p>{t.slogan}</p>
+                        <h1>Work-Crab ♾️</h1>
+                        <p style={{ opacity: 0.8 }}>Infinite Evolution (Phase 5)</p>
                     </header>
 
+                    <section className="ai-coach-panel">
+                        <h3 style={{ color: '#7F00FF', margin: '0 0 10px 0' }}>🤖 Infinite AI Coach</h3>
+                        <p style={{ fontSize: '0.9rem', marginBottom: '15px' }}>{aiAdvice}</p>
+                        <button onClick={handleAskAI} style={{ width: '100%', background: '#7F00FF' }}>초정밀 분석 요청</button>
+                    </section>
 
                     <section className="burnout-gauge">
-                        <h2>{t.energy}</h2>
+                        <h2>Energy Nexus</h2>
                         <div className="gauge-container">
                             <div className="gauge-bar"></div>
                             <div className="gauge-progress" style={{ transform: `rotate(${45 + (burnout.energy_level * 1.8)}deg)` }}></div>
                         </div>
                         <div className="gauge-text">
-                            <h3>{burnout.energy_level}% - {burnout.status}</h3>
-                            <p>{burnout.recommendation}</p>
-                        </div>
-                        
-                        <div className="timer-section" style={{ marginTop: '20px', padding: '15px', background: isDarkMode ? '#2C2C2C' : '#f9f9f9', borderRadius: '12px' }}>
-                            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: isTimerRunning ? '#FF5722' : (isDarkMode ? '#FFF' : '#333') }}>
-                                {formatTime(timer)}
-                            </div>
-                            <button 
-                                onClick={() => setIsTimerRunning(!isTimerRunning)} 
-                                style={{ marginTop: '10px', background: isTimerRunning ? '#333' : '#FF5722' }}
-                            >
-                                {isTimerRunning ? "Pause" : t.focus}
-                            </button>
-                            <button onClick={() => { setTimer(300); setIsTimerRunning(true); }} style={{ marginLeft: '10px', background: '#1A237E' }}>
-                                {t.break}
-                            </button>
-                        </div>
-
-                        <div className="stats-mini" style={{ marginTop: '20px', padding: '15px', border: '1px solid #eee', borderRadius: '12px' }}>
-                            <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem' }}>{t.stats}</h4>
-                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '60px', padding: '0 10px' }}>
-                                {[40, 70, 90, 60, 80, 50, 95].map((val, i) => (
-                                    <div key={i} style={{ 
-                                        width: '20px', 
-                                        height: `${val}%`, 
-                                        background: val > 80 ? 'var(--success-green)' : 'var(--crab-orange)',
-                                        borderRadius: '4px 4px 0 0'
-                                    }}></div>
-                                ))}
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginTop: '5px', opacity: 0.6 }}>
-                                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-                            </div>
-                        </div>
-                        
-                        <div className="achievements-mini" style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
-                            <h4 style={{ margin: '0 0 10px 0', fontSize: '0.9rem' }}>{t.achievements}</h4>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '15px' }}>
-                                <span title="Miracle Morning" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🌅</span>
-                                <span title="Work-Crab Rookie" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🦀</span>
-                                <span title="Health Master" style={{ fontSize: '1.8rem', opacity: 0.8 }}>🥗</span>
-                            </div>
+                            <h3 style={{ color: burnout.energy_level > 50 ? '#06D6A0' : '#FF5722' }}>
+                                {burnout.energy_level}% - {burnout.status}
+                            </h3>
+                            <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>{burnout.recommendation}</p>
                         </div>
                     </section>
-
-
-
-
 
                     <section className="tasks-section">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h2>{t.tasks}</h2>
-                            <button onClick={() => alert("Listening...")} style={{ background: '#1A237E', padding: '5px 12px' }}>
-                                {t.voice}
-                            </button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                            <h2>Infinite Tasks</h2>
+                            <button style={{ padding: '5px 12px', fontSize: '0.8rem' }}>+ Add</button>
                         </div>
-                        {/* ... tasks map ... */}
                         {tasks.map(task => (
                             <div key={task.id} className="task-card">
-                                <div className="task-info">
-                                    <h3 style={{ textDecoration: task.status === "Done" ? 'line-through' : 'none', opacity: task.status === "Done" ? 0.5 : 1 }}>
+                                <div style={{ flex: 1 }}>
+                                    <h3 style={{ margin: '0 0 5px 0', textDecoration: task.status === "Done" ? 'line-through' : 'none', opacity: task.status === "Done" ? 0.5 : 1 }}>
                                         {task.title}
+                                        {task.warranted && <span className="warranty-badge">🛡️ Warranty</span>}
                                     </h3>
-                                    <span className={`priority-tag priority-${task.priority.toLowerCase()}`}>{task.priority}</span>
+                                    <span style={{ fontSize: '0.8rem', color: '#888' }}>Priority: {task.priority}</span>
                                 </div>
-                                <button onClick={() => toggleTask(task.id)}>
-                                    {task.status === "Done" ? "Undo" : "Done"}
-                                </button>
+                                <div style={{ display: 'flex', gap: '5px' }}>
+                                    {!task.warranted && task.status !== "Done" && (
+                                        <button onClick={() => applyWarranty(task.id)} style={{ padding: '5px 10px', fontSize: '0.7rem', background: '#333' }}>Stake</button>
+                                    )}
+                                    <button onClick={() => toggleTask(task.id)} style={{ padding: '5px 10px', fontSize: '0.8rem' }}>
+                                        {task.status === "Done" ? "Undo" : "Done"}
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </section>
 
-
-                    <section className="diary-section">
-                        <h2>{t.diary}</h2>
-                        <textarea 
-                            className="diary-input" 
-                            placeholder="Share your feelings today..."
-                            value={diary}
-                            onChange={(e) => setDiary(e.target.value)}
-                        ></textarea>
-                        <button onClick={handleDiarySubmit} style={{ width: '100%', marginBottom: '15px' }}>{t.save}</button>
+                    <section className="ambassador-section">
+                        <h2>Crab Ambassadors 🌟</h2>
+                        <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>전문가의 업무 트랙을 동기화하세요.</p>
                         
-                        <button 
-                            onClick={() => alert("Instagram Sharing...")} 
-                            style={{ width: '100%', background: 'linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)', fontWeight: 'bold' }}
-                        >
-                            {t.share}
-                        </button>
-                        </section>
-
-                        <section className="activity-log-section">
-                        <h2>{t.activity}</h2>
-                        {[
-                            { id: 1, type: "Task", desc: "기획서 작성 완료", time: "10:30 AM" },
-                            { id: 2, type: "Break", desc: "15분 휴식", time: "11:15 AM" },
-                            { id: 3, type: "Diary", desc: "오전 감정 기록", time: "11:35 AM" }
-                        ].map(log => (
-                            <div key={log.id} className="log-item">
-                                <span className="log-type">[{log.type}]</span>
-                                <span className="log-desc">{log.desc}</span>
-                                <span className="log-time">{log.time}</span>
-                            </div>
-                        ))}
-                        </section>
-
+                        <div className="ambassador-card">
+                            <h4 style={{ margin: '0 0 5px 0', color: '#06D6A0' }}>Elon Crab</h4>
+                            <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem' }}>Track: 100-Hour Work Week (Hardcore)</p>
+                            <button style={{ width: '100%', padding: '5px', fontSize: '0.8rem', background: '#3A4E7A' }}>Sync Track</button>
                         </div>
-                        );
-                        }
+                        
+                        <div className="ambassador-card">
+                            <h4 style={{ margin: '0 0 5px 0', color: '#FFDC00' }}>Zen Crab</h4>
+                            <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem' }}>Track: Deep Work & Meditation</p>
+                            <button style={{ width: '100%', padding: '5px', fontSize: '0.8rem', background: '#3A4E7A' }}>Sync Track</button>
+                        </div>
+                    </section>
 
+                </div>
+            );
+        }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);

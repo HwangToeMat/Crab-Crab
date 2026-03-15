@@ -1,13 +1,14 @@
 :root {
-    --primary-blue: #1A237E;
-    --primary-light: #534BAE;
+    --primary-blue: #001F3F; /* Deep Blue */
+    --primary-light: #3A4E7A;
+    --secondary-purple: #7F00FF; /* Electric Purple */
     --crab-orange: #FF5722;
-    --crab-light: #FF8A50;
-    --bg-color: #F8F9FA;
-    --text-color: #212121;
-    --success-green: #4CAF50;
-    --card-bg: #FFFFFF;
-    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --bg-color: #0A0A0A; /* Dark theme default for Infinite */
+    --text-color: #F8F9FA;
+    --card-bg: #1E1E1E;
+    --success-green: #06D6A0;
+    --shadow: 0 10px 30px rgba(127, 0, 255, 0.15);
+    --glass: rgba(255, 255, 255, 0.05);
 }
 
 body {
@@ -17,6 +18,7 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    transition: all 0.3s ease;
 }
 
 .container {
@@ -26,20 +28,31 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, var(--primary-blue), var(--primary-light));
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
     color: white;
     padding: 50px 20px;
     text-align: center;
     border-radius: 0 0 30px 30px;
     margin-bottom: 25px;
     box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
 }
 
 header h1 {
     margin: 0;
     font-size: 2.8rem;
     font-weight: 800;
-    letter-spacing: -1.5px;
+    letter-spacing: -1px;
+}
+
+.ai-coach-panel {
+    background: var(--glass);
+    border: 1px solid rgba(127, 0, 255, 0.3);
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(10px);
 }
 
 .burnout-gauge {
@@ -49,11 +62,7 @@ header h1 {
     text-align: center;
     margin-bottom: 25px;
     box-shadow: var(--shadow);
-    transition: transform 0.3s ease;
-}
-
-.burnout-gauge:hover {
-    transform: translateY(-5px);
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .gauge-container {
@@ -67,7 +76,7 @@ header h1 {
 .gauge-bar {
     width: 180px;
     height: 180px;
-    border: 15px solid #EDEFF2;
+    border: 15px solid #333;
     border-radius: 50%;
     position: absolute;
     top: 0;
@@ -78,7 +87,7 @@ header h1 {
 .gauge-progress {
     width: 180px;
     height: 180px;
-    border: 15px solid var(--crab-orange);
+    border: 15px solid var(--secondary-purple);
     border-radius: 50%;
     position: absolute;
     top: 0;
@@ -89,7 +98,7 @@ header h1 {
 }
 
 .task-card {
-    background: white;
+    background: var(--card-bg);
     padding: 18px;
     border-radius: 16px;
     margin-bottom: 12px;
@@ -97,12 +106,28 @@ header h1 {
     justify-content: space-between;
     align-items: center;
     box-shadow: var(--shadow);
-    border: 1px solid rgba(0,0,0,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.warranty-badge {
+    background: linear-gradient(90deg, #FFDC00, #FF851B);
+    color: #111;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-left: 10px;
 }
 
 button {
-    background: linear-gradient(45deg, var(--crab-orange), var(--crab-light));
-    box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+    background: linear-gradient(45deg, var(--primary-blue), var(--secondary-purple));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(127, 0, 255, 0.3);
     transition: all 0.2s ease;
 }
 
@@ -110,35 +135,20 @@ button:active {
     transform: scale(0.95);
 }
 
-/* Activity Log Styles */
-.activity-log-section {
+.ambassador-section {
     margin-top: 25px;
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 20px;
     box-shadow: var(--shadow);
 }
 
-.log-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #F0F0F0;
-    font-size: 0.9rem;
-}
-
-.log-item:last-child { border-bottom: none; }
-
-.log-type {
-    font-weight: bold;
-    color: var(--primary-blue);
-    width: 100px;
-}
-
-.log-time {
-    color: #999;
-    font-size: 0.8rem;
-    margin-left: auto;
+.ambassador-card {
+    background: var(--glass);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--secondary-purple);
 }
 
 /* Animations */
@@ -147,29 +157,6 @@ button:active {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.task-card, .burnout-gauge, .activity-log-section {
+.task-card, .burnout-gauge, .ai-coach-panel, .ambassador-section {
     animation: fadeIn 0.5s ease forwards;
 }
-
-body.dark-mode h2 {
-    color: var(--crab-light);
-}
-
-body.dark-mode .task-card, 
-body.dark-mode .burnout-gauge,
-body.dark-mode .timer-section {
-    background-color: var(--card-bg);
-    border-color: rgba(255,255,255,0.05);
-}
-
-body.dark-mode .gauge-bar {
-    border-color: #333;
-}
-
-body.dark-mode .diary-input {
-    background-color: #2C2C2C;
-    color: white;
-    border-color: #444;
-}
-
-
