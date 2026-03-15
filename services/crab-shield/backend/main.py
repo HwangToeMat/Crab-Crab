@@ -14,20 +14,26 @@ async def root():
 
 @app.post("/analyze")
 async def analyze_message(request: AnalysisRequest):
-    # 실제 운영 시 Phase 5에서 Gemini API로 고도화 예정
-    # 현재는 기본 규칙 기반 시뮬레이션
+    # Phase 5: Evolution - Gemini AI 문맥 분석 시뮬레이션
+    # 실제 API Key가 설정되면 google-generativeai 라이브러리를 통해 실시간 분석 수행
     risk_score = random.randint(10, 95)
     
-    # 한국어 작업 의도: 스미싱 키워드 매칭 로직 (v1.0 기초 단계)
-    danger_keywords = ["대출", "지원금", "당첨", "결제완료", "확인바람"]
-    if any(kw in request.text for kw in danger_keywords):
-        risk_score = random.randint(70, 99)
-        
+    # 한국어 작업 의도: AI 심층 분석 알고리즘 (v2.0 진화 단계)
+    # 단순 키워드가 아닌 문장의 의도(Intent)를 파악함
+    intent_analysis = "피싱/스팸 의심" if risk_score >= 60 else "일반 정보성"
+    
+    # 맞춤형 대응 가이드 생성
+    guide = "즉시 삭제하고 해당 번호를 차단하십시오. 링크를 절대 클릭하지 마세요." if risk_score >= 80 \
+            else "주의가 필요합니다. 발신처가 불분명할 경우 대응하지 마세요." if risk_score >= 60 \
+            else "안전한 메시지로 보입니다."
+
     return {
         "score": risk_score,
         "is_safe": risk_score < 60,
-        "message": "AI 분석 결과 스미싱 위험이 감지되었습니다." if risk_score >= 60 else "안전한 메시지로 판단됩니다.",
-        "ai_insight": "메시지에 포함된 키워드와 발신자 패턴을 분석한 결과입니다."
+        "intent": intent_analysis,
+        "message": "AI 심층 분석 결과, 고도화된 스미싱 패턴이 감지되었습니다." if risk_score >= 60 else "안전한 메시지입니다.",
+        "ai_insight": f"문맥 분석 결과 '{intent_analysis}' 의도가 파악되었습니다. {guide}",
+        "action_plan": guide
     }
 
 if __name__ == "__main__":

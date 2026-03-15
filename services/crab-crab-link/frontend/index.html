@@ -72,6 +72,19 @@
             </div>
         </div>
 
+        <!-- [Evolution 2.0] Ambassador Spotlight Section -->
+        <section id="ambassador-spotlight" class="ambassador-section" aria-labelledby="ambassador-title" style="margin-top: var(--space-lg);">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="ambassador-title">이달의 꽃게 앰배서더 🏅</h2>
+                    <button class="btn-secondary" id="apply-ambassador-btn">앰배서더 신청</button>
+                </div>
+                <div id="ambassador-list" class="ambassador-grid" style="display: flex; gap: var(--space-md); overflow-x: auto; padding-bottom: var(--space-md);">
+                    <!-- 앰배서더 카드가 동적으로 추가됩니다 -->
+                </div>
+            </div>
+        </section>
+
         <section class="feed" aria-labelledby="feed-title">
             <div class="container">
                 <div class="section-header">
@@ -137,6 +150,21 @@
             </div>
             <button id="confirm-verify-btn" class="btn-primary" style="width: 100%;" data-i18n="confirmVerify">이 동네로 인증 완료</button>
         </div>
+    </div>
+
+    <!-- [Evolution 2.0] AI Chat Assistant Modal -->
+    <div id="ai-chat-modal" class="ai-chat-modal">
+        <div class="ai-chat-header">
+            <span>✨ 꽃게 AI 어시스턴트</span>
+            <button id="close-ai-chat" style="background:none; border:none; color:white; cursor:pointer; font-size:1.2rem; min-width:auto; min-height:auto;">&times;</button>
+        </div>
+        <div id="ai-chat-messages" class="ai-chat-messages">
+            <div class="message bot">안녕하세요! 당신의 동네 생활을 돕는 꽃게 AI입니다. 무엇을 도와드릴까요? 🦀</div>
+        </div>
+        <form id="ai-chat-form" class="ai-chat-input-area">
+            <input type="text" id="ai-chat-input" placeholder="AI에게 물어보세요..." aria-label="AI 채팅 입력">
+            <button type="submit" class="btn-secondary" style="min-width:60px; padding:0;">전송</button>
+        </form>
     </div>
 
     <script src="js/i18n.js"></script>

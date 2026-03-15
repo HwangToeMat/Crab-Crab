@@ -27,12 +27,19 @@
         <nav style="display: flex; gap: 10px; margin: 20px 0; border-bottom: 2px solid #eee;">
             <button class="tab-btn active" data-tab="habit-list" style="flex:1; padding: 10px; border:none; background:none; cursor:pointer; font-weight:bold;">Habits</button>
             <button class="tab-btn" data-tab="league-view" style="flex:1; padding: 10px; border:none; background:none; cursor:pointer; font-weight:bold;">League 🏆</button>
+            <button class="tab-btn" data-tab="ambassador-view" style="flex:1; padding: 10px; border:none; background:none; cursor:pointer; font-weight:bold;">Ambassadors 🌟</button>
             <button class="tab-btn" data-tab="crab-room" style="flex:1; padding: 10px; border:none; background:none; cursor:pointer; font-weight:bold;">Room 🏠</button>
         </nav>
 
         <main>
+            <section id="ai-coach-section" style="margin-bottom: 20px; padding: 15px; background: rgba(127, 0, 255, 0.1); border-radius: 12px; border-left: 5px solid #7F00FF;">
+                <h3><span class="crab-icon">🤖</span> Infinite AI Coach</h3>
+                <p id="ai-advice" style="font-size: 0.9rem; margin: 10px 0;">분석을 시작합니다...</p>
+                <button id="ask-ai-btn" style="background: #7F00FF; color: white; border: none; padding: 5px 12px; border-radius: 8px; cursor:pointer;">맞춤 조언 받기</button>
+            </section>
+
             <section id="habit-list" class="tab-content">
-                <h2>오늘의 갓생 할 일</h2>
+                <h2>오늘의 갓생 할 일 <span id="user-points" style="font-size: 0.8rem; float:right; color: #7F00FF;">💰 5000</span></h2>
                 <ul id="tasks"></ul>
                 <div class="add-task">
                     <input type="text" id="new-task-title" placeholder="새로운 습관을 입력하세요...">
@@ -46,8 +53,18 @@
             </section>
 
             <section id="league-view" class="tab-content" style="display: none;">
+                <div style="background: #fff8e1; border: 1px solid #ffe082; padding: 12px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight:bold; color: #f57f17;">🏆 이번 주 우승 보상</span>
+                    <span style="font-weight:bold; color: #f57f17;">💰 10,000 P</span>
+                </div>
                 <h2>실시간 꽃게 랭킹</h2>
                 <ul id="rankings-list" style="list-style:none; padding:0;"></ul>
+            </section>
+
+            <section id="ambassador-view" class="tab-content" style="display: none;">
+                <h2>Crab Ambassadors 🌟</h2>
+                <p>전문가들이 설계한 갓생 트랙을 팔로우하세요.</p>
+                <ul id="ambassadors-list" style="list-style:none; padding:0;"></ul>
             </section>
 
             <section id="crab-room" class="tab-content" style="display: none; text-align: center;">

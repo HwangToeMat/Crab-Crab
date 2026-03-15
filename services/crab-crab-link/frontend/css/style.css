@@ -1,11 +1,12 @@
 :root {
-    --color-primary: #F97316; /* Crab Orange */
+    --color-primary: #1E3A8A; /* Deep Blue */
+    --color-accent: #F97316; /* Crab Orange */
     --color-secondary: #C1121F;
     --color-ai-deep-blue: #1E3A8A;
     --color-ai-electric-purple: #7C3AED;
-    --ai-gradient: linear-gradient(135deg, #F97316 0%, #7C3AED 100%);
-    --color-bg: #F8F9FA;
-    --color-text: #1A1D20;
+    --ai-gradient: linear-gradient(135deg, var(--color-ai-deep-blue) 0%, var(--color-ai-electric-purple) 100%);
+    --color-bg: #F0F4F8;
+    --color-text: #0F172A;
     --color-white: #FFFFFF;
     --color-focus: #7C3AED;
     --space-xs: 4px;
@@ -17,127 +18,91 @@
     --radius-lg: 16px;
 }
 
-/* [Evolution 2.0] AI Section Styles */
-.ai-recommendation-section {
-    background: var(--ai-gradient);
-    padding: var(--space-lg) 0;
-    margin-bottom: var(--space-lg);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    color: white;
-}
-
-.ai-header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
-    padding: 0 var(--space-md);
-}
-
-.ai-header h2 {
-    font-size: 1.4rem;
-    font-weight: 800;
-}
-
-.ai-badge-label {
-    background-color: white;
-    color: var(--color-ai-electric-purple);
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.ai-scroll-container {
-    display: flex;
-    gap: var(--space-md);
-    overflow-x: auto;
-    padding: var(--space-sm) var(--space-md) var(--space-lg);
-    scrollbar-width: none;
-}
-
-.ai-scroll-container::-webkit-scrollbar {
+/* [Evolution 2.0] AI Chat Styles */
+.ai-chat-modal {
     display: none;
-}
-
-.ai-card {
-    min-width: 280px;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
     background: white;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 1001;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--color-ai-electric-purple);
+}
+
+.ai-chat-header {
+    background: var(--ai-gradient);
+    color: white;
     padding: var(--space-md);
-    color: var(--color-text);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-
-.ai-card:hover {
-    transform: scale(1.02);
-    border-color: var(--color-ai-electric-purple);
-    box-shadow: 0 0 15px var(--color-ai-electric-purple);
-}
-
-.ai-card-type {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--color-ai-electric-purple);
-    margin-bottom: var(--space-xs);
-    display: block;
-}
-
-.ai-card-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: var(--space-xs);
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.ai-card-reason {
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: var(--space-md);
-    line-height: 1.4;
-}
-
-.ai-card-footer {
     display: flex;
-    justify-content: flex-end;
-}
-
-/* [Evolution 2.0] Trust System Styles */
-.warranty-badge {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: linear-gradient(45deg, var(--color-ai-deep-blue), #FFD700);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-.ambassador-badge {
-    background-color: var(--color-ai-deep-blue);
+.ai-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.message {
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    max-width: 80%;
+    font-size: 0.95rem;
+}
+
+.message.bot {
+    background: #F1F5F9;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.message.user {
+    background: var(--color-ai-electric-purple);
     color: white;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    margin-left: 6px;
-    vertical-align: middle;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.ai-chat-input-area {
+    padding: var(--space-md);
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.ai-chat-input-area input {
+    flex: 1;
+    border: 1px solid #E2E8F0;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+}
+
+/* [Evolution 2.0] Header & Layout Evolution */
+header {
+    background-color: var(--color-white);
+    border-bottom: 2px solid var(--color-ai-deep-blue);
+    padding: var(--space-md) 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: var(--ai-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* ... existing body styles ... */

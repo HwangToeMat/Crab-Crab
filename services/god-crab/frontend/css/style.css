@@ -1,67 +1,171 @@
 :root {
-    --primary: #FF6B6B;
-    --secondary: #4D96FF;
+    --primary: #001F3F; /* Infinite Deep Blue */
+    --secondary: #7F00FF; /* Electric Purple */
+    --accent: #FFDC00;
     --success: #06D6A0;
-    --warning: #FFD166;
-    --bg: #F8F9FA;
-    --text: #333;
-    --card-bg: #fff;
+    --bg: #F0F4F8;
+    --text: #1A1A1A;
+    --card-bg: #FFFFFF;
+    --ai-gradient: linear-gradient(135deg, #001F3F, #7F00FF);
 }
 
 body.dark-mode {
-    --bg: #1a1a1a;
-    --text: #f8f9fa;
-    --card-bg: #2d2d2d;
+    --bg: #0A0A0A;
+    --text: #F8F9FA;
+    --card-bg: #1E1E1E;
 }
 
 body {
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
     display: flex;
     justify-content: center;
     padding: 20px;
-    font-size: 18px; 
-    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+    transition: all 0.3s ease;
 }
 
 #app {
     width: 100%;
-    max-width: 450px;
+    max-width: 480px;
     background: var(--card-bg);
-    padding: 40px;
-    border-radius: 28px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    padding: 30px;
+    border-radius: 32px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
 }
 
+/* Header & AI Coach */
 header h1 {
     color: var(--primary);
-    text-align: center;
+    text-align: left;
+    font-size: 1.8rem;
+    font-weight: 800;
     margin-bottom: 20px;
+}
+
+#ai-coach-section {
+    background: rgba(127, 0, 255, 0.05);
+    border: 1px solid rgba(127, 0, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+#ai-coach-section h3 {
+    color: var(--secondary);
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+#ai-advice {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+    opacity: 0.8;
+}
+
+/* Tabs */
+nav {
     display: flex;
-    justify-content: center;
+    gap: 5px;
+    margin-bottom: 25px;
+    background: #eee;
+    padding: 5px;
+    border-radius: 12px;
+}
+
+.tab-btn {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    color: #666;
+}
+
+.tab-btn.active {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Habit List */
+.task-item {
+    background: var(--bg);
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
 }
 
-.crab-icon {
-    display: inline-block;
-    animation: crab-dance 2s infinite ease-in-out;
+.task-item:hover {
+    border-color: var(--secondary);
+    transform: translateY(-2px);
 }
 
-@keyframes crab-dance {
-    0%, 100% { transform: rotate(0deg) translateX(0); }
-    25% { transform: rotate(-10deg) translateX(-5px); }
-    75% { transform: rotate(10deg) translateX(5px); }
+.task-item input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--secondary);
+    cursor: pointer;
 }
 
-#crab-info {
-    text-align: center;
-    margin-bottom: 30px;
+.task-item span {
+    flex: 1;
+    font-weight: 500;
+}
+
+.task-item.completed {
+    opacity: 0.5;
+    background: #e9ecef;
+}
+
+.task-item.completed span {
+    text-decoration: line-through;
+}
+
+.warranty-badge {
+    font-size: 0.7rem;
+    background: var(--ai-gradient);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 20px;
     font-weight: bold;
 }
 
+/* Ambassador Cards */
+.ambassador-card {
+    background: white;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+}
+
+.ambassador-card h4 {
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+.ambassador-card p {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* Common Components */
 .progress-bar {
     width: 100%;
     height: 10px;
@@ -73,68 +177,45 @@ header h1 {
 
 #crab-exp {
     height: 100%;
-    background: var(--primary);
-    transition: width 0.3s ease;
+    background: var(--ai-gradient);
+    transition: width 0.5s ease;
 }
 
-#habit-list h2 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    background: #fff;
-    padding: 15px;
-    margin-bottom: 10px;
+button.primary {
+    background: var(--ai-gradient);
+    color: white;
+    border: none;
+    padding: 12px 20px;
     border-radius: 12px;
-    border: 1px solid #eee;
-    display: flex;
-    align-items: center;
+    font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: opacity 0.2s;
 }
 
-li:hover {
-    border-color: var(--primary);
-}
-
-li.completed {
-    background: #f0fff4;
-    text-decoration: line-through;
-    color: #999;
-    animation: pop 0.3s ease-out;
-}
-
-@keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+button.primary:hover {
+    opacity: 0.9;
 }
 
 .add-task {
     display: flex;
-    gap: 12px;
-    margin-top: 25px;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-input {
+.add-task input {
     flex: 1;
-    padding: 12px 16px;
-    border: 1px solid #ddd;
+    padding: 12px;
     border-radius: 12px;
+    border: 1px solid #ddd;
+    outline: none;
 }
 
-button {
+.add-task button {
     background: var(--primary);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
+    width: 45px;
+    border-radius: 12px;
+    font-size: 1.5rem;
     cursor: pointer;
-    font-weight: bold;
 }

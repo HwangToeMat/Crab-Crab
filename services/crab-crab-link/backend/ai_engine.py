@@ -1,22 +1,83 @@
 """
-[Evolution 2.0] AI Engine Module
-Gemini API를 연동하여 사용자의 활동 이력을 기반으로 맞춤형 게시글 및 팁을 추천합니다.
-실제 API 연동은 Mock 처리되어 있으나, 확장 가능한 구조로 설계되었습니다.
+[Evolution 2.0] AI Engine Module - Gemini Integration
+Gemini API를 실제 연동하여 사용자의 활동 이력을 기반으로 맞춤형 게시글 및 팁을 추천합니다.
 """
-import random
+import os
+import json
+import logging
 from typing import List
+import google.generativeai as genai
 from . import schemas
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class GeminiAIProcessor:
-    def __init__(self, api_key: str = "MOCK_KEY"):
-        self.api_key = api_key
+    def __init__(self):
+        api_key = os.getenv("GEMINI_API_KEY")
+        if api_key:
+            genai.configure(api_key=api_key)
+            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            self.has_key = True
+            logger.info("Gemini API configured successfully.")
+        else:
+            self.has_key = False
+            logger.warning("GEMINI_API_KEY not found. Operating in MOCK mode.")
 
     async def get_recommendations(self, user_id: int, context: dict) -> List[schemas.AIRecommendation]:
-        # 실제 구현에서는 여기서 Gemini API (google-generativeai)를 호출합니다.
-        # 프롬프트 예시: "사용자 {user_id}의 최근 검색어는 {context['recent_searches']}입니다. 
-        # 현재 {context['location']} 지역의 {context['weather']} 날씨에 어울리는 나눔 아이템을 추천하세요."
+        if not self.has_key:
+            return self._get_mock_recommendations(context)
+
+        prompt = f"""
+        You are 'Crab-Link AI Assistant', a helpful neighborhood guide for 1-person households in Korea.
+        User (ID: {user_id}) is currently in {context.get('location', 'Seoul')}. 
+        Weather: {context.get('weather', 'Clear')}.
+        Recent Interests: {", ".join(context.get('recent_searches', []))}.
+
+        Based on this, suggest 3 personalized recommendations.
+        Each recommendation must include:
+        - title: Catchy title in Korean.
+        - reason: Short explanation in Korean why this is recommended.
+        - item_type: One of "POST", "TIP", "EVENT".
+        - image_url: A relevant Unsplash URL.
+        - action_url: A path like "/posts/123" or "/tips/abc".
+
+        Return the result ONLY as a JSON list.
+        """
         
-        mock_recommendations = [
+        try:
+            response = self.model.generate_content(prompt)
+            # JSON 응답 정제 (Markdown block 제거 등)
+            content = response.text.strip()
+            if content.startswith("```json"):
+                content = content[7:-3].strip()
+            elif content.startswith("```"):
+                content = content[3:-3].strip()
+            
+            recommendations_data = json.loads(content)
+            return [schemas.AIRecommendation(**rec) for rec in recommendations_data]
+        except Exception as e:
+            logger.error(f"Error calling Gemini API: {e}")
+            return self._get_mock_recommendations(context)
+
+    async def chat_with_assistant(self, message: str, user_history: List[dict]) -> str:
+        if not self.has_key:
+            return f"꽃게 AI 어시스턴트(MOCK)입니다: '{message}'에 대해 말씀하신 내용은 잘 이해했습니다. 이웃과의 따뜻한 연결을 도와드릴게요!"
+
+        try:
+            chat = self.model.start_chat(history=[]) # 심플하게 구현
+            response = chat.send_message(f"사용자 질문: {message}\n\n당신은 한국의 1인 가구를 돕는 다정한 꽃게 AI입니다. 한국어로 답변해 주세요.")
+            return response.text
+        except Exception as e:
+            logger.error(f"Error in Gemini chat: {e}")
+            return "죄송합니다, 잠시 꽃게가 집게발을 다쳐서 응답이 어렵네요. 나중에 다시 시도해 주세요!"
+
+    def _get_mock_recommendations(self, context: dict) -> List[schemas.AIRecommendation]:
+        return [
             schemas.AIRecommendation(
                 id="rec_01",
                 title="비 오는 날, 따뜻한 차 한 잔 어때요?",
@@ -32,22 +93,7 @@ class GeminiAIProcessor:
                 item_type="POST",
                 image_url="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=300",
                 action_url="/posts/102"
-            ),
-            schemas.AIRecommendation(
-                id="rec_03",
-                title="꽃게 앰배서더 웰컴 이벤트",
-                reason="활동 지수가 높으시네요! 마포구 앰배서더에 도전해 보시는 건 어떨까요?",
-                item_type="EVENT",
-                image_url="https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=300",
-                action_url="/events/ambassador-recruitment"
             )
         ]
-        
-        # 실제 로직에서는 Gemini의 응답을 파싱하여 반환합니다.
-        return random.sample(mock_recommendations, k=min(len(mock_recommendations), 3))
-
-    async def chat_with_assistant(self, message: str, user_history: List[dict]) -> str:
-        # Gemini 기반 1:1 대화형 나눔 도우미 Mock 응답
-        return f"꽃게 AI 어시스턴트입니다: '{message}'에 대해 말씀하신 내용은 잘 이해했습니다. 이웃과의 따뜻한 연결을 도와드릴게요!"
 
 ai_processor = GeminiAIProcessor()
