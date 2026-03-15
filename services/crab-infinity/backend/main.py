@@ -293,6 +293,27 @@ async def broadcast_task(task: dict = Body(...)):
         "ai_analysis": ai_analysis
     }
 
+@app.get("/api/nexus/analytics")
+async def get_nexus_analytics():
+    """생태계 전체 성장 및 기여도 분석 리포트 생성"""
+    state = load_evo_state()
+    total_events = len(state.history)
+    auto_heal_events = len([e for e in state.history if "AUTO-HEAL" in e.get("event", "")])
+    delegated_events = len([e for e in state.history if "Delegation" in e.get("event", "") or "Broadcast" in e.get("event", "")])
+    
+    # AI-driven synthesis
+    growth_rate = min(100, (state.xp / 10))
+    analysis = f"꽃게팀 생태계의 총 지능 지수는 {state.xp} XP입니다. {total_events}회의 진화 파동이 관측되었으며, 이 중 {auto_heal_events}회는 AI 자율 대응으로 수행되었습니다."
+    
+    return {
+        "xp": state.xp,
+        "stage": stageNames[state.stage] if state.stage < len(stageNames) else "BEYOND NEXUS",
+        "growth_rate": growth_rate,
+        "auto_heal_ratio": (auto_heal_events / total_events * 100) if total_events > 0 else 0,
+        "delegation_efficiency": (delegated_events / total_events * 100) if total_events > 0 else 0,
+        "analysis": analysis
+    }
+
 # Serve Static Files
 if os.path.exists(FRONTEND_DIR):
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")

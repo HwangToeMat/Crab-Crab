@@ -79,6 +79,31 @@ async function updateNexus() {
             </div>
         `;
 
+        // 5. Ecosystem Analytics
+        const analyticsRes = await fetch(`${API_URL}/nexus/analytics`);
+        const analytics = await analyticsRes.json();
+        const footer = document.querySelector("footer");
+        
+        // Dynamic Theme Toggle for Transcendence
+        if (analytics.xp >= 1000) {
+            document.documentElement.style.setProperty('--accent-color', '#ffca28');
+            document.documentElement.style.setProperty('--success-color', '#ff9800');
+            document.body.style.boxShadow = "inset 0 0 100px rgba(255, 202, 40, 0.1)";
+        }
+
+        footer.innerHTML = `
+            <div style="margin-top: 40px; padding: 20px; border-top: 1px solid var(--border-color);">
+                <h4>Nexus Ecosystem V3.0 Growth Report</h4>
+                <p style="font-size: 0.85rem; color: #ccc;">${analytics.analysis}</p>
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 15px;">
+                    <div><span style="color: var(--accent-color);">Growth:</span> ${analytics.growth_rate.toFixed(1)}%</div>
+                    <div><span style="color: var(--success-color);">Auto-Heal:</span> ${analytics.auto_heal_ratio.toFixed(1)}%</div>
+                    <div><span style="color: var(--warning-color);">Delegation:</span> ${analytics.delegation_efficiency.toFixed(1)}%</div>
+                </div>
+            </div>
+            <p style="margin-top: 30px;">&copy; 2026 CrabTeam - Infinite Evolution V3.0 Transcendence Mode Active</p>
+        `;
+
     } catch (err) {
         console.error("Nexus update failed", err);
     }
