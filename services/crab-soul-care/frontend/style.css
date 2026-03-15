@@ -90,14 +90,32 @@ textarea {
 .bar {
     width: 8px;
     background: var(--accent-color);
-    animation: bounce 1s infinite ease-in-out;
+    animation: bounce 0.8s infinite ease-in-out;
+    border-radius: 4px;
 }
 
-.bar:nth-child(2) { animation-delay: 0.2s; }
-.bar:nth-child(3) { animation-delay: 0.4s; }
-.bar:nth-child(4) { animation-delay: 0.6s; }
+.bar:nth-child(1) { animation-delay: 0.1s; }
+.bar:nth-child(2) { animation-delay: 0.3s; }
+.bar:nth-child(3) { animation-delay: 0.5s; }
+.bar:nth-child(4) { animation-delay: 0.7s; }
+.bar:nth-child(5) { animation-delay: 0.2s; }
+.bar:nth-child(6) { animation-delay: 0.4s; }
+
+/* Emotion Themes */
+.theme-joy { --accent-color: #ffd700; --soft-pink: #fffacd; }
+.theme-stress { --accent-color: #ff6b6b; --soft-pink: #ffe3e3; }
+.theme-sadness { --accent-color: #4facfe; --soft-pink: #e0f2fe; }
+.theme-peace { --accent-color: #b8e994; --soft-pink: #f1f9ec; }
+.theme-anxiety { --accent-color: #a29bfe; --soft-pink: #efedff; }
+.theme-loneliness { --accent-color: #dfe6e9; --soft-pink: #f5f6fa; }
+.theme-confidence { --accent-color: #fdcb6e; --soft-pink: #fff9e6; }
+.theme-excitement { --accent-color: #ff7675; --soft-pink: #fff1f1; }
 
 @keyframes bounce {
-    0%, 100% { height: 10px; }
-    50% { height: 30px; }
+    0%, 100% { height: 10px; transform: scaleY(1); }
+    50% { height: 40px; transform: scaleY(1.2); }
+}
+
+.result-section {
+    transition: all 0.5s ease-in-out;
 }

@@ -15,6 +15,7 @@ document.getElementById('analyze-btn').addEventListener('click', async () => {
         const data = await response.json();
 
         // UI 업데이트
+        document.body.className = `theme-${data.emotion.toLowerCase()}`;
         document.getElementById('result-section').classList.remove('hidden');
         document.getElementById('emotion-badge').innerText = data.emotion;
         document.getElementById('ai-msg').innerText = data.ai_coach_msg;
