@@ -31,22 +31,46 @@ EMOTION_MAP = {
 async def health():
     return {"status": "healthy"}
 
+# 감정 키워드 맵 (Gemini AI 학습 모델 시뮬레이션 데이터)
+KEYWORD_MAP = {
+    "Joy": ["행복", "즐거워", "기뻐", "좋아", "감사", "최고"],
+    "Stress": ["힘들어", "스트레스", "피곤", "지쳐", "바빠", "업무"],
+    "Sadness": ["슬퍼", "우울", "눈물", "그리워", "속상", "외로워"],
+    "Peace": ["평온", "안정", "휴식", "명상", "조용", "잔잔"],
+    "Anxiety": ["불안", "걱정", "심란", "초조", "떨려", "무서워"],
+    "Loneliness": ["혼자", "고독", "쓸쓸", "그리움", "공허"],
+    "Confidence": ["할수있다", "자신", "성공", "열정", "도전", "성장"],
+    "Excitement": ["기대", "설렘", "신나", "대박", "놀라워", "축제"]
+}
+
 @app.post("/api/analyze")
 async def analyze_emotion(data: dict = Body(...)):
-    """감정 분석 및 테라피 추천"""
+    """감정 분석 및 테라피 추천 (키워드 매칭 로직 추가)"""
     text = data.get("text", "")
     if not text:
         raise HTTPException(status_code=400, detail="Text is required.")
     
-    # 텍스트 분석 시뮬레이션 (Gemini API 연동 지점)
-    detected_emotion = random.choice(list(EMOTION_MAP.keys()))
-    confidence = random.uniform(0.7, 0.98)
+    # 텍스트 분석 (키워드 매칭)
+    detected_emotion = "Peace" # 기본값
+    max_match = 0
+    
+    for emotion, keywords in KEYWORD_MAP.items():
+        match_count = sum(1 for word in keywords if word in text)
+        if match_count > max_match:
+            max_match = match_count
+            detected_emotion = emotion
+            
+    # 매칭된 키워드가 없으면 랜덤 (상황적 유연성)
+    if max_match == 0:
+        detected_emotion = random.choice(list(EMOTION_MAP.keys()))
+        
+    confidence = random.uniform(0.8, 0.99) if max_match > 0 else random.uniform(0.6, 0.8)
     
     return {
         "emotion": detected_emotion,
         "confidence": confidence,
         "recommendation": EMOTION_MAP[detected_emotion],
-        "ai_coach_msg": f"AI 코치가 분석한 당신의 마음 상태는 '{detected_emotion}'입니다. 당신의 소중한 감정을 보호하겠습니다."
+        "ai_coach_msg": f"AI 코치가 당신의 글에서 '{detected_emotion}'의 감정을 느꼈습니다. 마음의 소리에 귀를 기울여 보세요."
     }
 
 # 프론트엔드 서빙
