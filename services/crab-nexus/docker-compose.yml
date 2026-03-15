@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nexus-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - crab-network
+
+  nexus-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - crab-network
+
+networks:
+  crab-network:
+    driver: bridge
