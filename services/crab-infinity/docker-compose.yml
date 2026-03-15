@@ -6,8 +6,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ../../services:/app/services:ro
-      - ../../config:/app/config:ro
+      - .:/app
+      - ../../config/state:/app/config/state
     environment:
       - ENV=production
     restart: always

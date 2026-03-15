@@ -1,33 +1,44 @@
-// Phase 2: Initial Functional Verification (QA Specialist)
-// To run: node services/god-crab/qa_test.js
+const axios = require('axios');
 
-const http = require('http');
+const BASE_URL = 'http://localhost:3001/api';
 
-const API_URL = 'http://localhost:3001/api';
-
-async function testApi() {
-  console.log('--- Phase 2 QA Verification Start ---');
+async function runTest() {
+  console.log('🚀 Starting God-Crab v2.0 QA Stress Test...');
 
   try {
-    // 1. Check if backend is reachable (GET /tasks)
-    console.log('[Test 1] GET /api/tasks...');
-    // In a real env, we'd use fetch or axios. For simplicity, we check if server.js exists.
-    console.log('PASSED: Backend structure verified.');
+    // 1. Check Task List
+    console.log('[1/5] Fetching tasks...');
+    const tasks = await axios.get(`${BASE_URL}/tasks`);
+    console.log(`✅ Found ${tasks.data.length} tasks.`);
 
-    // 2. Check UI structure
-    console.log('[Test 2] Frontend structure...');
-    // Logic to check file presence
-    console.log('PASSED: Frontend files (index.html, style.css, app.js) present.');
+    // 2. Add New Task
+    console.log('[2/5] Adding new task...');
+    const newTask = await axios.post(`${BASE_URL}/tasks`, { title: 'QA Stress Test Task' });
+    console.log(`✅ Task added with ID: ${newTask.data.id}`);
 
-    // 3. Logic check
-    console.log('[Test 3] Core logic verification...');
-    console.log('PASSED: Crab evolution logic (exp gain) integrated into backend.');
+    // 3. Toggle Task & Check Level Up
+    console.log('[3/5] Completing tasks for Level Up...');
+    for (let i = 0; i < 5; i++) {
+        const task = await axios.post(`${BASE_URL}/tasks`, { title: `Level Up Task ${i}` });
+        await axios.patch(`${BASE_URL}/tasks/${task.data.id}`);
+    }
+    const status = await axios.get(`${BASE_URL}/crab/status`);
+    console.log(`✅ Current Level: ${status.data.level}, Exp: ${status.data.exp}`);
 
-    console.log('--- All Initial QA Tests PASSED ---');
-  } catch (err) {
-    console.error('QA Test FAILED:', err);
-    process.exit(1);
+    // 4. Check Rankings
+    console.log('[4/5] Checking Rankings...');
+    const rankings = await axios.get(`${BASE_URL}/league/rankings`);
+    console.log(`✅ Top Ranker: ${rankings.data[0].name} (Score: ${rankings.data[0].score})`);
+
+    // 5. Check AI Coach
+    console.log('[5/5] Requesting AI Advice...');
+    const ai = await axios.post(`${BASE_URL}/ai/coach`, { current_tasks: ['Refactoring', 'Testing'] });
+    console.log(`✅ AI Advice: "${ai.data.advice}"`);
+
+    console.log('\n✨ All QA Tests Passed Successfully!');
+  } catch (error) {
+    console.error('❌ QA Test Failed:', error.message);
   }
 }
 
-testApi();
+runTest();

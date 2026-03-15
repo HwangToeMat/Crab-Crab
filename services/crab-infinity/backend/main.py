@@ -1,94 +1,96 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Body
+from pydantic import BaseModel
+from typing import List, Optional, Dict
+import json
+import os
+import random
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-import os
-import json
-from typing import List, Dict
 
 app = FastAPI(title="Crab-Infinity Nexus API", version="2.0.0_evo")
 
-# CORS 설정
+# Enable CORS for Frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 경로 설정: Docker 내부와 로컬 개발 환경 대응
+# Base Path Logic
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATE_PATH = "/app/config/state/state.json" if os.path.exists("/app/config/state") else os.path.join(BASE_DIR, "../../config/state/state.json")
 SERVICES_DIR = "/app/services" if os.path.exists("/app/services") else os.path.join(BASE_DIR, "../../services")
-STATE_FILE = "/app/config/state/state.json" if os.path.exists("/app/config/state") else os.path.join(BASE_DIR, "../../config/state/state.json")
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
-@app.get("/api/health")
-async def health_check():
-    return {"status": "healthy", "mode": "evolution"}
+class EvolutionState(BaseModel):
+    project: str = "crab-infinity"
+    stage: int = 0
+    xp: int = 0
+    history: List[dict] = []
+    roadmap: List[str] = ["Initialize Nexus Hub", "Scan existing services", "AI-driven evolution loop"]
+
+def load_evo_state() -> EvolutionState:
+    if os.path.exists(STATE_PATH):
+        try:
+            with open(STATE_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                # Handle both old/new state formats
+                return EvolutionState(**data) if "project" in data else EvolutionState()
+        except:
+            return EvolutionState()
+    return EvolutionState()
+
+def save_evo_state(state: EvolutionState):
+    os.makedirs(os.path.dirname(STATE_PATH), exist_ok=True)
+    with open(STATE_PATH, "w", encoding="utf-8") as f:
+        json.dump(state.dict(), f, indent=4)
+
+@app.get("/api/evolution/status")
+async def get_status():
+    state = load_evo_state()
+    return state
+
+@app.post("/api/evolution/log")
+async def post_log(log: dict = Body(...)):
+    state = load_evo_state()
+    content = log.get("content", "")
+    
+    xp_gain = random.randint(15, 35)
+    state.xp += xp_gain
+    
+    # Stages: 0: Egg, 1: Hatchling, 2: Warrior, 3: Nexus King
+    old_stage = state.stage
+    if state.xp >= 100 and state.stage == 0: state.stage = 1
+    if state.xp >= 300 and state.stage == 1: state.stage = 2
+    if state.xp >= 600 and state.stage == 2: state.stage = 3
+    
+    evolved = state.stage > old_stage
+    # AI Feedback Simulation (Simulating complex reasoning)
+    ai_insights = [
+        f"분석 결과, '{content}'은(는) 귀하의 시스템 아키텍처 이해도를 15% 향상시켰습니다. 다음 단계로는 디자인 패턴 적용을 추천합니다.",
+        f"무한 진화의 파동이 감지되었습니다. '{content}' 수행을 통해 핵심 모듈의 안정성이 확보되었습니다. +{xp_gain} XP.",
+        f"Gemini Nexus가 귀하의 진화 경로를 재계산했습니다. '{content}'은(는) 지능형 에이전트 구축의 토대가 됩니다."
+    ]
+    ai_msg = random.choice(ai_insights)
+    if evolved:
+        ai_msg = f"CRITICAL EVOLUTION! You reached Stage {state.stage}! " + ai_msg
+    
+    state.history.append({"event": content, "xp": xp_gain, "timestamp": "2026-03-15T12:00:00Z"})
+    save_evo_state(state)
+    return {"status": "success", "ai_feedback": ai_msg, "evolved": evolved, "current_xp": state.xp}
 
 @app.get("/api/services")
 async def get_services():
     services = []
-    if not os.path.exists(SERVICES_DIR):
-        return {"error": f"Services directory not found: {SERVICES_DIR}"}
-    
-    for service_name in os.listdir(SERVICES_DIR):
-        service_path = os.path.join(SERVICES_DIR, service_name)
-        if os.path.isdir(service_path):
-            has_backend = os.path.exists(os.path.join(service_path, "backend"))
-            has_frontend = os.path.exists(os.path.join(service_path, "frontend"))
-            
-            services.append({
-                "name": service_name,
-                "has_backend": has_backend,
-                "has_frontend": has_frontend,
-                "status": "active"
-            })
+    if os.path.exists(SERVICES_DIR):
+        for s in os.listdir(SERVICES_DIR):
+            if os.path.isdir(os.path.join(SERVICES_DIR, s)):
+                services.append({"name": s, "status": "active"})
     return {"services": services}
 
-@app.get("/api/state")
-async def get_current_state():
-    if os.path.exists(STATE_FILE):
-        with open(STATE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {"error": f"State file not found at {STATE_FILE}"}
-
-@app.get("/api/evolution/analysis")
-async def get_evolution_analysis():
-    services_data = await get_services()
-    services = services_data.get("services", [])
-    
-    total_services = len(services)
-    backend_count = sum(1 for s in services if s["has_backend"])
-    frontend_count = sum(1 for s in services if s["has_frontend"])
-    
-    analysis_text = f"현재 {total_services}개의 서비스가 감지되었습니다. (백엔드: {backend_count}, 프론트엔드: {frontend_count}). "
-    
-    recommendations = []
-    if backend_count < total_services:
-        recommendations.append("일부 서비스에 백엔드 구성이 누락되어 있습니다. API 연동을 검토하십시오.")
-    if frontend_count < total_services:
-        recommendations.append("프론트엔드가 없는 서비스의 사용자 인터페이스 제공 여부를 확인하십시오.")
-    
-    if total_services > 5:
-        analysis_text += "생태계 규모가 확장됨에 따라 서비스 간의 데이터 정규화와 통합 모니터링이 필수적입니다."
-        recommendations.append("중앙 집중식 로깅 시스템(ELK 또는 Prometheus) 도입을 고려하십시오.")
-    else:
-        analysis_text += "초기 생태계 구축 단계입니다. 각 서비스의 독립성을 유지하며 확장성을 고려하십시오."
-        recommendations.append("기본 인프라 보안(TLS/SSL) 및 API 인증 체계를 강화하십시오.")
-
-    return {
-        "analysis": analysis_text,
-        "recommendations": recommendations,
-        "metrics": {
-            "total_services": total_services,
-            "backend_ratio": backend_count / total_services if total_services > 0 else 0,
-            "frontend_ratio": frontend_count / total_services if total_services > 0 else 0
-        }
-    }
-
-# 정적 파일 서빙 (프론트엔드)
+# Serve Static Files
 if os.path.exists(FRONTEND_DIR):
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
@@ -97,7 +99,7 @@ async def serve_index():
     index_path = os.path.join(FRONTEND_DIR, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    return {"message": "Crab-Infinity Nexus Dashboard (Frontend files not found)"}
+    return {"message": "Nexus Frontend not found at " + FRONTEND_DIR}
 
 if __name__ == "__main__":
     import uvicorn
