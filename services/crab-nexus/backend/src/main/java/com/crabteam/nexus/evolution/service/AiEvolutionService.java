@@ -43,16 +43,26 @@ public class AiEvolutionService {
     public String generateApiDocs(String serviceId) {
         String packageSuffix = SERVICE_MAP.getOrDefault(serviceId, serviceId.replace("-", ""));
         
-        // 실제 운영 시에는 리소스 폴더나 특정 경로에서 파일을 읽어오거나 
-        // Reflection을 사용하나, 여기서는 AI-Native 진화를 위해 소스 코드를 분석 대상으로 삼습니다.
-        String controllerDirPath = String.format("services/crab-nexus/backend/src/main/java/com/crabteam/nexus/%s/controller", packageSuffix);
+        // 경로 후보군 (루트 실행 시 vs 백엔드 디렉토리 내 실행 시)
+        String[] pathCandidates = {
+            String.format("src/main/java/com/crabteam/nexus/%s/controller", packageSuffix),
+            String.format("services/crab-nexus/backend/src/main/java/com/crabteam/nexus/%s/controller", packageSuffix)
+        };
+        
+        Path dirPath = null;
+        for (String path : pathCandidates) {
+            Path p = Paths.get(path);
+            if (Files.exists(p)) {
+                dirPath = p;
+                break;
+            }
+        }
+
+        if (dirPath == null) {
+            return "[Error] 컨트롤러 디렉토리를 찾을 수 없습니다 (Checked candidates: " + String.join(", ", pathCandidates) + ")";
+        }
         
         try {
-            Path dirPath = Paths.get(controllerDirPath);
-            if (!Files.exists(dirPath)) {
-                return "[Error] 컨트롤러 디렉토리를 찾을 수 없습니다: " + controllerDirPath;
-            }
-            
             Path sourceFile = Files.list(dirPath)
                     .filter(p -> p.toString().endsWith("Controller.java"))
                     .findFirst()
