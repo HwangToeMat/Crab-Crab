@@ -8,6 +8,7 @@ const CarePage = () => {
     const [msg, setMsg] = useState('');
     const [chat, setChat] = useState([]);
     const [alerts, setAlerts] = useState([]);
+    const [isTyping, setIsTyping] = useState(false);
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/v1/care/health-status/user123').then(res => setHealth(res.data));
@@ -19,9 +20,14 @@ const CarePage = () => {
         const newMsg = { role: 'user', text: msg };
         setChat([...chat, newMsg]);
         setMsg('');
+        setIsTyping(true);
 
-        const res = await axios.post('http://localhost:8080/api/v1/care/chat', { message: msg });
-        setChat(prev => [...prev, { role: 'bot', text: res.data.response }]);
+        try {
+            const res = await axios.post('http://localhost:8080/api/v1/care/chat', { message: msg });
+            setChat(prev => [...prev, { role: 'bot', text: res.data.response }]);
+        } finally {
+            setIsTyping(false);
+        }
     };
 
     return (
@@ -63,6 +69,13 @@ const CarePage = () => {
                                     {c.text}
                                 </div>
                             ))}
+                            {isTyping && (
+                                <div className="typing-indicator">
+                                    <div className="typing-dot"></div>
+                                    <div className="typing-dot"></div>
+                                    <div className="typing-dot"></div>
+                                </div>
+                            )}
                         </div>
                         <div className="chat-input">
                             <input 
@@ -71,8 +84,9 @@ const CarePage = () => {
                                 value={msg}
                                 onChange={(e) => setMsg(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                                disabled={isTyping}
                             />
-                            <button onClick={handleSend}><Send size={18} /></button>
+                            <button onClick={handleSend} disabled={isTyping}><Send size={18} /></button>
                         </div>
                     </section>
                 </div>
