@@ -16,16 +16,19 @@ public class MoodController {
     @PostMapping("/analyze")
     public Map<String, Object> analyzeMood(@RequestBody Map<String, String> request) {
         String note = request.getOrDefault("note", "");
+        System.out.println("DEBUG: Initiating Real Gemini AI Analysis for Mood-Ge...");
+        
         String systemPrompt = "너는 세계 최고의 심리 분석가 '무드게'이다. 사용자의 메모를 분석하여 다음 항목을 포함한 상세 리포트를 JSON으로만 작성하라. " +
                 "1. mood: 감정명, 2. score: 감정 점수(0-100), 3. analysis: 감정의 원인 분석, 4. advice: 따뜻한 조언, 5. challenge: 추천 1일 미션. " +
-                "예: {\"mood\": \"Calm\", \"score\": 85, \"analysis\": \"현재 매우 평온한 상태입니다.\", \"advice\": \"이 평온함을 유지하세요.\", \"challenge\": \"오늘 저녁에 10분간 명상하기\"}";
+                "JSON 응답 외에 다른 말은 하지 마라.";
         
         String aiResponse = geminiService.analyzeWithAi(systemPrompt, note);
+        System.out.println("DEBUG: AI Response received for Mood-Ge: " + aiResponse);
         
         return Map.of(
             "timestamp", new Date(),
             "note", note,
-            "report", aiResponse, // AI가 생성한 상세 JSON 리포트
+            "report", aiResponse,
             "points_earned", 15
         );
     }
