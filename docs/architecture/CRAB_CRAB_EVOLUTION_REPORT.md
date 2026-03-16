@@ -55,6 +55,22 @@
 
 ---
 
+## 5. 시스템 핵심 자산 및 기술적 실체 (System Assets)
+
+`Crab-Crab`의 실제 구동 원리와 운영 방식을 파악할 수 있는 핵심 자산들입니다.
+
+### 📜 운영 및 가이드 (Documentation)
+*   **[MASTER_GUIDELINE.md](../MASTER_GUIDELINE.md):** AI 에이전트들이 준수해야 할 최상위 운영 규범과 보안 지침입니다.
+*   **[USER_MANUAL.md](../USER_MANUAL.md):** 인간 사용자가 시스템을 가동하고 지시를 내리는 '사용자 매뉴얼'입니다.
+*   **[SPRING_REACT_CONVENTION.md](../standards/SPRING_REACT_CONVENTION.md):** AI가 작성하는 코드의 품질과 일관성을 보장하는 기술 표준서입니다.
+
+### ⚙️ 시스템 엔진 (Core Engine)
+*   **[orchestrator.py](../../core/orchestrator.py):** 15명의 에이전트에게 작업을 할당하고 조율하는 '지휘자' 로직입니다.
+*   **[auto_pilot_loop.py](../../core/auto_pilot_loop.py):** 자율 주행 모드에서 에이전트 간 피드백 루프를 실행하는 핵심 엔진입니다.
+*   **[state.json](../../config/state/state.json):** 전체 시스템의 현재 진행 상황과 작업 이력이 실시간으로 기록되는 데이터 파일입니다.
+
+---
+
 ### 📘 NotebookLM 연동을 위한 추가 팁
 
 1.  본 보고서를 **첫 번째 소스**로 업로드하세요.
