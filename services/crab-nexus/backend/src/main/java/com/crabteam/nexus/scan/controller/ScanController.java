@@ -1,62 +1,41 @@
 package com.crabteam.nexus.scan.controller;
 
-import com.crabteam.nexus.scan.dto.ScanAnalysisRequest;
-import com.crabteam.nexus.scan.dto.ScanStatusResponse;
+import com.crabteam.nexus.common.service.GeminiService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/scan")
+@RequiredArgsConstructor
 public class ScanController {
 
-    private int savingScore = 85;
-    private long totalSpent = 450000;
-    private int streak = 12;
-    private final List<Map<String, Object>> expenses = new ArrayList<>(List.of(
-        new HashMap<>(Map.of("id", 1, "itemName", "교통비", "price", 1500, "category", "Transport", "essential", true)),
-        new HashMap<>(Map.of("id", 2, "itemName", "커피", "price", 4500, "category", "Dining", "essential", false))
-    ));
-
-    @GetMapping("/status")
-    public ScanStatusResponse getStatus() {
-        return ScanStatusResponse.builder()
-                .savingScore(savingScore)
-                .totalSpent(totalSpent)
-                .streak(streak)
-                .quests(List.of(
-                    Map.of("id", 1, "title", "무지출 챌린지", "completed", false, "reward", 100),
-                    Map.of("id", 2, "title", "배달 음식 안 먹기", "completed", true, "reward", 50)
-                ))
-                .rankings(List.of(
-                    Map.of("name", "왕게절약왕", "score", 98),
-                    Map.of("name", "나 (크래비)", "score", savingScore),
-                    Map.of("name", "쇼핑왕대게", "score", 45)
-                ))
-                .build();
-    }
+    private final GeminiService geminiService;
 
     @PostMapping("/analyze")
-    public Map<String, Object> analyzeSpending(@RequestBody ScanAnalysisRequest request) {
-        String advice = String.format("%s 지출을 분석했습니다. 당신의 갓생 절약 점수는 현재 %d점입니다!", request.getItemName(), savingScore);
-        String status = "Neutral";
-
-        if (request.getPrice() > 30000 && request.getItemName().contains("음식")) {
-            advice = String.format("우와, %d원짜리 %s이라니요! 꽃게가 보기엔 조금 무거운 한 끼네요. 다음엔 껍질을 조금 더 단단히 조여보는 건 어떨까요?", request.getPrice(), request.getItemName());
-            status = "Caution";
-        } else if (request.getPrice() < 5000 && (request.getItemName().contains("커피") || request.getItemName().contains("카페"))) {
-            advice = String.format("오, %s! 커피 한 잔의 여유는 좋지만, 일주일이면 치킨 한 마리 값이에요! 🍗", request.getItemName());
-            status = "Frugal";
-        }
-
-        totalSpent += request.getPrice();
-        if (!request.isEssential()) savingScore -= 2;
-
-        return Map.of("advice", advice, "status", status, "updatedScore", savingScore);
+    public Map<String, Object> analyzeExpense(@RequestBody Map<String, Object> request) {
+        String itemName = (String) request.getOrDefault("itemName", "");
+        Integer price = (Integer) request.getOrDefault("price", 0);
+        
+        String systemPrompt = "너는 합리적인 소비를 돕는 자산 관리 전문가이다. 사용자의 지출 항목과 가격을 분석하여, 이것이 꼭 필요한 지출이었는지 평가하고 따끔하지만 유용한 절약 조언을 제공하라. " +
+                "결과는 반드시 JSON 형식으로 하라: {\"status\": \"BAD/GOOD\", \"advice\": \"조언\"}";
+        
+        String aiResponse = geminiService.analyzeWithAi(systemPrompt, itemName + " (" + price + "원)");
+        
+        return Map.of(
+            "status", "ANALYZED",
+            "advice", aiResponse
+        );
     }
 
-    @GetMapping("/expenses")
-    public List<Map<String, Object>> getExpenses() {
-        return expenses;
+    @GetMapping("/status")
+    public Map<String, Object> getScanStatus() {
+        return Map.of(
+            "savingScore", 72,
+            "totalSpent", 450000,
+            "streak", 5,
+            "rankings", List.of(Map.of("name", "나", "score", 720))
+        );
     }
 }
