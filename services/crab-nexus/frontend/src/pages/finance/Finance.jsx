@@ -7,6 +7,7 @@ const FinancePage = () => {
     const [stats, setStats] = useState([]);
     const [text, setText] = useState('');
     const [analysis, setAnalysis] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/v1/finance/stats').then(res => setStats(res.data));
@@ -14,8 +15,14 @@ const FinancePage = () => {
 
     const handleClassify = async () => {
         if (!text) return;
-        const res = await axios.post('http://localhost:8080/api/v1/finance/classify', { text });
-        setAnalysis(res.data);
+        setLoading(true);
+        setAnalysis(null);
+        try {
+            const res = await axios.post('http://localhost:8080/api/v1/finance/classify', { text });
+            setAnalysis(res.data);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const totalAmount = stats.reduce((acc, curr) => acc + curr.amount, 0);
@@ -45,11 +52,27 @@ const FinancePage = () => {
                             value={text}
                             onChange={(e) => setText(e.target.value)}
                         />
-                        <button onClick={handleClassify}>Classify</button>
+                        <button onClick={handleClassify} disabled={loading}>
+                            {loading ? "Analyzing..." : "Classify"}
+                        </button>
                     </div>
+
+                    {loading && (
+                        <div className="ai-loading-container">
+                            <div className="ai-pulse-dot"></div>
+                            <span className="ai-loading-text">꽃게 AI가 분석 중...</span>
+                        </div>
+                    )}
+
                     {analysis && (
-                        <div className="analysis-result">
-                            <Tag size={18} /> Category: <strong>{analysis.category}</strong>
+                        <div className="analysis-result-container">
+                            <div className="analysis-result">
+                                <Tag size={18} /> Category: <strong>{analysis.category}</strong>
+                            </div>
+                            <div className="ai-advice-box">
+                                <h4>Crab's Financial Advice</h4>
+                                <p>{analysis.aiAdvice}</p>
+                            </div>
                         </div>
                     )}
                 </section>

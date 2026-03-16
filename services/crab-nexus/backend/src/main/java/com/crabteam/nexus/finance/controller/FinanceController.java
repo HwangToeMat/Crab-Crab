@@ -14,34 +14,31 @@ public class FinanceController {
 
     private final GeminiService geminiService;
 
-    private final Map<String, String> categoryMap = Map.ofEntries(
-        Map.entry("점심", "식비"), Map.entry("커피", "식비"), Map.entry("마트", "식비"),
-        Map.entry("버스", "교통"), Map.entry("택시", "교통"), Map.entry("주유", "교통"),
-        Map.entry("넷플릭스", "취미"), Map.entry("구독", "취미"), Map.entry("영화", "취미"),
-        Map.entry("월세", "주거"), Map.entry("전기", "주거")
-    );
-
     @PostMapping("/classify")
     public ExpenseAnalysisResponse classifyExpense(@RequestBody Map<String, String> request) {
         String text = request.getOrDefault("text", "");
         
-        String aiAdvice = geminiService.analyzeWithAi(
-            "너는 사용자의 지출 내역을 분석하는 금융 가이드 '꽃게 금융'이야. 지출 내역을 보고 절약 방법이나 칭찬을 한 문장으로 해줘.",
-            text
-        );
-
-        String foundCategory = "기타";
-        for (Map.Entry<String, String> entry : categoryMap.entrySet()) {
-            if (text.contains(entry.getKey())) {
-                foundCategory = entry.getValue();
-                break;
-            }
-        }
+        String systemPrompt = "너는 금융 분석 전문가 '꽃게 금융'이다. 사용자의 지출 항목을 보고 [카테고리]와 [조언]을 JSON 형식으로 답변하라. " +
+                "카테고리는 '식비', '교통', '취미', '주거', '의료', '생활', '기타' 중 하나여야 한다. " +
+                "예: {\"category\": \"식비\", \"advice\": \"피자는 맛있지만 건강을 위해 빈도를 줄여보세요!\"}";
+        
+        String aiResponse = geminiService.analyzeWithAi(systemPrompt, text);
+        
+        // AI 응답 파싱 (간이 구현)
+        String category = "기타";
+        String advice = aiResponse;
+        
+        if (aiResponse.contains("식비")) category = "식비";
+        else if (aiResponse.contains("교통")) category = "교통";
+        else if (aiResponse.contains("취미")) category = "취미";
+        else if (aiResponse.contains("주거")) category = "주거";
+        else if (aiResponse.contains("의료")) category = "의료";
+        else if (aiResponse.contains("생활")) category = "생활";
 
         return ExpenseAnalysisResponse.builder()
-                .category(foundCategory)
+                .category(category)
                 .rawText(text)
-                .aiAdvice(aiAdvice)
+                .aiAdvice(advice)
                 .build();
     }
 

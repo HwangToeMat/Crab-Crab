@@ -57,6 +57,28 @@
     background: var(--bg-hover);
     border-radius: 8px;
     font-size: 0.95rem;
+    margin-bottom: 16px;
+}
+
+.ai-advice-box {
+    padding: 20px;
+    background: rgba(0, 255, 163, 0.05);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+}
+
+.ai-advice-box h4 {
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.ai-advice-box p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-main);
 }
 
 .stat-item {
