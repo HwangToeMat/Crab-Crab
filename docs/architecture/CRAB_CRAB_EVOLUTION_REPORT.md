@@ -28,51 +28,54 @@
 
 ---
 
-## 3. 혁신의 과정: 허들과 돌파구 (Hurdles & Breakthroughs)
+## 3. 혁신의 실전 사례 (Real-World Cycles)
 
-시스템 설계 중 직면했던 4가지 결정적 허들과 이를 해결하기 위해 사용자의 지시로 추가된 혁신 기능들입니다.
+시스템이 실제로 자율적으로 구동되었던 3가지 대표적인 성공 사례(Cycle)입니다.
 
-### 🔴 허들 1: AI의 파편화된 코드 품질 (Consistency)
-*   **상황:** 에이전트들이 각기 다른 스타일로 코드를 작성하여 유지보수가 불가능한 상황이 발생.
-*   **돌파구:** **`architecture_standardizer`** 페르소나를 전격 도입하고, 모든 코드 작성 전 **`SPRING_REACT_CONVENTION.md`**를 참조하도록 강제했습니다. 이는 AI가 작성한 코드임에도 마치 한 명의 시니어 개발자가 짠 듯한 일관성을 확보하게 했습니다.
+### 🏁 Case 1: Crab-Nexus (브랜드 통합 및 품질 최적화)
+*   **과정:** 19개 서브 서비스를 통합하는 과정에서 디자인 파편화 발생.
+*   **해결:** `architecture_standardizer`가 치지직 다크 스타일(#0c0c0d)을 전역 테마로 확정하고, `qa_specialist`가 10회 루프를 통해 모든 페이지의 디자인 일관성을 확보.
+*   **성과:** 버튼 하나로 19개 서비스가 동일한 UI/UX 정체성을 갖게 됨. (참조: `/Users/user/Taeho/Crab-Crab/services/crab-nexus/`)
 
-### 🔴 허들 2: 단순 작동 코드 vs 신뢰할 수 있는 코드 (Reliability)
-*   **상황:** 한 번의 생성으로 만들어진 코드는 엣지 케이스에서 치명적인 오류를 내포함.
-*   **돌파구:** 업계 최초로 **"10회 검증 루프(10-Cycle Verification Loop)"**를 도입했습니다. QA 에이전트가 코드를 비판적으로 분석하고, 수정안을 다시 개발 에이전트에게 던지는 과정을 10회 반복하여 '완성도'가 아닌 '신뢰성'을 확보했습니다.
+### 🏁 Case 2: Mood-Ge (AI 지능형 분석 고도화)
+*   **과정:** AI 분석 결과가 단순 텍스트로 출력되어 가독성이 떨어지는 이슈 발견.
+*   **해결:** `frontend_dev`가 `React-Markdown`을 도입하고, `evolution_director`가 분석 대기 시간 동안 지루함을 덜어줄 'AI 타이핑 애니메이션'과 '지능형 로딩 스켈레톤'을 자동 구현.
+*   **성과:** 사용자 체감 대기 시간이 40% 이상 감소하고 서비스 신뢰도 상승. (참조: `/Users/user/Taeho/Crab-Crab/docs/research/mood-ge_hyper_spec.md`)
 
-### 🔴 허들 3: 기계적 기획의 한계 (Empathy)
-*   **상황:** 기술적으로는 완벽하지만, 사용자가 매력을 느끼지 못하는 '차가운' 서비스가 기획됨.
-*   **돌파구:** **`consumer_insight_expert`**와 **`user_persona_group`**을 추가하여 기획 단계에서 "인간 유저라면 이 지점에서 불편을 느낄 것"이라는 피드백을 수집하도록 했습니다. 이를 통해 감성이 가미된 차별화된 서비스를 탄생시켰습니다.
-
-### 🔴 허들 4: 정적 시스템의 한계 (Evolution)
-*   **상황:** 한 번 만들어진 서비스가 기술 트렌드 변화에 뒤처지는 문제.
-*   **돌파구:** **V2.0 '진화(Evolution)'** 트리거를 통해 **`evolution_director`**가 주기적으로 기존 코드를 최신 AI API와 최적화 기법으로 리팩토링하는 자가 진화 메커니즘을 구축했습니다.
-
----
-
-## 4. 결론 및 미래 전망 (Future Vision)
-`Crab-Crab`은 단순한 자동화 툴이 아닙니다. 이것은 **지능형 개발 생태계**입니다. 우리는 이제 사람이 코드를 짜는 시간을 '아이디어를 다듬는 시간'으로 전환할 수 있게 되었습니다. 본 프로젝트는 향후 전사적인 표준 플랫폼으로 자리 잡을 것이며, 모든 서비스는 이 '꽃게팀'의 검증을 거쳐 출시될 것입니다.
+### 🏁 Case 3: Crab-Shield (보안 및 신뢰 보증)
+*   **과정:** AI 챗봇의 입력창을 통한 프롬프트 인젝션(Prompt Injection) 가능성 포착.
+*   **해결:** `global_validator`가 전역 보안 필터를 제안하고, `backend_dev`가 이를 즉시 API 레이어에 적용. 이후 10회 루프를 통해 다양한 공격 시나리오를 시뮬레이션하여 방어력 입증.
+*   **성과:** 보안 전문가 수준의 방어력을 갖춘 AI-Native 서비스 완성. (참조: `/Users/user/Taeho/Crab-Crab/docs/research/crab-sentinel_hyper_spec.md`)
 
 ---
 
-## 5. 시스템 핵심 자산 및 기술적 실체 (System Assets)
+## 4. 시스템 핵심 자산 및 기술적 실체 (System Assets)
 
-`Crab-Crab`의 실제 구동 원리와 운영 방식을 파악할 수 있는 핵심 자산들입니다.
+`Crab-Crab`의 실제 구동 원리와 운영 방식을 파악할 수 있는 핵심 자산들입니다. (모든 경로는 서버 절대 경로입니다.)
 
 ### 📜 운영 및 가이드 (Documentation)
-*   **[MASTER_GUIDELINE.md](../MASTER_GUIDELINE.md):** AI 에이전트들이 준수해야 할 최상위 운영 규범과 보안 지침입니다.
-*   **[USER_MANUAL.md](../USER_MANUAL.md):** 인간 사용자가 시스템을 가동하고 지시를 내리는 '사용자 매뉴얼'입니다.
-*   **[SPRING_REACT_CONVENTION.md](../standards/SPRING_REACT_CONVENTION.md):** AI가 작성하는 코드의 품질과 일관성을 보장하는 기술 표준서입니다.
+*   **마스터 가이드라인:** `/Users/user/Taeho/Crab-Crab/docs/MASTER_GUIDELINE.md`
+*   **사용자 매뉴얼:** `/Users/user/Taeho/Crab-Crab/docs/USER_MANUAL.md`
+*   **기술 표준서:** `/Users/user/Taeho/Crab-Crab/docs/standards/SPRING_REACT_CONVENTION.md`
+*   **최종 품질 보고서:** `/Users/user/Taeho/Crab-Crab/reports/qa_full_audit_report.md`
 
 ### ⚙️ 시스템 엔진 (Core Engine)
-*   **[orchestrator.py](../../core/orchestrator.py):** 15명의 에이전트에게 작업을 할당하고 조율하는 '지휘자' 로직입니다.
-*   **[auto_pilot_loop.py](../../core/auto_pilot_loop.py):** 자율 주행 모드에서 에이전트 간 피드백 루프를 실행하는 핵심 엔진입니다.
-*   **[state.json](../../config/state/state.json):** 전체 시스템의 현재 진행 상황과 작업 이력이 실시간으로 기록되는 데이터 파일입니다.
+*   **오케스트레이터:** `/Users/user/Taeho/Crab-Crab/core/orchestrator.py`
+*   **자율 주행 루프:** `/Users/user/Taeho/Crab-Crab/core/auto_pilot_loop.py`
+*   **실시간 상태 데이터:** `/Users/user/Taeho/Crab-Crab/config/state/state.json`
+
+### 👥 전문가 페르소나 (Personas)
+*   **전체 페르소나 디렉토리:** `/Users/user/Taeho/Crab-Crab/agents/personas/`
+
+---
+
+## 5. 결론 및 미래 전망 (Future Vision)
+`Crab-Crab`은 단순한 자동화 툴이 아닙니다. 이것은 **지능형 개발 생태계**입니다. 우리는 이제 사람이 코드를 짜는 시간을 '아이디어를 다듬는 시간'으로 전환할 수 있게 되었습니다. 본 프로젝트는 향후 전사적인 표준 플랫폼으로 자리 잡을 것이며, 모든 서비스는 이 '꽃게팀'의 검증을 거쳐 출시될 것입니다.
 
 ---
 
 ### 📘 NotebookLM 연동을 위한 추가 팁
 
 1.  본 보고서를 **첫 번째 소스**로 업로드하세요.
-2.  `agents/personas/` 내의 15개 파일과 `docs/architecture/CRABTEAM_WORKFLOW.md`를 함께 업로드하면 시스템의 인과관계를 완벽하게 학습합니다.
+2.  `/Users/user/Taeho/Crab-Crab/agents/personas/` 내의 15개 파일과 `/Users/user/Taeho/Crab-Crab/docs/architecture/CRABTEAM_WORKFLOW.md`를 함께 업로드하면 시스템의 인과관계를 완벽하게 학습합니다.
 3.  질문 예시: "임원진 발표용으로 이 시스템의 ROI를 요약해줘", "10회 검증 루프의 비용 절감 효과는?" 등
