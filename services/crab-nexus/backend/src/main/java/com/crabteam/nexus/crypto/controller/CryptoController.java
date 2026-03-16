@@ -1,38 +1,48 @@
 package com.crabteam.nexus.crypto.controller;
 
+import com.crabteam.nexus.common.service.GeminiService;
 import com.crabteam.nexus.crypto.dto.CryptoSentimentResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/crypto")
+@RequiredArgsConstructor
 public class CryptoController {
+
+    private final GeminiService geminiService;
 
     @PostMapping("/analyze")
     public CryptoSentimentResponse analyzeSentiment(@RequestBody Map<String, String> request) {
-        String text = request.getOrDefault("text", "").toLowerCase();
+        String text = request.getOrDefault("text", "");
         
-        // 감성 분석 엔진 시뮬레이션 (Spring Boot 버전)
-        double polarity = 0.0;
-        double subjectivity = new Random().nextDouble();
+        String systemPrompt = "너는 암호화폐 시장 감성 분석 전문가이다. 입력된 텍스트를 분석하여 감성 점수(-1.0에서 1.0 사이)와 상태(positive, negative, neutral 중 하나)를 JSON 형식으로만 답변하라. 예: {\"score\": 0.8, \"status\": \"positive\"}";
         
-        List<String> positiveWords = List.of("bull", "moon", "buy", "good", "up", "pump", "rich");
-        List<String> negativeWords = List.of("bear", "dump", "sell", "bad", "down", "crash", "scam");
+        String aiResponse = geminiService.analyzeWithAi(systemPrompt, text);
         
-        for (String word : positiveWords) if (text.contains(word)) polarity += 0.2;
-        for (String word : negativeWords) if (text.contains(word)) polarity -= 0.2;
-        
-        polarity = Math.max(-1.0, Math.min(1.0, polarity));
-        
+        // AI 응답 파싱 (간이 구현)
+        double score = 0.0;
         String status = "neutral";
-        if (polarity > 0.1) status = "positive";
-        else if (polarity < -0.1) status = "negative";
+        
+        try {
+            if (aiResponse.contains("positive")) status = "positive";
+            else if (aiResponse.contains("negative")) status = "negative";
+            
+            // 숫자 추출 시도
+            String cleaned = aiResponse.replaceAll("[^0-9.-]", " ").trim();
+            if (!cleaned.isEmpty()) {
+                score = Double.parseDouble(cleaned.split(" ")[0]);
+            }
+        } catch (Exception e) {
+            // 파싱 실패 시 기본값 사용
+        }
 
         return CryptoSentimentResponse.builder()
                 .text(text)
-                .score(Math.round(polarity * 100.0) / 100.0)
-                .subjectivity(Math.round(subjectivity * 100.0) / 100.0)
+                .score(score)
+                .subjectivity(0.5) // 고정값 또는 AI 판단값
                 .status(status)
                 .build();
     }
